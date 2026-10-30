@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #090d16;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 40px;
+    }
+    .container {
+      text-align: center;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 5px 14px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    h2 {
+      color: #ffffff;
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    p {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+    
+    /* Etiqueta renderizada em tamanho ampliado para visualização nítida (escala 5x) */
+    .label-preview-wrapper {
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 20px;
+      padding: 40px;
+      display: inline-block;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+    
+    .label-box {
+      width: 573px;  /* 38.2mm * 15px/mm */
+      height: 318px; /* 21.2mm * 15px/mm */
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1.5px solid #f1f5f9;
+      padding-bottom: 8px;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-name {
+      font-size: 22px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+    }
+    .brand-name span { color: #059669; }
+    .country-tag {
+      font-size: 13px;
+      font-weight: 800;
+      color: #047857;
+      background: #ecfdf5;
+      border: 1.5px solid #a7f3d0;
+      padding: 3px 12px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .body-group {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin: auto 0;
+    }
+    .qr-side {
+      width: 145px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .qr-img {
+      width: 130px;
+      height: 130px;
+      border-radius: 6px;
+    }
+    .qr-pill {
+      font-size: 12px;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 800;
+      color: #0f172a;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 3px 8px;
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .info-side {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: left;
+    }
+    .prod-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+    .prod-title {
+      font-size: 28px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.8px;
+    }
+    .dosage-pill {
+      font-size: 16px;
+      font-weight: 900;
+      background: #1e3a8a;
+      color: #ffffff;
+      padding: 4px 14px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+    .chem-sub {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .batch-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #334155;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+    .batch-box strong { color: #0f172a; }
+
+    .bottom-bar {
+      background: linear-gradient(90deg, #f0fdf4 0%, #eff6ff 100%);
+      border: 1.5px solid #bbf7d0;
+      border-radius: 6px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #15803d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="badge">NOVO DESIGN COMPLETO</div>
+    <h2>Etiqueta Spiral A4351 (GHK CU 50 MG)</h2>
+    <p>Visualização ampliada da etiqueta unitária (38,2 × 21,2 mm) com Logotipo, QR Code reduzido e UX farmacêutica</p>
+
+    <div class="label-preview-wrapper">
+      <div class="label-box">
+        <!-- HEADER -->
+        <div class="top-header">
+          <div class="brand-group">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#0f172a" stroke="#1e3a8a" stroke-width="1.4"/>
+              <path d="M12 5V19M6.5 9L17.5 15M17.5 9L6.5 15" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="12" cy="12" r="3.2" fill="#10b981" stroke="#ffffff" stroke-width="1"/>
+            </svg>
+            <div class="brand-name">PSL <span>LABS</span></div>
+          </div>
+          <div class="country-tag">🇵🇾 PY · ASUNCIÓN</div>
+        </div>
+
+        <!-- BODY -->
+        <div class="body-group">
+          <div class="qr-side">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://psl-labs.vercel.app/v/GHK50-8F92K&color=0f172a" class="qr-img" alt="QR Code" />
+            <div class="qr-pill">GHK50-8F92K</div>
+          </div>
+
+          <div class="info-side">
+            <div>
+              <div class="prod-line">
+                <span class="prod-title">GHK CU</span>
+                <span class="dosage-pill">50 MG</span>
+              </div>
+              <div class="chem-sub">Copper Tripeptide-1 · &gt;99% Pure</div>
+            </div>
+
+            <div class="batch-box">
+              <div>LOTE: <strong>LOT-2026-01</strong></div>
+              <div>FAB: <strong>10/2026</strong> · VAL: <strong>10/2028</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="bottom-bar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+          <span>ESCANEIE O QR CODE PARA VERIFICAR AUTENTICIDADE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

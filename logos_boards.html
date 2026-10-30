@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #090d16;
+      color: #ffffff;
+      padding: 40px;
+      width: 1400px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 25px;
+    }
+    .badge-top {
+      display: inline-block;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 999px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p.sub {
+      color: #94a3b8;
+      font-size: 16px;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
+    .logo-card {
+      background: #0f172a;
+      border: 1.5px solid #1e293b;
+      border-radius: 24px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .logo-card.featured {
+      border-color: #10b981;
+      background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.12), #0f172a 60%);
+    }
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .opt-number {
+      font-size: 14px;
+      font-weight: 900;
+      color: #64748b;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .featured-tag {
+      background: #065f46;
+      color: #6ee7b7;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Previews: Dark & Light side by side */
+    .preview-duo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .box-dark {
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .box-light {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .box-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .box-dark .box-label { color: #64748b; }
+    .box-light .box-label { color: #94a3b8; }
+    
+    .symbol-svg {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .brand-type-dark {
+      font-size: 18px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+    .brand-type-dark span { color: #10b981; }
+    .sub-type-dark {
+      font-size: 8.5px;
+      color: #94a3b8;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .brand-type-light {
+      font-size: 18px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+    .brand-type-light span { color: #059669; }
+    .sub-type-light {
+      font-size: 8.5px;
+      color: #64748b;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .info-footer h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .info-footer p {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    .traits {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .trait-pill {
+      font-size: 11px;
+      background: #1e293b;
+      color: #cbd5e1;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="badge-top">🇵🇾 IDENTIDADE VISUAL OFICIAL</div>
+    <h1>Opções de Logotipo · PSL LABS</h1>
+    <p class="sub">Desenvolvidos para pureza biotecnológica, autoridade farmacêutica e legibilidade em micro-impressão (38 × 21 mm)</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- OPTION 1: HEXASHIELD -->
+    <div class="logo-card featured">
+      <div>
+        <div class="card-top">
+          <span class="opt-number">Opção 01</span>
+          <span class="featured-tag">⭐ Aplicado no PDF Atual</span>
+        </div>
+
+        <div class="preview-duo">
+          <!-- Dark Box -->
+          <div class="box-dark">
+            <span class="box-label">Fundo Escuro</span>
+            <div class="symbol-svg">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#0f172a" stroke="#2563eb" stroke-width="1.4"/>
+                <path d="M12 5V19M6.5 9L17.5 15M17.5 9L6.5 15" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="3.2" fill="#10b981" stroke="#ffffff" stroke-width="1"/>
+              </svg>
+            </div>
+            <div class="brand-type-dark">PSL <span>LABS</span></div>
+            <div class="sub-type-dark">Paraguay · BioTech</div>
+          </div>
+
+          <!-- Light Box (Label standard) -->
+          <div class="box-light">
+            <span class="box-label">Fundo Claro (Etiqueta)</span>
+            <div class="symbol-svg">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#0f172a" stroke="#1e3a8a" stroke-width="1.4"/>
+                <path d="M12 5V19M6.5 9L17.5 15M17.5 9L6.5 15" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="3.2" fill="#10b981" stroke="#ffffff" stroke-width="1"/>
+              </svg>
+            </div>
+            <div class="brand-type-light">PSL <span>LABS</span></div>
+            <div class="sub-type-light">Paraguay · BioTech</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-footer">
+        <h3>1. HexaShield Biotech (Escudo Molecular)</h3>
+        <p>Combina a geometria do anel hexagonal de benzeno/peptídeo com o escudo de proteção anti-fraude. No centro, o átomo verde representa vitalidade e pureza cromatográfica.</p>
+        <div class="traits">
+          <span class="trait-pill">Proteção & Segurança</span>
+          <span class="trait-pill">Química Peptídica</span>
+          <span class="trait-pill">Contraste Máximo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION 2: BIOHELIX NEXUS -->
+    <div class="logo-card">
+      <div>
+        <div class="card-top">
+          <span class="opt-number">Opção 02</span>
+          <span class="trait-pill" style="background:#1e3a8a; color:#93c5fd;">Genética & Síntese</span>
+        </div>
+
+        <div class="preview-duo">
+          <!-- Dark Box -->
+          <div class="box-dark">
+            <span class="box-label">Fundo Escuro</span>
+            <div class="symbol-svg">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" fill="#0f172a" stroke="#2563eb" stroke-width="1.5"/>
+                <path d="M7.5 18V6H13.5C16 6 17.5 7.6 17.5 9.8C17.5 12 16 13.6 13.5 13.6H7.5" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="13.5" cy="9.8" r="1.8" fill="#ffffff"/>
+                <path d="M6 14L10 10M9 17L13 13" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="brand-type-dark">PSL <span>LABS</span></div>
+            <div class="sub-type-dark">Bioceuticals</div>
+          </div>
+
+          <!-- Light Box -->
+          <div class="box-light">
+            <span class="box-label">Fundo Claro (Etiqueta)</span>
+            <div class="symbol-svg">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" fill="#0f172a" stroke="#2563eb" stroke-width="1.5"/>
+                <path d="M7.5 18V6H13.5C16 6 17.5 7.6 17.5 9.8C17.5 12 16 13.6 13.5 13.6H7.5" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="13.5" cy="9.8" r="1.8" fill="#ffffff"/>
+                <path d="M6 14L10 10M9 17L13 13" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="brand-type-light">PSL <span>LABS</span></div>
+            <div class="sub-type-light">Bioceuticals</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-footer">
+        <h3>2. BioHelix Nexus (Hélice Molecular 'P')</h3>
+        <p>A estrutura de dupla hélice de DNA entrelaçada formando uma letra "P" estilizada com nódulo de síntese celular. Estética altamente inovadora para biotecnologia moderna.</p>
+        <div class="traits">
+          <span class="trait-pill">Precisão Molecular</span>
+          <span class="trait-pill">DNA & Peptídeos</span>
+          <span class="trait-pill">Fluidez Orgânica</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION 3: PARAGUAY LAB FLASK -->
+    <div class="logo-card">
+      <div>
+        <div class="card-top">
+          <span class="opt-number">Opção 03</span>
+          <span class="trait-pill" style="background:#3b0764; color:#d8b4fe;">Padrão Clínico</span>
+        </div>
+
+        <div class="preview-duo">
+          <!-- Dark Box -->
+          <div class="box-dark">
+            <span class="box-label">Fundo Escuro</span>
+            <div class="symbol-svg">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 2H15M10 2V7L4.5 17.5C3.8 18.8 4.7 20.5 6.2 20.5H17.8C19.3 20.5 20.2 18.8 19.5 17.5L14 7V2" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="#1e3a8a"/>
+                <path d="M6.5 15H17.5L18.5 18C18.8 18.8 18.2 19.5 17.4 19.5H6.6C5.8 19.5 5.2 18.8 5.5 18L6.5 15Z" fill="#10b981"/>
+                <circle cx="12" cy="17" r="1.4" fill="#ffffff"/>
+                <circle cx="15.5" cy="16.5" r="0.9" fill="#ffffff"/>
+              </svg>
+            </div>
+            <div class="brand-type-dark">PSL <span>LABS</span></div>
+            <div class="sub-type-dark">Clinical Pharma</div>
+          </div>
+
+          <!-- Light Box -->
+          <div class="box-light">
+            <span class="box-label">Fundo Claro (Etiqueta)</span>
+            <div class="symbol-svg">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 2H15M10 2V7L4.5 17.5C3.8 18.8 4.7 20.5 6.2 20.5H17.8C19.3 20.5 20.2 18.8 19.5 17.5L14 7V2" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="#1e3a8a"/>
+                <path d="M6.5 15H17.5L18.5 18C18.8 18.8 18.2 19.5 17.4 19.5H6.6C5.8 19.5 5.2 18.8 5.5 18L6.5 15Z" fill="#10b981"/>
+                <circle cx="12" cy="17" r="1.4" fill="#ffffff"/>
+                <circle cx="15.5" cy="16.5" r="0.9" fill="#ffffff"/>
+              </svg>
+            </div>
+            <div class="brand-type-light">PSL <span>LABS</span></div>
+            <div class="sub-type-light">Clinical Pharma</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-footer">
+        <h3>3. Lab Flask (Matraz Farmacêutico Analítico)</h3>
+        <p>O clássico frasco Erlenmeyer de pesquisa laboratorial com base em reagente bioativo verde esmeralda. Transmite seriedade analítica e manufatura em ambiente estéril.</p>
+        <div class="traits">
+          <span class="trait-pill">Laboratório Clássico</span>
+          <span class="trait-pill">Rigor Analítico</span>
+          <span class="trait-pill">Tradição Farmacêutica</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION 4: NORDIC MONOGRAM -->
+    <div class="logo-card">
+      <div>
+        <div class="card-top">
+          <span class="opt-number">Opção 04</span>
+          <span class="trait-pill" style="background:#334155; color:#f1f5f9;">Minimalismo Suíço</span>
+        </div>
+
+        <div class="preview-duo">
+          <!-- Dark Box -->
+          <div class="box-dark">
+            <span class="box-label">Fundo Escuro</span>
+            <div class="symbol-svg">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="20" height="20" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.8"/>
+                <text x="12" y="16.5" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="9" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-0.3">PSL</text>
+              </svg>
+            </div>
+            <div class="brand-type-dark">PSL <span>LABS</span></div>
+            <div class="sub-type-dark">Scientific Labs</div>
+          </div>
+
+          <!-- Light Box -->
+          <div class="box-light">
+            <span class="box-label">Fundo Claro (Etiqueta)</span>
+            <div class="symbol-svg">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="20" height="20" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1.8"/>
+                <text x="12" y="16.5" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="9" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-0.3">PSL</text>
+              </svg>
+            </div>
+            <div class="brand-type-light">PSL <span>LABS</span></div>
+            <div class="sub-type-light">Scientific Labs</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-footer">
+        <h3>4. Nordic Monogram (Cápsula Tipográfica)</h3>
+        <p>Design tipográfico purista suíço com micro-borda esmeralda. Máximo impacto em distâncias curtas e leitura rápida sem distrações visuais.</p>
+        <div class="traits">
+          <span class="trait-pill">Tipografia Direta</span>
+          <span class="trait-pill">Padrão Suíço</span>
+          <span class="trait-pill">Ultra Compacto</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
