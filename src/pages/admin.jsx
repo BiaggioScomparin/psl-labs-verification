@@ -791,77 +791,93 @@ export default function AdminPage() {
             {labelsData.labels.map((lbl, idx) => (
               <div
                 key={idx}
-                className="label-cell flex items-center p-1 bg-white border border-slate-200"
+                className="label-cell flex flex-col justify-between p-1 bg-white border border-slate-200 rounded"
                 style={{
                   width: '38.2mm',
                   height: '21.2mm',
                   boxSizing: 'border-box'
                 }}
               >
-                {/* Left QR Column */}
-                <div className="flex flex-col items-center justify-center shrink-0" style={{ width: '15.5mm' }}>
-                  <img
-                    src={lbl.qrDataUrl}
-                    alt="QR"
-                    style={{ width: '13.5mm', height: '13.5mm', display: 'block' }}
-                  />
-                  <div
-                    style={{
-                      fontSize: '4.8pt',
-                      fontFamily: 'monospace',
-                      fontWeight: 'bold',
-                      color: '#0f172a',
-                      marginTop: '0.2mm',
-                      textAlign: 'center'
-                    }}
-                  >
-                    {lbl.code}
+                {/* Top Header: Logo + PSL LABS + Country */}
+                <div className="flex items-center justify-between border-b border-slate-100 pb-0.5" style={{ height: '4.2mm' }}>
+                  <div className="flex items-center gap-1">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#0f172a" stroke="#1e3a8a" strokeWidth="1.2"/>
+                      <path d="M12 6V18M7.5 9.5L16.5 14.5M16.5 9.5L7.5 14.5" stroke="#38bdf8" strokeWidth="1.6" strokeLinecap="round"/>
+                      <circle cx="12" cy="12" r="2.8" fill="#10b981" stroke="#ffffff" strokeWidth="0.8"/>
+                    </svg>
+                    <span style={{ fontSize: '6.4pt', fontWeight: '900', color: '#0f172a', letterSpacing: '-0.2px' }}>
+                      PSL <span style={{ color: '#059669' }}>LABS</span>
+                    </span>
+                  </div>
+                  <span style={{ fontSize: '3.8pt', fontWeight: 'bold', color: '#047857', background: '#ecfdf5', padding: '0.1mm 0.8mm', borderRadius: '0.4mm' }}>
+                    🇵🇾 PY · ASUNCIÓN
+                  </span>
+                </div>
+
+                {/* Body: Reduced QR (9.8mm) + Info */}
+                <div className="flex items-center gap-1 my-auto" style={{ height: '12mm' }}>
+                  <div className="flex flex-col items-center justify-center shrink-0" style={{ width: '10.2mm' }}>
+                    <img
+                      src={lbl.qrDataUrl}
+                      alt="QR"
+                      style={{ width: '9.8mm', height: '9.8mm', display: 'block', borderRadius: '0.2mm' }}
+                    />
+                    <div
+                      style={{
+                        fontSize: '3.8pt',
+                        fontFamily: 'monospace',
+                        fontWeight: 'bold',
+                        color: '#0f172a',
+                        background: '#f8fafc',
+                        border: '0.15mm solid #cbd5e1',
+                        padding: '0.1mm 0.4mm',
+                        borderRadius: '0.3mm',
+                        marginTop: '0.2mm',
+                        textAlign: 'center'
+                      }}
+                    >
+                      {lbl.code}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col justify-between overflow-hidden flex-1" style={{ height: '100%', paddingLeft: '0.4mm' }}>
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span style={{ fontSize: '7pt', fontWeight: '900', color: '#0f172a', letterSpacing: '-0.2px' }}>
+                          {lbl.productName}
+                        </span>
+                        <span style={{ fontSize: '4.8pt', fontWeight: '900', background: '#1e3a8a', color: '#ffffff', padding: '0.2mm 1mm', borderRadius: '0.4mm' }}>
+                          50 MG
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '3.3pt', color: '#64748b', fontWeight: '600' }}>
+                        Copper Tripeptide-1 · &gt;99% Pure
+                      </div>
+                    </div>
+
+                    <div style={{ fontSize: '3.8pt', color: '#334155', background: '#f8fafc', border: '0.15mm solid #e2e8f0', borderRadius: '0.4mm', padding: '0.2mm 0.5mm', lineHeight: '1.2' }}>
+                      <div>LOTE: <strong style={{ color: '#0f172a' }}>{lbl.batchNumber}</strong></div>
+                      <div>FAB: <strong>{lbl.mfgDate}</strong> · VAL: <strong>{lbl.expDate}</strong></div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Right Info Column */}
+                {/* Bottom Security Strip */}
                 <div
-                  className="flex flex-col justify-between overflow-hidden"
+                  className="flex items-center justify-center gap-1"
                   style={{
-                    width: '21.5mm',
-                    height: '100%',
-                    paddingLeft: '1mm',
-                    boxSizing: 'border-box'
+                    height: '2.8mm',
+                    background: 'linear-gradient(90deg, #f0fdf4 0%, #eff6ff 100%)',
+                    border: '0.15mm solid #bbf7d0',
+                    borderRadius: '0.4mm',
+                    fontSize: '3.2pt',
+                    fontWeight: '800',
+                    color: '#15803d',
+                    textTransform: 'uppercase'
                   }}
                 >
-                  {/* Brand & Flag */}
-                  <div className="flex items-center justify-between">
-                    <span style={{ fontSize: '6.8pt', fontWeight: '900', color: '#0f172a', letterSpacing: '-0.2px' }}>
-                      PSL LABS
-                    </span>
-                    <span style={{ fontSize: '4.5pt', fontWeight: 'bold', color: '#059669' }}>
-                      🇵🇾 PY
-                    </span>
-                  </div>
-
-                  {/* Product Name */}
-                  <div style={{ fontSize: '6.2pt', fontWeight: 'bold', color: '#1e3a8a', lineHeight: '1.1' }}>
-                    {lbl.productName}
-                  </div>
-
-                  {/* Batch & Dates */}
-                  <div
-                    style={{
-                      fontSize: '4.2pt',
-                      color: '#334155',
-                      lineHeight: '1.15',
-                      borderLeft: '0.3mm solid #cbd5e1',
-                      paddingLeft: '0.8mm'
-                    }}
-                  >
-                    <div>L:{lbl.batchNumber}</div>
-                    <div>F:{lbl.mfgDate} | V:{lbl.expDate}</div>
-                  </div>
-
-                  {/* Security Note */}
-                  <div style={{ fontSize: '3.6pt', fontWeight: 'bold', color: '#2563eb', textTransform: 'uppercase' }}>
-                    VERIFICAR AUTENTICIDADE
-                  </div>
+                  🔒 ESCANEIE O QR CODE PARA VERIFICAR AUTENTICIDADE
                 </div>
               </div>
             ))}
