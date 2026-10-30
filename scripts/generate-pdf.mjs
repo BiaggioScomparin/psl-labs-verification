@@ -64,7 +64,7 @@ async function generate() {
     batch: "LOT-2026-01",
     mfg: "10/2026",
     exp: "10/2028",
-    baseUrl: "https://psl-labs.vercel.app"
+    baseUrl: "https://psl-labs-verification.vercel.app"
   };
 
   const labels = [];
