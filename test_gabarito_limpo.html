@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Teste Gabarito Limpo Spiral A4351</title>
+  <style>
+    @page {
+      size: 210mm 297mm;
+      margin: 0;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      background: #f8fafc;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .sheet {
+      width: 210mm;
+      height: 297mm;
+      padding-top: 10.7mm;
+      padding-bottom: 10.7mm;
+      padding-left: 4.5mm;
+      padding-right: 4.5mm;
+      margin: 0 auto;
+      background: #ffffff;
+      display: grid;
+      grid-template-columns: 38.2mm 2.5mm 38.2mm 2.5mm 38.2mm 2.5mm 38.2mm 2.5mm 38.2mm;
+      grid-template-rows: repeat(13, 21.2mm);
+    }
+    .col-gap {
+      width: 2.5mm;
+      height: 21.2mm;
+    }
+    .label {
+      width: 38.2mm;
+      height: 21.2mm;
+      max-height: 21.2mm;
+      overflow: hidden;
+      padding: 1.2mm 1.5mm;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      /* Guia de corte pontilhada ultra discreta para teste visual */
+      outline: 0.1mm dashed #cbd5e1;
+      outline-offset: -0.1mm;
+      background: #ffffff;
+    }
+    .left-side {
+      width: 11.5mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .qr-img {
+      width: 10mm;
+      height: 10mm;
+      display: block;
+    }
+    .code-txt {
+      font-size: 4.2pt;
+      font-family: "Courier New", monospace;
+      font-weight: bold;
+      color: #0f172a;
+      margin-top: 0.4mm;
+      text-align: center;
+      letter-spacing: -0.2px;
+    }
+    .right-side {
+      width: 23mm;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-left: 1mm;
+      overflow: hidden;
+      text-align: left;
+    }
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8mm;
+      line-height: 1;
+    }
+    .brand-title {
+      font-size: 6.5pt;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.2px;
+    }
+    .brand-title span { color: #059669; }
+    .py-tag {
+      font-size: 4pt;
+      font-weight: 800;
+      color: #047857;
+      margin-left: auto;
+    }
+    .prod-name {
+      font-size: 6.8pt;
+      font-weight: 900;
+      color: #1e3a8a;
+      line-height: 1.1;
+      letter-spacing: -0.2px;
+      margin-top: 0.3mm;
+    }
+    .meta-data {
+      font-size: 4.2pt;
+      color: #334155;
+      font-weight: 600;
+      line-height: 1.25;
+      margin-top: 0.3mm;
+    }
+    .meta-data strong {
+      color: #0f172a;
+      font-weight: 800;
+    }
+    .verify-note {
+      font-size: 3.6pt;
+      font-weight: 800;
+      color: #059669;
+      text-transform: uppercase;
+      letter-spacing: 0.1px;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="label">
+      <div class="left-side">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://psl-labs-verification.vercel.app/v/GHK50-TEST&color=0f172a" class="qr-img" alt="QR" />
+        <div class="code-txt">GHK50-8F92K</div>
+      </div>
+      <div class="right-side">
+        <div class="brand-row">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#0f172a" stroke="#1e3a8a" stroke-width="1.2"/>
+            <path d="M12 6V18M7.5 9.5L16.5 14.5M16.5 9.5L7.5 14.5" stroke="#38bdf8" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="2.8" fill="#10b981" stroke="#ffffff" stroke-width="0.8"/>
+          </svg>
+          <span class="brand-title">PSL <span>LABS</span></span>
+          <span class="py-tag">🇵🇾 PY</span>
+        </div>
+        <div class="prod-name">GHK CU 50 MG</div>
+        <div class="meta-data">
+          <div>LOTE: <strong>LOT-2026-01</strong></div>
+          <div>FAB: <strong>10/26</strong> · VAL: <strong>10/28</strong></div>
+        </div>
+        <div class="verify-note">✓ Verificar Autenticidade</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
