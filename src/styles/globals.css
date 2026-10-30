@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+}
+
+/* Spiral A4351 Print Stylesheet */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .sheet-container {
+    width: 210mm !important;
+    height: 297mm !important;
+    padding: 10.7mm 4.5mm !important;
+    box-sizing: border-box !important;
+    page-break-after: always !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, 38.2mm) !important;
+    grid-column-gap: 2.5mm !important;
+    grid-template-rows: repeat(13, 21.2mm) !important;
+    grid-row-gap: 0mm !important;
+  }
+
+  .label-cell {
+    width: 38.2mm !important;
+    height: 21.2mm !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+  }
+}

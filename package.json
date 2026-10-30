@@ -1,0 +1,23 @@
+{
+  "name": "psl-labs-verification",
+  "version": "1.0.0",
+  "description": "PSL LABS Paraguay - Sistema de Verificação de Autenticidade e Gerador de Etiquetas Spiral A4351",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "generate:pdf": "node scripts/generate-pdf.js"
+  },
+  "dependencies": {
+    "lucide-react": "^1.64.0",
+    "next": "14.2.15",
+    "qrcode": "^1.5.4",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14"
+  }
+}
