@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import QRCameraScanner from '../components/QRCameraScanner';
 import { useLanguage } from '../context/LanguageContext';
 import { 
   ShieldCheck, 
   QrCode, 
   Search, 
+  Camera,
   Sparkles, 
   CheckCircle2, 
   AlertTriangle, 
@@ -21,6 +23,7 @@ export default function Home() {
   const { lang, t } = useLanguage();
   const [inputCode, setInputCode] = useState('');
   const [products, setProducts] = useState([]);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -88,6 +91,25 @@ export default function Home() {
                 </button>
               </form>
 
+              {/* Instant Camera Scanner Button */}
+              <div className="mt-4 pt-4 border-t border-slate-800/80">
+                <button
+                  type="button"
+                  onClick={() => setIsCameraOpen(true)}
+                  className="w-full bg-slate-800/90 hover:bg-slate-750 border border-emerald-500/40 hover:border-emerald-500 text-white font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2.5 transition group cursor-pointer shadow-sm shadow-emerald-950/30"
+                >
+                  <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Camera className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm font-semibold tracking-wide">
+                    {lang === 'py' ? 'Abrir Cámara para Escanear QR' : 'Abrir Câmera para Ler QR Code'}
+                  </span>
+                  <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full font-bold ml-1">
+                    CÂMERA
+                  </span>
+                </button>
+              </div>
+
               <div className="mt-4 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
                 <span>{t.hero.helperText}</span>
                 <div className="flex items-center gap-2">
@@ -108,6 +130,12 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            {/* QR Camera Scanner Modal */}
+            <QRCameraScanner
+              isOpen={isCameraOpen}
+              onClose={() => setIsCameraOpen(false)}
+            />
 
             {/* Trust Seals */}
             <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">

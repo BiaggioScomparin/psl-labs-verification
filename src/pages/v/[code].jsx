@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import QRCameraScanner from '../../components/QRCameraScanner';
 import { useLanguage } from '../../context/LanguageContext';
 import { 
   ShieldCheck, 
@@ -17,7 +18,8 @@ import {
   ArrowLeft,
   RefreshCw,
   Clock,
-  Sparkles
+  Sparkles,
+  Camera
 } from 'lucide-react';
 
 export default function VerificationPage() {
@@ -28,6 +30,7 @@ export default function VerificationPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
   const [error, setError] = useState(false);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   useEffect(() => {
     if (!code) return;
@@ -81,14 +84,24 @@ export default function VerificationPage() {
 
       <main className="flex-grow py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
         
-        {/* Back Link */}
-        <button
-          onClick={() => router.push('/')}
-          className="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-emerald-400 mb-8 transition cursor-pointer"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Voltar ao Início</span>
-        </button>
+        {/* Top Navigation Row */}
+        <div className="flex items-center justify-between mb-8">
+          <button
+            onClick={() => router.push('/')}
+            className="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-emerald-400 transition cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Voltar ao Início</span>
+          </button>
+
+          <button
+            onClick={() => setIsCameraOpen(true)}
+            className="inline-flex items-center gap-1.5 text-xs bg-slate-900 hover:bg-slate-800 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl transition cursor-pointer shadow-sm"
+          >
+            <Camera className="w-3.5 h-3.5" />
+            <span>Escanear Outro QR</span>
+          </button>
+        </div>
 
         {loading ? (
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 text-center shadow-2xl">
@@ -309,8 +322,17 @@ export default function VerificationPage() {
                   <span>{t.status.viewCOA}</span>
                 </a>
 
-                <div className="text-xs text-slate-500">
-                  Fabricante: <strong>PSL LABS Paraguay S.A.</strong>
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => setIsCameraOpen(true)}
+                    className="inline-flex items-center gap-1.5 text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl transition cursor-pointer shadow-sm"
+                  >
+                    <Camera className="w-3.5 h-3.5" />
+                    <span>Escanear Outro Produto</span>
+                  </button>
+                  <div className="text-xs text-slate-500 hidden sm:block">
+                    Fabricante: <strong>PSL LABS Paraguay S.A.</strong>
+                  </div>
                 </div>
               </div>
 
@@ -319,6 +341,11 @@ export default function VerificationPage() {
           </div>
         )}
 
+        {/* Camera Scanner Modal */}
+        <QRCameraScanner
+          isOpen={isCameraOpen}
+          onClose={() => setIsCameraOpen(false)}
+        />
       </main>
 
       <Footer />
