@@ -113,7 +113,7 @@ export default function Home() {
               <div className="mt-4 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
                 <span>{t.hero.helperText}</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-slate-500">Exemplos rápidos:</span>
+                  <span className="text-slate-500">{lang === 'py' ? 'Ejemplos rápidos:' : 'Exemplos rápidos:'}</span>
                   <button
                     onClick={() => router.push('/v/PSL-TEST-ORIGINAL')}
                     className="text-emerald-400 hover:underline cursor-pointer"
@@ -125,7 +125,7 @@ export default function Home() {
                     onClick={() => router.push('/v/PSL-TEST-CLONED')}
                     className="text-amber-400 hover:underline cursor-pointer"
                   >
-                    Alerta de Clonagem
+                    {lang === 'py' ? 'Alerta de Clonación' : 'Alerta de Clonagem'}
                   </button>
                 </div>
               </div>
@@ -141,19 +141,19 @@ export default function Home() {
             <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
               <div className="p-4 rounded-xl bg-slate-900/50 border border-slate-800">
                 <div className="text-emerald-400 font-extrabold text-xl mb-1">&gt; 99%</div>
-                <div className="text-xs text-slate-400">Pureza HPLC Certificada</div>
+                <div className="text-xs text-slate-400">{lang === 'py' ? 'Pureza HPLC Certificada' : 'Pureza HPLC Certificada'}</div>
               </div>
               <div className="p-4 rounded-xl bg-slate-900/50 border border-slate-800">
                 <div className="text-emerald-400 font-extrabold text-xl mb-1">Unitário</div>
-                <div className="text-xs text-slate-400">QR Code Único por Frasco</div>
+                <div className="text-xs text-slate-400">{lang === 'py' ? 'QR Code Único por Frasco' : 'QR Code Único por Frasco'}</div>
               </div>
               <div className="p-4 rounded-xl bg-slate-900/50 border border-slate-800">
                 <div className="text-emerald-400 font-extrabold text-xl mb-1">A4351</div>
-                <div className="text-xs text-slate-400">Padrão Spiral 65 Etiquetas</div>
+                <div className="text-xs text-slate-400">{lang === 'py' ? 'Norma Spiral 65 Etiquetas' : 'Padrão Spiral 65 Etiquetas'}</div>
               </div>
               <div className="p-4 rounded-xl bg-slate-900/50 border border-slate-800">
                 <div className="text-emerald-400 font-extrabold text-xl mb-1">🇵🇾 PY</div>
-                <div className="text-xs text-slate-400">Asunción & Ciudad del Este</div>
+                <div className="text-xs text-slate-400">Asunción &amp; Ciudad del Este</div>
               </div>
             </div>
 
@@ -166,7 +166,7 @@ export default function Home() {
             <div className="text-center max-w-3xl mx-auto mb-16">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3">
                 <FlaskConical className="w-3.5 h-3.5" />
-                <span>Portfólio Farmacêutico</span>
+                <span>{lang === 'py' ? 'Portafolio Farmacéutico' : 'Portfólio Farmacêutico'}</span>
               </div>
               <h2 className="text-3xl font-extrabold text-white mb-4">
                 {t.products.title}
@@ -202,7 +202,7 @@ export default function Home() {
                         
                         {isMainGHK && (
                           <div className="absolute top-3 left-3 bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow">
-                            ⭐ Produto Destaque
+                            {lang === 'py' ? '⭐ Producto Destacado' : '⭐ Produto Destaque'}
                           </div>
                         )}
                         <div className="absolute top-3 right-3 bg-slate-900/90 border border-slate-700 text-slate-200 text-xs font-mono px-2.5 py-1 rounded-lg">
@@ -227,15 +227,15 @@ export default function Home() {
 
                         <div className="space-y-2 border-t border-slate-800 pt-4 text-xs text-slate-400">
                           <div className="flex justify-between">
-                            <span>Pureza:</span>
+                            <span>{lang === 'py' ? 'Pureza:' : 'Pureza:'}</span>
                             <span className="text-emerald-400 font-bold">{p.purity}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Apresentação:</span>
+                            <span>{lang === 'py' ? 'Presentación:' : 'Apresentação:'}</span>
                             <span className="text-slate-200">{p.presentation}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Anti-Clonagem:</span>
+                            <span>{lang === 'py' ? 'Anti-Clonación:' : 'Anti-Clonagem:'}</span>
                             <span className="text-emerald-400">QR Code Criptográfico</span>
                           </div>
                         </div>
