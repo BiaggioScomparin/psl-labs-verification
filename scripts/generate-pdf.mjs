@@ -19,15 +19,15 @@ if (fs.existsSync(dbPath)) {
   db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
 }
 
-// HexaShield Biotech Vector Logo (Compact & Crisp)
+// HexaShield Biotech Vector Logo
 const LOGO_HEXASHIELD = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; flex-shrink:0;">
-  <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#0f172a" stroke="#1e3a8a" stroke-width="1.2"/>
+  <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#000000" stroke="#1e3a8a" stroke-width="1.2"/>
   <path d="M12 6V18M7.5 9.5L16.5 14.5M16.5 9.5L7.5 14.5" stroke="#38bdf8" stroke-width="1.6" stroke-linecap="round"/>
   <circle cx="12" cy="12" r="2.8" fill="#10b981" stroke="#ffffff" stroke-width="0.8"/>
 </svg>`;
 
 async function generate() {
-  console.log("📐 Gerando Gabarito Perfeito Spiral A4351 com layout limpo e margem de segurança...");
+  console.log("⚡ Gerando QR Codes OTIMIZADOS de ALTA LEITURA (12.2mm, Margem de Silêncio e Preto Puro)...");
 
   const product = {
     brand: "PSL LABS",
@@ -59,13 +59,16 @@ async function generate() {
       status: "active"
     };
 
-    // Generate high-contrast, clean 10mm vector QR code
+    // ULTRA READABLE QR CODE CONFIGURATION:
+    // 1. margin: 2 (Quiet Zone indispensável para a câmera do celular focar instantaneamente)
+    // 2. width: 360 (Alta definição para evitar qualquer serrilhado na impressão da Canon)
+    // 3. dark: '#000000' (Preto 100% puro para acionar o cartucho preto pigmentado da impressora)
     const qrDataUrl = await QRCode.toDataURL(verifyUrl, {
-      margin: 0,
-      width: 110,
+      margin: 2,
+      width: 360,
       errorCorrectionLevel: 'M',
       color: {
-        dark: '#0f172a',
+        dark: '#000000',
         light: '#ffffff'
       }
     });
@@ -80,22 +83,12 @@ async function generate() {
   // Update db.json
   fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf8');
 
-  // BUILD THE ROCK-SOLID SPIRAL A4351 HTML TEMPLATE
-  // Dimensions specifications:
-  // Sheet: A4 (210mm x 297mm)
-  // Margem Superior: 10.7mm
-  // Margem Inferior: 10.7mm
-  // Margem Esquerda: 4.5mm
-  // Margem Direita: 4.5mm
-  // 5 colunas de 38.2mm com gap horizontal de 2.5mm:
-  // 4.5 + (5 * 38.2) + (4 * 2.5) + 4.5 = 4.5 + 191 + 10 + 4.5 = 210.0mm (Exato!)
-  // 13 linhas de 21.2mm sem gap vertical:
-  // 10.7 + (13 * 21.2) + 10.7 = 10.7 + 275.6 + 10.7 = 297.0mm (Exato!)
+  // GABARITO MILIMÉTRICO SPIRAL A4351
   const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <title>PSL LABS - Gabarito Limpo Spiral A4351</title>
+  <title>PSL LABS - QR Codes de Alta Leitura Spiral A4351</title>
   <style>
     @page {
       size: 210mm 297mm;
@@ -116,7 +109,6 @@ async function generate() {
       overflow: hidden;
     }
     
-    /* GABARITO DA FOLHA A4 */
     .sheet-grid {
       width: 210mm;
       height: 297mm;
@@ -130,31 +122,27 @@ async function generate() {
       page-break-after: always;
     }
 
-    /* ESPAÇO ENTRE AS COLUNAS (2.5mm) */
     .gap-col {
       width: 2.5mm;
       height: 21.2mm;
     }
 
-    /* ETIQUETA UNITÁRIA (38.2mm x 21.2mm) */
     .label-cell {
       width: 38.2mm;
       height: 21.2mm;
       max-height: 21.2mm;
       overflow: hidden;
-      /* Margem de respiro interna de segurança: 1.2mm vertical, 1.4mm horizontal */
-      padding: 1.2mm 1.4mm;
+      padding: 1.0mm 1.2mm;
       display: flex;
       align-items: center;
       justify-content: space-between;
       background: #ffffff;
-      /* Linha pontilhada ultra suave de calibragem (quase invisível) */
-      border: 0.05mm dotted #e2e8f0;
+      border: 0.05mm dotted #f1f5f9;
     }
 
-    /* COLUNA DA ESQUERDA: QR CODE (10mm) + CÓDIGO UNITÁRIO */
+    /* COLUNA DO QR CODE AUMENTADA PARA 12.2mm */
     .col-qr {
-      width: 11.2mm;
+      width: 13.0mm;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -162,34 +150,35 @@ async function generate() {
       flex-shrink: 0;
     }
     .qr-img {
-      width: 9.8mm;
-      height: 9.8mm;
+      width: 12.2mm;
+      height: 12.2mm;
       display: block;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
     }
     .serial-text {
       font-size: 3.8pt;
       font-family: "Courier New", Courier, monospace;
-      font-weight: 800;
-      color: #0f172a;
+      font-weight: 900;
+      color: #000000;
       letter-spacing: -0.2px;
       margin-top: 0.3mm;
       text-align: center;
       white-space: nowrap;
     }
 
-    /* COLUNA DA DIREITA: LOGO + GHK CU 50 MG + LOTE/VAL */
+    /* COLUNA DA DIREITA */
     .col-info {
-      width: 23.2mm;
+      width: 22.2mm;
       height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding-left: 0.8mm;
+      padding-left: 0.6mm;
       overflow: hidden;
       text-align: left;
     }
 
-    /* Linha 1: Logo + PSL LABS + Bandeira */
     .row-brand {
       display: flex;
       align-items: center;
@@ -199,7 +188,7 @@ async function generate() {
     .brand-title {
       font-size: 6.2pt;
       font-weight: 900;
-      color: #0f172a;
+      color: #000000;
       letter-spacing: -0.2px;
     }
     .brand-title span {
@@ -212,7 +201,6 @@ async function generate() {
       margin-left: auto;
     }
 
-    /* Linha 2: Nome do Produto em Destaque */
     .row-product {
       font-size: 7.2pt;
       font-weight: 900;
@@ -222,22 +210,20 @@ async function generate() {
       margin-top: 0.2mm;
     }
 
-    /* Linha 3: Informações do Lote e Validade */
     .row-meta {
-      font-size: 4pt;
+      font-size: 3.9pt;
       font-weight: 600;
       color: #334155;
       line-height: 1.25;
       margin-top: 0.2mm;
     }
     .row-meta strong {
-      color: #0f172a;
+      color: #000000;
       font-weight: 800;
     }
 
-    /* Linha 4: Chamada de Autenticidade */
     .row-security {
-      font-size: 3.4pt;
+      font-size: 3.3pt;
       font-weight: 800;
       color: #059669;
       text-transform: uppercase;
@@ -256,13 +242,13 @@ async function generate() {
           const lbl = labels[idx];
           cells += `
             <div class="label-cell">
-              <!-- LADO ESQUERDO: QR CODE + CÓDIGO -->
+              <!-- QR CODE 12.2mm COM MARGEM DE SILÊNCIO -->
               <div class="col-qr">
                 <img src="${lbl.qrDataUrl}" class="qr-img" alt="QR" />
                 <div class="serial-text">${lbl.code}</div>
               </div>
 
-              <!-- LADO DIREITO: INFORMAÇÕES DO PRODUTO -->
+              <!-- DADOS DO PRODUTO -->
               <div class="col-info">
                 <div class="row-brand">
                   ${LOGO_HEXASHIELD}
@@ -282,7 +268,6 @@ async function generate() {
             </div>
           `;
 
-          // Add horizontal gap column (2.5mm) after columns 0, 1, 2, 3
           if (col < 4) {
             cells += `<div class="gap-col"></div>`;
           }
@@ -297,9 +282,8 @@ async function generate() {
   fs.writeFileSync(outputHtmlPath, html, 'utf8');
   console.log(`✓ HTML atualizado em: ${outputHtmlPath}`);
 
-  // COMPILE WITH EDGE HEADLESS TO PDF
   if (fs.existsSync(edgePath)) {
-    console.log("Compilando novo PDF vetorial com Microsoft Edge...");
+    console.log("Compilando novo PDF vetorial otimizado com Microsoft Edge...");
     const fileUri = `file:///${outputHtmlPath.replace(/\\/g, '/')}`;
 
     execFile(edgePath, [
