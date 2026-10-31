@@ -1,4 +1,4 @@
-import { getProducts, addProduct } from '../../../lib/db';
+import { getProducts, addProduct, updateProduct } from '../../../lib/db';
 
 export default function handler(req, res) {
   if (req.method === 'GET') {
@@ -31,6 +31,35 @@ export default function handler(req, res) {
 
     addProduct(newProduct);
     return res.status(201).json(newProduct);
+  }
+
+  if (req.method === 'PUT') {
+    const { id, name, chemicalName, category, concentration, purity, presentation, description_py, description_pt, storage_py, storage_pt, image, active } = req.body;
+    
+    if (!id) {
+      return res.status(400).json({ error: 'ID do produto é obrigatório para atualização' });
+    }
+
+    const updated = updateProduct(id, {
+      name,
+      chemicalName,
+      category,
+      concentration,
+      purity,
+      presentation,
+      description_py,
+      description_pt,
+      storage_py,
+      storage_pt,
+      image,
+      active: active !== undefined ? active : true
+    });
+
+    if (!updated) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
+
+    return res.status(200).json(updated);
   }
 
   return res.status(405).json({ error: 'Method not allowed' });

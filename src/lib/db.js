@@ -67,6 +67,22 @@ export function addProduct(newProduct) {
   return newProduct;
 }
 
+export function updateProduct(id, updatedFields) {
+  const db = loadDb();
+  db.products = db.products || [];
+  const index = db.products.findIndex(p => p.id === id);
+  if (index === -1) return null;
+
+  db.products[index] = {
+    ...db.products[index],
+    ...updatedFields,
+    id // preserve id
+  };
+
+  saveDb(db);
+  return db.products[index];
+}
+
 export function getBatches() {
   const db = loadDb();
   return db.batches || [];

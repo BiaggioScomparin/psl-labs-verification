@@ -12,11 +12,15 @@ import {
   RefreshCw, 
   Database, 
   FileText, 
-  QrCode,
-  TrendingUp,
-  FlaskConical,
-  ExternalLink,
-  Download
+  QrCode, 
+  TrendingUp, 
+  FlaskConical, 
+  ExternalLink, 
+  Download,
+  Edit3,
+  Image as ImageIcon,
+  Upload,
+  X
 } from 'lucide-react';
 
 export default function AdminPage() {
@@ -30,7 +34,10 @@ export default function AdminPage() {
   const [batches, setBatches] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // New product form
+  // Editing state
+  const [editingProductId, setEditingProductId] = useState(null);
+
+  // Product form
   const [prodForm, setProdForm] = useState({
     name: '',
     chemicalName: '',
@@ -38,6 +45,7 @@ export default function AdminPage() {
     concentration: '',
     purity: '99.2% (HPLC)',
     presentation: 'Frasco Vial Liofilizado',
+    image: '',
     description_py: '',
     description_pt: '',
     storage_py: 'Conservar refrigerado a 2°C - 8°C.',
@@ -106,7 +114,61 @@ export default function AdminPage() {
     }
   };
 
-  const handleCreateProduct = async (e) => {
+  const handleImageUpload = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("A imagem deve ter no máximo 5MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setProdForm(prev => ({ ...prev, image: event.target.result }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleStartEditProduct = (p) => {
+    setEditingProductId(p.id);
+    setProdForm({
+      name: p.name || '',
+      chemicalName: p.chemicalName || '',
+      category: p.category || 'Peptídeos & Longevidade',
+      concentration: p.concentration || '',
+      purity: p.purity || '99.2% (HPLC)',
+      presentation: p.presentation || 'Frasco Vial Liofilizado',
+      image: p.image || '',
+      description_py: p.description_py || '',
+      description_pt: p.description_pt || '',
+      storage_py: p.storage_py || 'Conservar refrigerado a 2°C - 8°C.',
+      storage_pt: p.storage_pt || 'Conservar refrigerado a 2°C - 8°C.'
+    });
+
+    // Scroll smoothly to form
+    const el = document.getElementById('product-form-box');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingProductId(null);
+    setProdForm({
+      name: '',
+      chemicalName: '',
+      category: 'Peptídeos & Longevidade',
+      concentration: '',
+      purity: '99.2% (HPLC)',
+      presentation: 'Frasco Vial Liofilizado',
+      image: '',
+      description_py: '',
+      description_pt: '',
+      storage_py: 'Conservar refrigerado a 2°C - 8°C.',
+      storage_pt: 'Conservar refrigerado a 2°C - 8°C.'
+    });
+  };
+
+  const handleSaveProduct = async (e) => {
     e.preventDefault();
     if (!prodForm.name || !prodForm.concentration) {
       alert("Preencha o nome e a concentração do produto");
@@ -114,29 +176,26 @@ export default function AdminPage() {
     }
 
     try {
+      const isEditing = !!editingProductId;
+      const method = isEditing ? 'PUT' : 'POST';
+      const payload = isEditing ? { id: editingProductId, ...prodForm } : prodForm;
+
       const res = await fetch('/api/admin/products', {
-        method: 'POST',
+        method: method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(prodForm)
+        body: JSON.stringify(payload)
       });
+
       if (res.ok) {
-        alert("Produto adicionado com sucesso!");
-        setProdForm({
-          name: '',
-          chemicalName: '',
-          category: 'Peptídeos & Longevidade',
-          concentration: '',
-          purity: '99.2% (HPLC)',
-          presentation: 'Frasco Vial Liofilizado',
-          description_py: '',
-          description_pt: '',
-          storage_py: 'Conservar refrigerado a 2°C - 8°C.',
-          storage_pt: 'Conservar refrigerado a 2°C - 8°C.'
-        });
+        alert(isEditing ? "Produto e imagem atualizados com sucesso!" : "Produto cadastrado com sucesso!");
+        handleCancelEdit();
         loadData();
+      } else {
+        const errData = await res.json();
+        alert(errData.error || "Erro ao salvar produto");
       }
     } catch (err) {
-      alert("Erro ao criar produto");
+      alert("Erro ao comunicar com o servidor");
     }
   };
 
@@ -615,14 +674,43 @@ export default function AdminPage() {
         {activeTab === 'products' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            {/* Create Product Form */}
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6">
-              <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-                <Plus className="w-4 h-4 text-emerald-400" />
-                <span>Adicionar Novo Produto</span>
-              </h2>
+            {/* Create / Edit Product Form */}
+            <div id="product-form-box" className="bg-slate-900 border border-slate-800 rounded-3xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                  {editingProductId ? (
+                    <>
+                      <Edit3 className="w-4 h-4 text-amber-400" />
+                      <span>Editar Produto</span>
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4 text-emerald-400" />
+                      <span>Adicionar Novo Produto</span>
+                    </>
+                  )}
+                </h2>
 
-              <form onSubmit={handleCreateProduct} className="space-y-3">
+                {editingProductId && (
+                  <button
+                    type="button"
+                    onClick={handleCancelEdit}
+                    className="text-xs text-slate-400 hover:text-white bg-slate-800 px-2.5 py-1 rounded-lg flex items-center gap-1 transition"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    <span>Cancelar</span>
+                  </button>
+                )}
+              </div>
+
+              {editingProductId && (
+                <div className="mb-4 p-2.5 bg-amber-950/40 border border-amber-800/60 rounded-xl text-xs text-amber-300 flex items-center gap-2">
+                  <span className="font-bold">Editando:</span>
+                  <span className="truncate">{prodForm.name}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleSaveProduct} className="space-y-3.5">
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1">
                     Nome Comercial
@@ -631,24 +719,38 @@ export default function AdminPage() {
                     type="text"
                     value={prodForm.name}
                     onChange={(e) => setProdForm({ ...prodForm, name: e.target.value })}
-                    placeholder="Ex: BPC-157 10 MG"
+                    placeholder="Ex: GHK CU 50 MG"
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
                     required
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Concentração
-                  </label>
-                  <input
-                    type="text"
-                    value={prodForm.concentration}
-                    onChange={(e) => setProdForm({ ...prodForm, concentration: e.target.value })}
-                    placeholder="Ex: 50 MG ou 10 MG"
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
-                    required
-                  />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Concentração
+                    </label>
+                    <input
+                      type="text"
+                      value={prodForm.concentration}
+                      onChange={(e) => setProdForm({ ...prodForm, concentration: e.target.value })}
+                      placeholder="Ex: 50 MG"
+                      className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Pureza HPLC
+                    </label>
+                    <input
+                      type="text"
+                      value={prodForm.purity}
+                      onChange={(e) => setProdForm({ ...prodForm, purity: e.target.value })}
+                      placeholder="Ex: 99.4% (HPLC)"
+                      className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -659,7 +761,75 @@ export default function AdminPage() {
                     type="text"
                     value={prodForm.chemicalName}
                     onChange={(e) => setProdForm({ ...prodForm, chemicalName: e.target.value })}
-                    placeholder="Ex: Body Protection Compound-157"
+                    placeholder="Ex: Copper Tripeptide-1"
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
+                  />
+                </div>
+
+                {/* FOTO DO PRODUTO (Upload ou URL) */}
+                <div className="p-3 bg-slate-950 border border-slate-800 rounded-2xl space-y-2.5">
+                  <label className="block text-xs font-bold text-emerald-400 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <ImageIcon className="w-3.5 h-3.5" />
+                      <span>Foto do Produto</span>
+                    </span>
+                    {prodForm.image && (
+                      <button
+                        type="button"
+                        onClick={() => setProdForm({ ...prodForm, image: '' })}
+                        className="text-[10px] text-red-400 hover:underline"
+                      >
+                        Remover Foto
+                      </button>
+                    )}
+                  </label>
+
+                  {/* Preview da foto se existir */}
+                  {prodForm.image && (
+                    <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-700 bg-slate-900">
+                      <img
+                        src={prodForm.image}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+
+                  {/* Botão de Upload de Arquivo */}
+                  <div>
+                    <label className="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-600 rounded-xl px-3 py-2 text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition">
+                      <Upload className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Carregar Foto do Computador / Celular</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+
+                  {/* Ou input de URL direta */}
+                  <div>
+                    <input
+                      type="url"
+                      value={prodForm.image}
+                      onChange={(e) => setProdForm({ ...prodForm, image: e.target.value })}
+                      placeholder="Ou cole a URL direta da imagem (https://...)"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-[11px] text-slate-300 placeholder-slate-600"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                    Descripción (Español - PY)
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={prodForm.description_py}
+                    onChange={(e) => setProdForm({ ...prodForm, description_py: e.target.value })}
+                    placeholder="Descripción del producto para clientes paraguayos..."
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
                   />
                 </div>
@@ -677,51 +847,74 @@ export default function AdminPage() {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">
-                    Descripción (Español - PY)
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={prodForm.description_py}
-                    onChange={(e) => setProdForm({ ...prodForm, description_py: e.target.value })}
-                    placeholder="Descripción del producto para clientes paraguayos..."
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
-                  />
-                </div>
+                <div className="flex gap-2 pt-2">
+                  <button
+                    type="submit"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-emerald-950/40"
+                  >
+                    {editingProductId ? "Salvar Alterações do Produto" : "Salvar Produto no Catálogo"}
+                  </button>
 
-                <button
-                  type="submit"
-                  className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer"
-                >
-                  Salvar Produto no Catálogo
-                </button>
+                  {editingProductId && (
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-3 rounded-xl text-xs transition cursor-pointer"
+                    >
+                      Cancelar
+                    </button>
+                  )}
+                </div>
               </form>
             </div>
 
             {/* List Existing Products */}
             <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-6">
-              <h2 className="text-base font-bold text-white mb-4">Catálogo Ativo</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-base font-bold text-white">Catálogo de Produtos Cadastrados</h2>
+                <span className="text-xs text-slate-400">Total: {products.length} itens</span>
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {products.map((p) => (
-                  <div
-                    key={p.id}
-                    className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex gap-4"
-                  >
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      className="w-16 h-16 rounded-xl object-cover bg-slate-900 shrink-0"
-                    />
-                    <div className="overflow-hidden">
-                      <div className="text-[10px] text-emerald-400 font-bold uppercase">{p.category}</div>
-                      <div className="font-bold text-white text-sm truncate">{p.name}</div>
-                      <div className="text-xs text-slate-400 font-mono">{p.concentration} | {p.purity}</div>
-                      <div className="text-[11px] text-slate-500 mt-1 truncate">{p.presentation}</div>
+                {products.map((p) => {
+                  const isCurrentEditing = editingProductId === p.id;
+                  return (
+                    <div
+                      key={p.id}
+                      className={`p-4 rounded-2xl bg-slate-950 border transition flex flex-col justify-between ${
+                        isCurrentEditing
+                          ? 'border-amber-500/80 ring-2 ring-amber-500/20'
+                          : 'border-slate-800 hover:border-slate-700'
+                      }`}
+                    >
+                      <div className="flex gap-3.5 mb-3">
+                        <img
+                          src={p.image || "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&q=80"}
+                          alt={p.name}
+                          className="w-16 h-16 rounded-xl object-cover bg-slate-900 shrink-0 border border-slate-800"
+                        />
+                        <div className="overflow-hidden flex-1">
+                          <div className="text-[10px] text-emerald-400 font-bold uppercase">{p.category}</div>
+                          <div className="font-bold text-white text-sm truncate">{p.name}</div>
+                          <div className="text-xs text-slate-400 font-mono">{p.concentration} | {p.purity}</div>
+                          <div className="text-[11px] text-slate-500 mt-0.5 truncate">{p.presentation}</div>
+                        </div>
+                      </div>
+
+                      <div className="border-t border-slate-800/80 pt-3 flex items-center justify-between">
+                        <span className="text-[10px] text-slate-500 font-mono">ID: {p.id}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleStartEditProduct(p)}
+                          className="text-xs bg-slate-800 hover:bg-amber-600 text-slate-200 hover:text-white px-3 py-1.5 rounded-lg transition cursor-pointer flex items-center gap-1.5 font-semibold"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                          <span>Editar Produto &amp; Foto</span>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
