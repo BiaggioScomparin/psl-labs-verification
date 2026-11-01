@@ -19,15 +19,15 @@ if (fs.existsSync(dbPath)) {
   db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
 }
 
-// HexaShield Biotech Vector Logo
+// HexaShield Biotech Vector Logo for Dark Background
 const LOGO_HEXASHIELD = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; flex-shrink:0;">
-  <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#000000" stroke="#1e3a8a" stroke-width="1.2"/>
+  <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#0f172a" stroke="#38bdf8" stroke-width="1.4"/>
   <path d="M12 6V18M7.5 9.5L16.5 14.5M16.5 9.5L7.5 14.5" stroke="#38bdf8" stroke-width="1.6" stroke-linecap="round"/>
   <circle cx="12" cy="12" r="2.8" fill="#10b981" stroke="#ffffff" stroke-width="0.8"/>
 </svg>`;
 
 async function generate() {
-  console.log("⚡ Gerando QR Codes OTIMIZADOS de ALTA LEITURA (12.2mm, Margem de Silêncio e Preto Puro)...");
+  console.log("⚡ Gerando Folha Spiral A4351 no Estilo DARK PREMIUM BIOTECH...");
 
   const product = {
     brand: "PSL LABS",
@@ -60,9 +60,7 @@ async function generate() {
     };
 
     // ULTRA READABLE QR CODE CONFIGURATION:
-    // 1. margin: 2 (Quiet Zone indispensável para a câmera do celular focar instantaneamente)
-    // 2. width: 360 (Alta definição para evitar qualquer serrilhado na impressão da Canon)
-    // 3. dark: '#000000' (Preto 100% puro para acionar o cartucho preto pigmentado da impressora)
+    // Pure black on white inside dedicated white protective box
     const qrDataUrl = await QRCode.toDataURL(verifyUrl, {
       margin: 2,
       width: 360,
@@ -83,12 +81,12 @@ async function generate() {
   // Update db.json
   fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf8');
 
-  // GABARITO MILIMÉTRICO SPIRAL A4351
+  // GABARITO MILIMÉTRICO SPIRAL A4351 - DARK PREMIUM BIOTECH
   const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <title>PSL LABS - QR Codes de Alta Leitura Spiral A4351</title>
+  <title>PSL LABS - Dark Premium Biotech Spiral A4351</title>
   <style>
     @page {
       size: 210mm 297mm;
@@ -122,11 +120,14 @@ async function generate() {
       page-break-after: always;
     }
 
+    /* Sangria profissional entre as colunas de etiquetas descartadas */
     .gap-col {
       width: 2.5mm;
       height: 21.2mm;
+      background: #0b1528;
     }
 
+    /* ETIQUETA UNITÁRIA SPIRAL A4351: 38.2mm x 21.2mm */
     .label-cell {
       width: 38.2mm;
       height: 21.2mm;
@@ -136,11 +137,10 @@ async function generate() {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #ffffff;
-      border: 0.05mm dotted #f1f5f9;
+      background: #0b1528;
     }
 
-    /* COLUNA DO QR CODE AUMENTADA PARA 12.2mm */
+    /* COLUNA DO QR CODE (BOX BRANCO DE LEITURA ÓPTICA) */
     .col-qr {
       width: 13.0mm;
       display: flex;
@@ -149,32 +149,42 @@ async function generate() {
       justify-content: center;
       flex-shrink: 0;
     }
-    .qr-img {
+    .qr-box {
       width: 12.2mm;
       height: 12.2mm;
+      background: #ffffff;
+      border-radius: 0.8mm;
+      padding: 0.3mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qr-img {
+      width: 100%;
+      height: 100%;
       display: block;
       image-rendering: -webkit-optimize-contrast;
       image-rendering: crisp-edges;
     }
     .serial-text {
-      font-size: 3.8pt;
+      font-size: 3.6pt;
       font-family: "Courier New", Courier, monospace;
-      font-weight: 900;
-      color: #000000;
+      font-weight: 800;
+      color: #94a3b8;
       letter-spacing: -0.2px;
       margin-top: 0.3mm;
       text-align: center;
       white-space: nowrap;
     }
 
-    /* COLUNA DA DIREITA */
+    /* COLUNA DA DIREITA: TEXTOS E LOGOTIPO */
     .col-info {
       width: 22.2mm;
       height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding-left: 0.6mm;
+      padding-left: 0.7mm;
       overflow: hidden;
       text-align: left;
     }
@@ -188,23 +198,26 @@ async function generate() {
     .brand-title {
       font-size: 6.2pt;
       font-weight: 900;
-      color: #000000;
+      color: #ffffff;
       letter-spacing: -0.2px;
     }
     .brand-title span {
-      color: #059669;
+      color: #38bdf8;
     }
     .tag-origin {
-      font-size: 3.8pt;
+      font-size: 3.6pt;
       font-weight: 800;
-      color: #047857;
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.2);
+      padding: 0.2mm 0.6mm;
+      border-radius: 0.3mm;
       margin-left: auto;
     }
 
     .row-product {
       font-size: 7.2pt;
       font-weight: 900;
-      color: #1e3a8a;
+      color: #38bdf8;
       letter-spacing: -0.3px;
       line-height: 1.1;
       margin-top: 0.2mm;
@@ -213,19 +226,19 @@ async function generate() {
     .row-meta {
       font-size: 3.9pt;
       font-weight: 600;
-      color: #334155;
+      color: #94a3b8;
       line-height: 1.25;
       margin-top: 0.2mm;
     }
     .row-meta strong {
-      color: #000000;
+      color: #f1f5f9;
       font-weight: 800;
     }
 
     .row-security {
       font-size: 3.3pt;
       font-weight: 800;
-      color: #059669;
+      color: #34d399;
       text-transform: uppercase;
       letter-spacing: 0.1px;
       line-height: 1;
@@ -242,9 +255,11 @@ async function generate() {
           const lbl = labels[idx];
           cells += `
             <div class="label-cell">
-              <!-- QR CODE 12.2mm COM MARGEM DE SILÊNCIO -->
+              <!-- QR CODE 12.2mm COM BOX BRANCO DE LEITURA ÓPTICA -->
               <div class="col-qr">
-                <img src="${lbl.qrDataUrl}" class="qr-img" alt="QR" />
+                <div class="qr-box">
+                  <img src="${lbl.qrDataUrl}" class="qr-img" alt="QR" />
+                </div>
                 <div class="serial-text">${lbl.code}</div>
               </div>
 

@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   const countNeeded = Math.max(65, batchCodes.length);
   const labelsToRender = [];
 
-  const hostUrl = baseUrl || (req.headers.host ? `https://${req.headers.host}` : 'https://psl-labs.vercel.app');
+  const hostUrl = baseUrl || (req.headers.host ? `https://${req.headers.host}` : 'https://psl-labs-verification.vercel.app');
 
   for (let i = 0; i < countNeeded; i++) {
     let item = batchCodes[i];
@@ -50,13 +50,13 @@ export default async function handler(req, res) {
 
     const verifyUrl = `${hostUrl}/v/${item.code}`;
     
-    // Generate QR code data URL (clean vector/PNG with zero margin)
+    // Generate QR code data URL (clean vector/PNG with quiet zone and pure black for fast camera detection)
     const qrDataUrl = await QRCode.toDataURL(verifyUrl, {
-      margin: 0,
-      width: 140,
+      margin: 2,
+      width: 360,
       errorCorrectionLevel: 'M',
       color: {
-        dark: '#0f172a',
+        dark: '#000000',
         light: '#ffffff'
       }
     });

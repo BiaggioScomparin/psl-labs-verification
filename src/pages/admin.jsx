@@ -510,14 +510,16 @@ export default function AdminPage() {
                     {labelsData.labels.slice(0, 15).map((lbl, idx) => (
                       <div
                         key={idx}
-                        className="bg-white text-slate-950 p-1.5 rounded border border-slate-300 flex items-center gap-1.5 shadow-sm text-[8px]"
+                        className="bg-[#0b1528] text-slate-100 p-1.5 rounded border border-slate-800 flex items-center gap-1.5 shadow-sm text-[8px]"
                         style={{ height: '70px' }}
                       >
-                        <img src={lbl.qrDataUrl} alt="QR" className="w-12 h-12 shrink-0" />
+                        <div className="w-12 h-12 bg-white rounded p-0.5 shrink-0 flex items-center justify-center">
+                          <img src={lbl.qrDataUrl} alt="QR" className="w-full h-full" />
+                        </div>
                         <div className="overflow-hidden leading-tight">
-                          <div className="font-black text-[9px] text-blue-900 tracking-tighter">PSL LABS</div>
-                          <div className="font-bold text-[8px] text-slate-900 truncate">{lbl.productName}</div>
-                          <div className="text-[7px] text-slate-600 mt-0.5">L:{lbl.batchNumber}</div>
+                          <div className="font-black text-[9px] text-white tracking-tighter">PSL <span className="text-sky-400">LABS</span></div>
+                          <div className="font-bold text-[8px] text-sky-400 truncate">{lbl.productName}</div>
+                          <div className="text-[7px] text-slate-400 mt-0.5">L:{lbl.batchNumber}</div>
                           <div className="text-[6.5px] text-slate-500 font-mono truncate">{lbl.code}</div>
                         </div>
                       </div>
@@ -1003,28 +1005,29 @@ export default function AdminPage() {
                     height: '21.2mm',
                     maxHeight: '21.2mm',
                     overflow: 'hidden',
-                    padding: '1.2mm 1.4mm',
+                    padding: '1.0mm 1.2mm',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    background: '#ffffff',
-                    border: '0.05mm dotted #e2e8f0',
+                    background: '#0b1528',
                     boxSizing: 'border-box'
                   }}
                 >
                   {/* Left Column: QR Code + Serial Text */}
-                  <div style={{ width: '11.2mm', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <img
-                      src={lbl.qrDataUrl}
-                      alt="QR"
-                      style={{ width: '9.8mm', height: '9.8mm', display: 'block' }}
-                    />
+                  <div style={{ width: '13.0mm', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <div style={{ width: '12.2mm', height: '12.2mm', background: '#ffffff', borderRadius: '0.8mm', padding: '0.3mm', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <img
+                        src={lbl.qrDataUrl}
+                        alt="QR"
+                        style={{ width: '100%', height: '100%', display: 'block' }}
+                      />
+                    </div>
                     <div
                       style={{
-                        fontSize: '3.8pt',
+                        fontSize: '3.6pt',
                         fontFamily: 'monospace',
                         fontWeight: '800',
-                        color: '#0f172a',
+                        color: '#94a3b8',
                         letterSpacing: '-0.2px',
                         marginTop: '0.3mm',
                         textAlign: 'center',
@@ -1036,36 +1039,36 @@ export default function AdminPage() {
                   </div>
 
                   {/* Right Column: Brand + Product + Batch */}
-                  <div style={{ width: '23.2mm', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', paddingLeft: '0.8mm', overflow: 'hidden', textAlign: 'left' }}>
+                  <div style={{ width: '22.2mm', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', paddingLeft: '0.7mm', overflow: 'hidden', textAlign: 'left' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.6mm', lineHeight: '1' }}>
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'inline-block', flexShrink: 0 }}>
-                        <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#0f172a" stroke="#1e3a8a" strokeWidth="1.2"/>
+                        <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#0f172a" stroke="#38bdf8" strokeWidth="1.4"/>
                         <path d="M12 6V18M7.5 9.5L16.5 14.5M16.5 9.5L7.5 14.5" stroke="#38bdf8" strokeWidth="1.6" strokeLinecap="round"/>
                         <circle cx="12" cy="12" r="2.8" fill="#10b981" stroke="#ffffff" strokeWidth="0.8"/>
                       </svg>
-                      <span style={{ fontSize: '6.2pt', fontWeight: '900', color: '#0f172a', letterSpacing: '-0.2px' }}>
-                        PSL <span style={{ color: '#059669' }}>LABS</span>
+                      <span style={{ fontSize: '6.2pt', fontWeight: '900', color: '#ffffff', letterSpacing: '-0.2px' }}>
+                        PSL <span style={{ color: '#38bdf8' }}>LABS</span>
                       </span>
-                      <span style={{ fontSize: '3.8pt', fontWeight: '800', color: '#047857', marginLeft: 'auto' }}>
+                      <span style={{ fontSize: '3.6pt', fontWeight: '800', color: '#34d399', background: 'rgba(16,185,129,0.2)', padding: '0.2mm 0.6mm', borderRadius: '0.3mm', marginLeft: 'auto' }}>
                         🇵🇾 PY
                       </span>
                     </div>
 
-                    <div style={{ fontSize: '7.2pt', fontWeight: '900', color: '#1e3a8a', letterSpacing: '-0.3px', lineHeight: '1.1', marginTop: '0.2mm' }}>
+                    <div style={{ fontSize: '7.2pt', fontWeight: '900', color: '#38bdf8', letterSpacing: '-0.3px', lineHeight: '1.1', marginTop: '0.2mm' }}>
                       {lbl.productName}
                     </div>
 
-                    <div style={{ fontSize: '4pt', fontWeight: '600', color: '#334155', lineHeight: '1.25', marginTop: '0.2mm' }}>
-                      <div>LOTE: <strong style={{ color: '#0f172a', fontWeight: '800' }}>{lbl.batchNumber}</strong></div>
+                    <div style={{ fontSize: '3.9pt', fontWeight: '600', color: '#94a3b8', lineHeight: '1.25', marginTop: '0.2mm' }}>
+                      <div>LOTE: <strong style={{ color: '#f1f5f9', fontWeight: '800' }}>{lbl.batchNumber}</strong></div>
                       <div>FAB: <strong>{lbl.mfgDate}</strong> · VAL: <strong>{lbl.expDate}</strong></div>
                     </div>
 
-                    <div style={{ fontSize: '3.4pt', fontWeight: '800', color: '#059669', textTransform: 'uppercase', letterSpacing: '0.1px', lineHeight: '1' }}>
+                    <div style={{ fontSize: '3.3pt', fontWeight: '800', color: '#34d399', textTransform: 'uppercase', letterSpacing: '0.1px', lineHeight: '1' }}>
                       ✓ Verifique Autenticidade
                     </div>
                   </div>
                 </div>
-                {(idx % 5 < 4) && <div style={{ width: '2.5mm', height: '21.2mm' }} />}
+                {(idx % 5 < 4) && <div style={{ width: '2.5mm', height: '21.2mm', background: '#0b1528' }} />}
               </>
             ))}
           </div>
