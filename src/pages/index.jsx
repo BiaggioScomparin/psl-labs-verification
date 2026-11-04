@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import QRCameraScanner from '../components/QRCameraScanner';
@@ -242,20 +243,27 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="p-6 pt-0">
+                    <div className="p-6 pt-0 space-y-2">
+                      <Link
+                        href={`/product/${p.id}`}
+                        className="w-full py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"
+                      >
+                        <span>{lang === 'py' ? 'Ficha Técnica' : 'Ficha Técnica'}</span>
+                        <ArrowRight className="w-3.5 h-3.5 text-sky-400" />
+                      </Link>
                       <button
                         onClick={() => {
                           setInputCode(isMainGHK ? 'PSL-8F92K1' : 'PSL-TEST-ORIGINAL');
                           window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className={`w-full py-3 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition cursor-pointer ${
+                        className={`w-full py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition cursor-pointer ${
                           isMainGHK
                             ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-950/40'
                             : 'bg-slate-800 hover:bg-slate-700 text-slate-200'
                         }`}
                       >
                         <span>{t.products.viewProduct}</span>
-                        <ArrowRight className="w-4 h-4" />
+                        <ShieldCheck className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
