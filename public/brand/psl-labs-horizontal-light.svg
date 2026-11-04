@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 160" width="100%" height="100%">
+  <defs>
+    <linearGradient id="shieldGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Icon on Left -->
+  <g transform="translate(15, 10)">
+    <path d="M70 12 L18 42 V72 C18 105 43 130 70 138 C97 130 122 105 122 72 V42 L70 12 Z" 
+          fill="url(#shieldGradLight)" 
+          stroke="#0284c7" 
+          stroke-width="5" 
+          stroke-linejoin="round"/>
+    <g stroke="#38bdf8" stroke-width="6" stroke-linecap="round">
+      <line x1="70" y1="31" x2="70" y2="114" />
+      <line x1="37" y1="52" x2="103" y2="94" />
+      <line x1="103" y1="52" x2="37" y2="94" />
+    </g>
+    <circle cx="70" cy="72" r="17" fill="#059669" stroke="#ffffff" stroke-width="3.5" />
+  </g>
+
+  <!-- Typography -->
+  <g transform="translate(175, 45)">
+    <!-- Brand Title -->
+    <text x="0" y="46" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="52" letter-spacing="-1">
+      <tspan fill="#0f172a">PSL </tspan>
+      <tspan fill="#0284c7">LABS</tspan>
+    </text>
+    
+    <!-- Subtitle -->
+    <text x="3" y="78" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="13.5" fill="#475569" letter-spacing="4.5">
+      PARAGUAY SCIENTIFIC LABORATORIES
+    </text>
+
+    <!-- Origin Pill Badge -->
+    <g transform="translate(325, 12)">
+      <rect width="68" height="24" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.2" />
+      <text x="34" y="16.5" font-family="'Inter', sans-serif" font-weight="800" font-size="11" fill="#15803d" text-anchor="middle" letter-spacing="1">
+        🇵🇾 PY
+      </text>
+    </g>
+  </g>
+</svg>
