@@ -51,9 +51,33 @@
       "storage_py": "Conservar refrigerado a 2°C - 8°C.",
       "storage_pt": "Conservar refrigerado a 2°C - 8°C.",
       "active": true
+    },
+    {
+      "id": "tirzepatida",
+      "name": "TIRZEPATIDA (KIT 4x 3ML)",
+      "chemicalName": "Dual GIP / GLP-1 Receptor Agonist",
+      "category": "Metabolismo & Longevidade",
+      "concentration": "4x Ampolas 3 ML (15 MG / Frasco)",
+      "purity": "99.5% (HPLC)",
+      "presentation": "Caja Estuche con 4 Ampollas / Viales de 3 ml",
+      "image": "/images/tirzepatida-box-kit.jpg",
+      "description_py": "Tirzepatida es un péptido de última generación que actúa como agonista dual de los receptores GIP y GLP-1. Diseñado para la investigación avanzada de la homeostasis metabólica, sensibilidad a la insulina y regulación glucémica. Presentación en estuche premium con 4 ampolas/viales liofilizados de 3 ml.",
+      "description_pt": "Tirzepatida é um peptídeo de última geração que atua como agonista duplo dos receptores GIP e GLP-1. Desenvolvido para a pesquisa avançada de homeostase metabólica, sensibilidade à insulina e regulação glicêmica. Apresentação em estojo premium com 4 ampolas/frascos liofilizados de 3 ml.",
+      "storage_py": "Almacenar refrigerado de 2°C a 8°C. Proteger de la luz solar directa. Tras su reconstitución, conservar en frío estricto.",
+      "storage_pt": "Armazenar refrigerado de 2°C a 8°C. Proteger da luz solar direta. Após reconstituição, conservar sob refrigeração estrita.",
+      "active": true
     }
   ],
   "batches": [
+    {
+      "id": "batch-tirz-2026-01",
+      "productId": "tirzepatida",
+      "batchNumber": "LOT-TRZ-2026-01",
+      "mfgDate": "11/2026",
+      "expDate": "11/2028",
+      "quantityLabels": 65,
+      "createdAt": "2026-11-05T10:00:00Z"
+    },
     {
       "id": "batch-ghk-2026-01",
       "productId": "ghk-cu-50mg",
