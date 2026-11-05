@@ -5,7 +5,7 @@ export default function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-slate-950 text-slate-400 border-t border-slate-800 pt-16 pb-12">
+    <footer className="bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800 pt-16 pb-12 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           
@@ -18,24 +18,24 @@ export default function Footer() {
                          fill="#10b981" stroke="#0a0f18" strokeWidth="1.2" strokeLinejoin="round" />
                 <circle cx="32" cy="32" r="3" fill="#ffffff" />
               </svg>
-              <span className="font-extrabold text-2xl tracking-wider text-white">
-                PSL <span className="text-emerald-400">LABS</span>
+              <span className="font-extrabold text-2xl tracking-wider text-slate-900 dark:text-white">
+                PSL <span className="text-emerald-500 dark:text-emerald-400">LABS</span>
               </span>
-              <span className="bg-red-950 text-red-300 border border-red-700/60 text-[10px] font-bold px-2 py-0.5 rounded-full">
+              <span className="bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 border border-red-300 dark:border-red-700/60 text-[10px] font-bold px-2 py-0.5 rounded-full">
                 🇵🇾 PY
               </span>
             </div>
-            <p className="text-sm text-slate-400 max-w-md leading-relaxed mb-4">
+            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md leading-relaxed mb-4">
               {t.footer.disclaimer}
             </p>
             <div className="flex items-center gap-2 text-xs text-slate-500">
-              <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
+              <MapPin className="w-4 h-4 text-emerald-500 dark:text-emerald-400 shrink-0" />
               <span>{t.footer.address}</span>
             </div>
           </div>
 
           <div>
-            <h4 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">
+            <h4 className="text-slate-900 dark:text-white font-semibold text-sm mb-4 uppercase tracking-wider">
               Qualidade & Normas
             </h4>
             <ul className="space-y-2 text-xs">
@@ -59,13 +59,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">
+            <h4 className="text-slate-900 dark:text-white font-semibold text-sm mb-4 uppercase tracking-wider">
               Segurança do Consumidor
             </h4>
-            <p className="text-xs text-slate-400 leading-relaxed mb-3">
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
               Nunca consuma produtos cujo código QR já apresente múltiplas consultas ou lacre violado.
             </p>
-            <div className="inline-flex items-center gap-2 text-xs text-emerald-400 bg-emerald-950/50 border border-emerald-800/60 px-3 py-1.5 rounded-lg">
+            <div className="inline-flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800/60 px-3 py-1.5 rounded-lg">
               <Shield className="w-4 h-4" />
               <span>Canal Anti-Fraude Ativo</span>
             </div>
@@ -73,7 +73,7 @@ export default function Footer() {
 
         </div>
 
-        <div className="border-t border-slate-900 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <div className="border-t border-slate-200 dark:border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>© {new Date().getFullYear()} PSL LABS S.A. {t.footer.rights}</p>
           <p>Asunción - Ciudad del Este | República del Paraguay</p>
         </div>

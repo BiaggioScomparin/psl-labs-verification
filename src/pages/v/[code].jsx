@@ -73,7 +73,7 @@ export default function VerificationPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
       <Head>
         <title>
           {data?.product?.name ? `${data.product.name} | Verificação PSL LABS` : 'Verificação de Autenticidade | PSL LABS'}
@@ -88,7 +88,7 @@ export default function VerificationPage() {
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => router.push('/')}
-            className="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-emerald-400 transition cursor-pointer"
+            className="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400 transition cursor-pointer font-medium"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Voltar ao Início</span>
@@ -96,7 +96,7 @@ export default function VerificationPage() {
 
           <button
             onClick={() => setIsCameraOpen(true)}
-            className="inline-flex items-center gap-1.5 text-xs bg-slate-900 hover:bg-slate-800 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-xl transition cursor-pointer shadow-sm"
+            className="inline-flex items-center gap-1.5 text-xs bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-slate-200 dark:border-emerald-500/30 px-3 py-1.5 rounded-xl transition cursor-pointer shadow-sm"
           >
             <Camera className="w-3.5 h-3.5" />
             <span>Escanear Outro QR</span>
@@ -104,40 +104,40 @@ export default function VerificationPage() {
         </div>
 
         {loading ? (
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 text-center shadow-2xl">
-            <RefreshCw className="w-10 h-10 text-emerald-400 animate-spin mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-white mb-2">Consultando Banco Criptográfico...</h2>
-            <p className="text-sm text-slate-400">Verificando chaves de segurança da PSL LABS Paraguai</p>
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center shadow-xl">
+            <RefreshCw className="w-10 h-10 text-emerald-600 dark:text-emerald-400 animate-spin mx-auto mb-4" />
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Consultando Banco Criptográfico...</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Verificando chaves de segurança da PSL LABS Paraguai</p>
           </div>
         ) : error || !data?.found ? (
           /* INVALID CODE CARD */
-          <div className="bg-slate-900 border border-red-500/50 rounded-3xl p-8 sm:p-12 text-center shadow-2xl shadow-red-950/40 relative overflow-hidden">
-            <div className="w-20 h-20 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 mx-auto mb-6">
+          <div className="bg-white dark:bg-slate-900 border border-red-300 dark:border-red-500/50 rounded-3xl p-8 sm:p-12 text-center shadow-xl shadow-red-500/10 dark:shadow-red-950/40 relative overflow-hidden">
+            <div className="w-20 h-20 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 flex items-center justify-center text-red-500 dark:text-red-400 mx-auto mb-6">
               <XCircle className="w-10 h-10" />
             </div>
 
-            <span className="bg-red-950 text-red-300 border border-red-700/60 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-3">
+            <span className="bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-700/60 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-3">
               Alerta de Segurança
             </span>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-3">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-3">
               {t.status.invalidTitle}
             </h1>
-            <p className="text-slate-300 max-w-lg mx-auto mb-6 text-sm sm:text-base">
+            <p className="text-slate-600 dark:text-slate-300 max-w-lg mx-auto mb-6 text-sm sm:text-base">
               {t.status.invalidSub}
             </p>
 
-            <div className="bg-red-950/40 border border-red-800/60 rounded-2xl p-5 max-w-lg mx-auto text-xs text-red-300 leading-relaxed mb-8">
+            <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 rounded-2xl p-5 max-w-lg mx-auto text-xs text-red-800 dark:text-red-300 leading-relaxed mb-8">
               {t.status.invalidAlert}
             </div>
 
-            <div className="text-xs text-slate-400 font-mono mb-6">
-              Código consultado: <span className="text-red-400 font-bold">{code}</span>
+            <div className="text-xs text-slate-500 dark:text-slate-400 font-mono mb-6">
+              Código consultado: <span className="text-red-600 dark:text-red-400 font-bold">{code}</span>
             </div>
 
             <button
               onClick={() => router.push('/')}
-              className="bg-slate-800 hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition cursor-pointer"
+              className="bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition cursor-pointer"
             >
               Tentar Outro Código
             </button>
@@ -149,28 +149,28 @@ export default function VerificationPage() {
             {/* Main Status Header Card */}
             {data.scanCount === 1 ? (
               /* ORIGINAL FIRST SCAN */
-              <div className="bg-gradient-to-br from-emerald-950/90 via-slate-900 to-slate-900 border border-emerald-500/60 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-emerald-950/50 relative overflow-hidden">
+              <div className="bg-gradient-to-br from-emerald-50 via-white to-white dark:from-emerald-950/90 dark:via-slate-900 dark:to-slate-900 border border-emerald-300 dark:border-emerald-500/60 rounded-3xl p-8 sm:p-10 shadow-xl shadow-emerald-500/5 dark:shadow-emerald-950/50 relative overflow-hidden">
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
-                  <div className="w-20 h-20 rounded-2xl bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center text-emerald-400 shrink-0 shadow-lg shadow-emerald-500/20">
+                  <div className="w-20 h-20 rounded-2xl bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-400/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 shadow-lg shadow-emerald-500/10">
                     <ShieldCheck className="w-12 h-12" />
                   </div>
                   <div>
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-2">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-400/40 text-emerald-800 dark:text-emerald-300 text-xs font-bold uppercase tracking-wider mb-2">
                       <Sparkles className="w-3.5 h-3.5" />
                       <span>{t.status.firstScanNotice}</span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-2">
+                    <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
                       {t.status.authenticTitle}
                     </h1>
-                    <p className="text-sm text-slate-300 leading-relaxed mb-4">
+                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
                       {t.status.authenticSub}
                     </p>
-                    <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 border-t border-slate-800/80 pt-4">
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800/80 pt-4">
                       <div className="flex items-center gap-1.5">
-                        <Clock className="w-4 h-4 text-emerald-400" />
-                        <span>{t.status.firstScanAt}: <strong className="text-white">{formatDate(data.firstScannedAt)}</strong></span>
+                        <Clock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                        <span>{t.status.firstScanAt}: <strong className="text-slate-900 dark:text-white">{formatDate(data.firstScannedAt)}</strong></span>
                       </div>
-                      <div className="flex items-center gap-1.5 bg-emerald-900/40 border border-emerald-700/60 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">
+                      <div className="flex items-center gap-1.5 bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-700/60 text-emerald-800 dark:text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">
                         <span>Total de consultas: 1</span>
                       </div>
                     </div>
@@ -179,35 +179,35 @@ export default function VerificationPage() {
               </div>
             ) : (
               /* WARNING: SCANNED MULTIPLE TIMES */
-              <div className="bg-gradient-to-br from-amber-950/90 via-slate-900 to-slate-900 border border-amber-500/60 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-amber-950/50 relative overflow-hidden">
+              <div className="bg-gradient-to-br from-amber-50 via-white to-white dark:from-amber-950/90 dark:via-slate-900 dark:to-slate-900 border border-amber-300 dark:border-amber-500/60 rounded-3xl p-8 sm:p-10 shadow-xl shadow-amber-500/5 dark:shadow-amber-950/50 relative overflow-hidden">
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
-                  <div className="w-20 h-20 rounded-2xl bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-400 shrink-0 shadow-lg shadow-amber-500/20 animate-pulse">
+                  <div className="w-20 h-20 rounded-2xl bg-amber-100 dark:bg-amber-500/20 border border-amber-300 dark:border-amber-400/50 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0 shadow-lg shadow-amber-500/10 animate-pulse">
                     <AlertTriangle className="w-12 h-12" />
                   </div>
                   <div className="flex-grow">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/20 border border-amber-300 dark:border-amber-400/40 text-amber-800 dark:text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">
                       <AlertTriangle className="w-3.5 h-3.5" />
                       <span>Alerta de Consultas Múltiplas ({data.scanCount}x)</span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-2">
+                    <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
                       {t.status.warningTitle}
                     </h1>
-                    <p className="text-sm text-slate-300 leading-relaxed mb-4">
+                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
                       {t.status.warningSub}
                     </p>
                     
-                    <div className="bg-amber-950/50 border border-amber-800/70 rounded-xl p-4 text-xs text-amber-200 leading-relaxed mb-4">
+                    <div className="bg-amber-100 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-800/70 rounded-xl p-4 text-xs text-amber-900 dark:text-amber-200 leading-relaxed mb-4">
                       {t.status.warningAlert}
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-400 border-t border-slate-800 pt-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800 pt-4">
                       <div>
                         {t.status.firstScanAt}: <br />
-                        <strong className="text-slate-200 font-mono">{formatDate(data.firstScannedAt)}</strong>
+                        <strong className="text-slate-800 dark:text-slate-200 font-mono">{formatDate(data.firstScannedAt)}</strong>
                       </div>
                       <div>
                         {t.status.lastScanAt}: <br />
-                        <strong className="text-amber-400 font-mono">{formatDate(data.lastScannedAt)}</strong>
+                        <strong className="text-amber-600 dark:text-amber-400 font-mono">{formatDate(data.lastScannedAt)}</strong>
                       </div>
                     </div>
                   </div>
@@ -216,46 +216,46 @@ export default function VerificationPage() {
             )}
 
             {/* Product Details Card */}
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
               <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start mb-8">
                 <img
                   src={data.product?.image || "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80"}
                   alt={data.product?.name}
-                  className="w-28 h-28 object-cover rounded-2xl border border-slate-700 bg-slate-950 shrink-0"
+                  className="w-28 h-28 object-cover rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-950 shrink-0"
                 />
                 <div className="text-center sm:text-left">
-                  <div className="text-xs text-emerald-400 font-bold uppercase tracking-wider mb-1">
+                  <div className="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mb-1">
                     {data.product?.category || "Peptídeo Bioativo"}
                   </div>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-1">
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-1">
                     {data.product?.name || "GHK CU 50 MG"}
                   </h2>
-                  <p className="text-xs text-slate-400 font-mono mb-3">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-mono mb-3">
                     {data.product?.chemicalName}
                   </p>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl">
                     {lang === 'py' ? data.product?.description_py : data.product?.description_pt}
                   </p>
                 </div>
               </div>
 
               {/* Technical Specifications Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 border-t border-slate-800 pt-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 border-t border-slate-200 dark:border-slate-800 pt-6">
                 
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800/80">
                   <div className="text-[11px] text-slate-500 uppercase tracking-wider mb-1">
                     {t.status.codeLabel}
                   </div>
-                  <div className="text-sm font-mono font-bold text-emerald-400">
+                  <div className="text-sm font-mono font-bold text-emerald-600 dark:text-emerald-400">
                     {data.code}
                   </div>
                 </div>
 
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800/80">
                   <div className="text-[11px] text-slate-500 uppercase tracking-wider mb-1">
                     {t.status.batchLabel}
                   </div>
-                  <div className="text-sm font-mono font-bold text-white">
+                  <div className="text-sm font-mono font-bold text-slate-900 dark:text-white">
                     {data.batchNumber}
                   </div>
                 </div>
