@@ -342,10 +342,12 @@ async function main() {
           <g transform="translate(53.5, 116)">
             <!-- Header row: Logo & PY Badge -->
             <g transform="translate(0, 2)">
-              <!-- HexaShield Logo -->
-              <path d="M4.5 0.5 L1 2.5 V5.5 C1 7.5 2.5 9 4.5 9.5 C6.5 9 8 7.5 8 5.5 V2.5 Z" fill="#071214" stroke="#10b981" stroke-width="0.6" stroke-linejoin="round"/>
-              <line x1="4.5" y1="1.5" x2="4.5" y2="8" stroke="#38bdf8" stroke-width="0.5"/>
-              <circle cx="4.5" cy="4.8" r="1.3" fill="#10b981" stroke="#ffffff" stroke-width="0.3"/>
+              <!-- Estrella de Mayo Official Logo -->
+              <circle cx="4.5" cy="4.5" r="4.2" stroke="#38bdf8" stroke-width="0.35" />
+              <circle cx="4.5" cy="4.5" r="3.6" stroke="#38bdf8" stroke-width="0.2" stroke-dasharray="0.3 0.4" />
+              <polygon points="4.5,1.8 5.1,3.4 6.7,3.5 5.5,4.5 5.9,6.1 4.5,5.2 3.1,6.1 3.5,4.5 2.3,3.5 3.9,3.4" 
+                       fill="#10b981" stroke="#0a0f18" stroke-width="0.15" stroke-linejoin="round"/>
+              <circle cx="4.5" cy="4.5" r="0.45" fill="#ffffff" />
 
               <text x="10.5" y="5.2" font-family="'Inter', sans-serif" font-weight="900" font-size="5" letter-spacing="-0.2">
                 <tspan fill="#ffffff">PSL </tspan>

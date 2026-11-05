@@ -17,17 +17,29 @@ if (fs.existsSync(dbPath)) {
   db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
 }
 
-// HexaShield Vector Logos for 50x20mm
-const LOGO_DARK_BG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; flex-shrink:0;">
-  <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#0b1120" stroke="#38bdf8" stroke-width="1.6"/>
-  <path d="M12 6V18M7.5 9.5L16.5 14.5M16.5 9.5L7.5 14.5" stroke="#0284c7" stroke-width="1.8" stroke-linecap="round"/>
-  <circle cx="12" cy="12" r="3.2" fill="#10b981" stroke="#ffffff" stroke-width="0.9"/>
+// Official Estrella de Mayo & Anel Científico Vector Logos for 50x20mm
+const LOGO_DARK_BG = `<svg width="14" height="14" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; flex-shrink:0;">
+  <circle cx="32" cy="32" r="30" stroke="#38bdf8" stroke-width="2.5" />
+  <circle cx="32" cy="32" r="26" stroke="#38bdf8" stroke-width="1.2" stroke-dasharray="1.5 2" />
+  <circle cx="32" cy="32" r="18" fill="rgba(56,189,248,0.2)" />
+  <line x1="32" y1="2" x2="32" y2="7" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="32" y1="57" x2="32" y2="62" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="2" y1="32" x2="7" y2="32" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="57" y1="32" x2="62" y2="32" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" />
+  <polygon points="32,13 36.5,24 48,24.8 39.2,32.2 42,43.5 32,37.5 22,43.5 24.8,32.2 16,24.8 27.5,24" fill="#10b981" stroke="#0a0f18" stroke-width="1.2" stroke-linejoin="round" />
+  <circle cx="32" cy="32" r="3" fill="#ffffff" />
 </svg>`;
 
-const LOGO_LIGHT_BG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; flex-shrink:0;">
-  <path d="M12 2L3 7V12C3 17.5 6.8 21.7 12 23C17.2 21.7 21 17.5 21 12V7L12 2Z" fill="#ffffff" stroke="#0369a1" stroke-width="1.6"/>
-  <path d="M12 6V18M7.5 9.5L16.5 14.5M16.5 9.5L7.5 14.5" stroke="#0284c7" stroke-width="1.8" stroke-linecap="round"/>
-  <circle cx="12" cy="12" r="3.2" fill="#059669" stroke="#ffffff" stroke-width="0.9"/>
+const LOGO_LIGHT_BG = `<svg width="14" height="14" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; flex-shrink:0;">
+  <circle cx="32" cy="32" r="30" stroke="#0284c7" stroke-width="2.5" />
+  <circle cx="32" cy="32" r="26" stroke="#0284c7" stroke-width="1.2" stroke-dasharray="1.5 2" />
+  <circle cx="32" cy="32" r="18" fill="rgba(2,132,199,0.12)" />
+  <line x1="32" y1="2" x2="32" y2="7" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="32" y1="57" x2="32" y2="62" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="2" y1="32" x2="7" y2="32" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="57" y1="32" x2="62" y2="32" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" />
+  <polygon points="32,13 36.5,24 48,24.8 39.2,32.2 42,43.5 32,37.5 22,43.5 24.8,32.2 16,24.8 27.5,24" fill="#059669" stroke="#ffffff" stroke-width="1.2" stroke-linejoin="round" />
+  <circle cx="32" cy="32" r="3" fill="#ffffff" />
 </svg>`;
 
 // Function to generate the HTML for a 50x20mm label

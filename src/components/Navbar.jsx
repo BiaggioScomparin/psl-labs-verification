@@ -13,10 +13,21 @@ export default function Navbar() {
       <header className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           
-          {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-700 via-blue-600 to-emerald-500 flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
-              <ShieldCheck className="w-6 h-6 text-white" />
+          {/* Brand Logo with New Official Estrella de Mayo Emblem */}
+          <Link href="/" className="flex items-center gap-3.5 group">
+            <div className="w-11 h-11 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center shadow-lg shadow-sky-500/10 group-hover:border-sky-500/50 transition-all p-1.5">
+              <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="32" cy="32" r="30" stroke="#38bdf8" strokeWidth="2.2" />
+                <circle cx="32" cy="32" r="26" stroke="#38bdf8" strokeWidth="1" strokeDasharray="1.5 2" />
+                <circle cx="32" cy="32" r="18" fill="rgba(56,189,248,0.15)" />
+                <line x1="32" y1="2" x2="32" y2="7" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="32" y1="57" x2="32" y2="62" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="2" y1="32" x2="7" y2="32" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="57" y1="32" x2="62" y2="32" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
+                <polygon points="32,13 36.5,24 48,24.8 39.2,32.2 42,43.5 32,37.5 22,43.5 24.8,32.2 16,24.8 27.5,24" 
+                         fill="#10b981" stroke="#0a0f18" strokeWidth="1.2" strokeLinejoin="round" />
+                <circle cx="32" cy="32" r="3.2" fill="#ffffff" />
+              </svg>
             </div>
             <div>
               <div className="flex items-center gap-2">
