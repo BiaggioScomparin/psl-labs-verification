@@ -5,20 +5,35 @@ export const translations = {
     nav: {
       brand: "PSL LABS",
       tagline: "Laboratorios Científicos del Paraguay",
-      verify: "Verificar Autenticidad",
-      products: "Catálogo de Productos",
-      quality: "Control de Calidad",
+      verify: "Verificar Lote",
+      products: "Monografías",
+      chromatography: "Cromatografía HPLC",
+      security: "Seguridad Anti-Copia",
       contact: "Contacto",
       admin: "Panel ADM"
     },
     hero: {
-      badge: "SISTEMA OFICIAL DE VERIFICACIÓN ANTI-FALSIFICACIÓN",
-      title: "Autenticidad y Pureza Certificada",
-      subtitle: "Cada unidad producida por PSL LABS cuenta con un código QR criptográfico exclusivo. Verifique el lote, fecha de vencimiento y el historial de consultas de su producto.",
-      inputPlaceholder: "Ingrese el código alfanumérico (ej: PSL-8F92K)",
-      verifyBtn: "Verificar Código",
+      regLine: "REG. PY-2026/884 • ISO/IEC 17025 ACREDITADO • PUREZA HPLC ≥ 99.2%",
+      badge: "SISTEMA OFICIAL DE VERIFICACIÓN Y TRAZABILIDAD",
+      title: "Verificación Analítica y Trazabilidad de Lotes",
+      subtitle: "Consulte la autenticidad, pureza cromatográfica (HPLC) y análisis de espectrometría de masas para cada vial liofilizado fabricado por PSL LABS en Paraguay.",
+      inputPlaceholder: "INGRESE CÓDIGO SERIAL (EJ: GHK50-EO0HH)",
+      verifyBtn: "Verificar Lote",
       scanCameraBtn: "Escanear QR con Cámara",
-      helperText: "El código único se encuentra impreso en la etiqueta de su frasco."
+      helperText: "Micro-código único impreso en el sello de seguridad de cada frasco.",
+      quickExamples: "Muestras de prueba:"
+    },
+    chromatogram: {
+      badge: "CONTROL ANALÍTICO LOTE A LOTE",
+      title: "Cromatografía Líquida de Alta Resolución (HPLC)",
+      subtitle: "Cada síntesis bioquímica es sometida a verificación instrumental de fase reversa C18 y espectrometría ESI-MS para garantizar ausencia total de impurezas y dímeros.",
+      paramPurity: "Pureza Cromatográfica",
+      paramRetention: "Tiempo de Retención (tR)",
+      paramSolvent: "Fase Móvil A/B",
+      paramFlow: "Flujo y Temperatura",
+      paramWavelength: "Detección UV",
+      paramStatus: "Conformidad Analítica",
+      downloadCOA: "Descargar Informe de Análisis (COA)"
     },
     status: {
       authenticTitle: "PRODUCTO ORIGINAL Y AUTÉNTICO",
@@ -47,14 +62,27 @@ export const translations = {
       reportIssue: "¿Sospecha de falsificación? Notificar al laboratorio"
     },
     products: {
-      title: "Línea de Productos de Alta Pureza",
-      subtitle: "Desarrollados con tecnología de liofilización avanzada y control cromatográfico estricto.",
-      viewProduct: "Ver Detalles",
-      filterAll: "Todos los Productos",
-      available: "Disponible con QR de Seguridad",
-      concentration: "Concentración",
-      presentation: "Presentación",
+      badge: "CATÁLOGO BIOQUÍMICO",
+      title: "Péptidos Liofilizados de Grado Analítico",
+      subtitle: "Compuestos sintetizados bajo estándares estrictos de pureza, liofilizados bajo atmósfera inerte de nitrógeno y sellados herméticamente.",
+      viewProduct: "Ver Monografía",
+      verifyThis: "Verificar Lote",
+      filterAll: "Todos los Péptidos",
+      available: "Lote Activo • Trazabilidad Verificable",
+      concentration: "Dosificación",
+      presentation: "Forma Farmacéutica",
       vialType: "Frasco Vial Liofilizado"
+    },
+    security: {
+      badge: "PROTECCIÓN CONTRA COPIAS",
+      title: "Protocolo de Seguridad en Tres Capas",
+      subtitle: "Diseñado para erradicar la clonación y garantizar que cada vial provenga directamente de nuestro laboratorio.",
+      layer1Title: "QR Unitario Serializado",
+      layer1Desc: "Cada frasco recibe un identificador criptográfico único de un solo uso. Una vez consultado, el sistema alerta de inmediato sobre cualquier intento posterior de duplicación.",
+      layer2Title: "Sello Físico Tamper-Evident",
+      layer2Desc: "Adhesivo de seguridad destructible en la tapa flip-off. Cualquier intento de apertura previa fragmenta el sello de manera irreversible.",
+      layer3Title: "Validación Cromatográfica HPLC",
+      layer3Desc: "Cada lote posee su informe de laboratorio asociado con espectro de masas y porcentaje de pureza verificado por terceros independientes."
     },
     quality: {
       title: "Compromiso con la Calidad Farmacéutica",
@@ -69,7 +97,7 @@ export const translations = {
     footer: {
       rights: "Todos los derechos reservados.",
       address: "Parque Industrial Asunción - Ciudad del Este, República del Paraguay.",
-      disclaimer: "Los productos PSL LABS son elaborados bajo rigurosos estándares analíticos y de calidad internacional."
+      disclaimer: "Los compuestos producidos por PSL LABS S.A. están destinados exclusivamente a la investigación bioquímica y desarrollo analítico conforme a las normativas de la República del Paraguay."
     }
   },
   pt: {
@@ -78,20 +106,35 @@ export const translations = {
     nav: {
       brand: "PSL LABS",
       tagline: "Laboratórios Científicos do Paraguai",
-      verify: "Verificar Autenticidade",
-      products: "Catálogo de Produtos",
-      quality: "Controle de Qualidade",
+      verify: "Verificar Lote",
+      products: "Monografias",
+      chromatography: "Cromatografia HPLC",
+      security: "Segurança Anti-Cópia",
       contact: "Contato",
       admin: "Painel ADM"
     },
     hero: {
-      badge: "SISTEMA OFICIAL DE VERIFICAÇÃO ANTI-CLONAGEM",
-      title: "Autenticidade e Pureza Certificada",
-      subtitle: "Cada unidade produzida pela PSL LABS possui um QR Code criptográfico exclusivo. Verifique o lote, data de validade e o histórico exato de consultas do seu produto.",
-      inputPlaceholder: "Digite o código alfanumérico (ex: PSL-8F92K)",
-      verifyBtn: "Verificar Código",
+      regLine: "REG. PY-2026/884 • ISO/IEC 17025 ACREDITADO • PUREZA HPLC ≥ 99.2%",
+      badge: "SISTEMA OFICIAL DE VERIFICAÇÃO E RASTREABILIDADE",
+      title: "Verificação Analítica e Rastreabilidade de Lotes",
+      subtitle: "Consulte a autenticidade, pureza cromatográfica (HPLC) e análise de espectrometria de massas para cada frasco liofilizado fabricado pela PSL LABS no Paraguai.",
+      inputPlaceholder: "DIGITE O CÓDIGO SERIAL (EX: GHK50-EO0HH)",
+      verifyBtn: "Verificar Lote",
       scanCameraBtn: "Escanear QR com Câmera",
-      helperText: "O código único encontra-se impresso na etiqueta do seu frasco."
+      helperText: "Micro-código único gravado no selo de segurança de cada frasco.",
+      quickExamples: "Amostras para teste:"
+    },
+    chromatogram: {
+      badge: "CONTROLE ANALÍTICO LOTE A LOTE",
+      title: "Cromatografia Líquida de Alta Resolução (HPLC)",
+      subtitle: "Cada síntese bioquímica é submetida a teste instrumental de fase reversa C18 e espectrometria ESI-MS para atestar pureza máxima e ausência total de dímeros.",
+      paramPurity: "Pureza Cromatográfica",
+      paramRetention: "Tempo de Retenção (tR)",
+      paramSolvent: "Fase Móvel A/B",
+      paramFlow: "Vazão e Temperatura",
+      paramWavelength: "Comprimento de Onda UV",
+      paramStatus: "Conformidade Analítica",
+      downloadCOA: "Baixar Laudo de Análise (COA)"
     },
     status: {
       authenticTitle: "PRODUTO 100% ORIGINAL E AUTÊNTICO",
@@ -120,29 +163,42 @@ export const translations = {
       reportIssue: "Suspeita de falsificação? Denuncie ao laboratório"
     },
     products: {
-      title: "Linha de Produtos de Alta Pureza",
-      subtitle: "Desenvolvidos com tecnologia avançada de liofilização e rigoroso controle cromatográfico.",
-      viewProduct: "Ver Detalhes",
-      filterAll: "Todos os Produtos",
-      available: "Disponível com QR de Segurança",
-      concentration: "Concentração",
-      presentation: "Apresentação",
+      badge: "CATÁLOGO BIOQUÍMICO",
+      title: "Peptídeos Liofilizados de Grau Analítico",
+      subtitle: "Compostos sintetizados sob rigorosos padrões de pureza, liofilizados em atmosfera inerte de nitrogênio e selados hermeticamente.",
+      viewProduct: "Ver Monografia",
+      verifyThis: "Verificar Lote",
+      filterAll: "Todos os Peptídeos",
+      available: "Lote Ativo • Rastreabilidade Verificável",
+      concentration: "Dosagem",
+      presentation: "Forma Farmacêutica",
       vialType: "Frasco Ampola Liofilizado"
     },
+    security: {
+      badge: "PROTEÇÃO CONTRA CÓPIAS",
+      title: "Protocolo de Segurança em Três Camadas",
+      subtitle: "Desenvolvido para eliminar qualquer tentativa de clonagem e garantir procedência direta do laboratório.",
+      layer1Title: "QR Code Unitário Serializado",
+      layer1Desc: "Cada frasco recebe um identificador criptográfico único descartável. Na primeira consulta o status é validado; consultas subsequentes acionam aviso imediato de duplicidade.",
+      layer2Title: "Selo Físico Tamper-Evident",
+      layer2Desc: "Adesivo de segurança destrutível aplicado sobre a tampa flip-off. Tentativas de remoção fragmentam o lacre de forma permanente.",
+      layer3Title: "Validação Cromatográfica HPLC",
+      layer3Desc: "Cada lote é acompanhado do seu laudo analítico completo com curva cromatográfica e espectro de massas atestado por laboratório independente."
+    },
     quality: {
-      title: "Compromisso com o Padrão Farmacêutico",
-      subtitle: "Nossos processos de fabricação garantem máxima pureza e estabilidade química.",
+      title: "Compromiso con la Calidad Farmacéutica",
+      subtitle: "Nuestros estándares de producción garantizan máxima pureza y estabilidad.",
       item1Title: "Cromatografia HPLC > 99%",
-      item1Desc: "Cada lote é analisado por HPLC para atestar pureza máxima e ausência de resíduos.",
+      item1Desc: "Cada lote é analisado por HPLC para verificar pureza química e ausência de impurezas.",
       item2Title: "Liofilização Asséptica",
-      item2Desc: "Secagem a vácuo e ultrabaixa temperatura preservando a integridade molecular do peptídeo.",
+      item2Desc: "Secagem a vácuo a baixa temperatura para preservar a estrutura molecular do peptídeo.",
       item3Title: "Rastreabilidade Criptográfica Unitária",
-      item3Desc: "Cada frasco possui uma chave individual única impossível de ser replicada em massa."
+      item3Desc: "Cada etiqueta possui um identificador serial único impossível de replicar em massa."
     },
     footer: {
       rights: "Todos os direitos reservados.",
       address: "Parque Industrial Assunção - Cidade do Leste, República do Paraguai.",
-      disclaimer: "Os produtos PSL LABS são fabricados seguindo rigorosos padrões de controle de qualidade internacional."
+      disclaimer: "Os compostos produzidos pela PSL LABS S.A. são destinados exclusivamente à pesquisa bioquímica e desenvolvimento analítico, em estrita conformidade com as normas da República do Paraguai."
     }
   }
 };

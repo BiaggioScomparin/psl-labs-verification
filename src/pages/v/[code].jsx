@@ -260,38 +260,38 @@ export default function VerificationPage() {
                   </div>
                 </div>
 
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800/80">
                   <div className="text-[11px] text-slate-500 uppercase tracking-wider mb-1">
                     {t.status.purityLabel}
                   </div>
-                  <div className="text-sm font-bold text-emerald-400">
+                  <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
                     {data.product?.purity || '99.4% (HPLC)'}
                   </div>
                 </div>
 
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800/80">
                   <div className="text-[11px] text-slate-500 uppercase tracking-wider mb-1">
                     {t.status.mfgLabel}
                   </div>
-                  <div className="text-sm font-bold text-slate-200">
+                  <div className="text-sm font-bold text-slate-800 dark:text-slate-200">
                     {data.mfgDate}
                   </div>
                 </div>
 
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800/80">
                   <div className="text-[11px] text-slate-500 uppercase tracking-wider mb-1">
                     {t.status.expLabel}
                   </div>
-                  <div className="text-sm font-bold text-slate-200">
+                  <div className="text-sm font-bold text-slate-800 dark:text-slate-200">
                     {data.expDate}
                   </div>
                 </div>
 
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80">
+                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800/80">
                   <div className="text-[11px] text-slate-500 uppercase tracking-wider mb-1">
                     {t.status.originLabel}
                   </div>
-                  <div className="text-sm font-bold text-white flex items-center gap-1.5">
+                  <div className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                     <span>🇵🇾</span>
                     <span>{t.status.originVal}</span>
                   </div>
@@ -300,23 +300,23 @@ export default function VerificationPage() {
               </div>
 
               {/* Storage Instructions */}
-              <div className="mt-6 p-4 rounded-xl bg-slate-950/60 border border-slate-800 flex items-start gap-3 text-xs text-slate-400">
-                <FlaskConical className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              <div className="mt-6 p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-start gap-3 text-xs text-slate-600 dark:text-slate-400">
+                <FlaskConical className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-slate-200 block mb-0.5">{t.status.storageLabel}:</strong>
+                  <strong className="text-slate-900 dark:text-slate-200 block mb-0.5">{t.status.storageLabel}:</strong>
                   <span>{lang === 'py' ? data.product?.storage_py : data.product?.storage_pt}</span>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-8 pt-6 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4">
+              <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4">
                 <a
                   href="#coa"
                   onClick={(e) => {
                     e.preventDefault();
                     alert("Certificado de Análise Laboratorial (COA) autenticado com grau farmacêutico 99.4% HPLC.");
                   }}
-                  className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition"
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 transition"
                 >
                   <FileText className="w-4 h-4" />
                   <span>{t.status.viewCOA}</span>
