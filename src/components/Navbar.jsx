@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import QRCameraScanner from './QRCameraScanner';
-import { ShieldCheck, Lock, Camera, Sun, Moon } from 'lucide-react';
+import { ShieldCheck, Lock, Camera, Sun, Moon, Globe } from 'lucide-react';
 
 export default function Navbar() {
   const { lang, changeLang, t } = useLanguage();
@@ -15,12 +15,17 @@ export default function Navbar() {
       <header className="sticky top-0 z-50 bg-white/95 dark:bg-[#0A0E17]/95 backdrop-blur-md border-b border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white transition-colors duration-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           
-          {/* Brand Logo with PSL Labs Premium Synthesis Line */}
+          {/* Brand Logo (Transparent Background - Green in Light Mode, White in Dark Mode) */}
           <Link href="/" className="flex items-center gap-3.5 group">
             <img 
               src="/brand/psl-labs-premium-synthesis-line.png" 
               alt="PSL LABS - Premium Synthesis Line" 
-              className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-[1.02] filter dark:brightness-110"
+              className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-[1.02] dark:hidden"
+            />
+            <img 
+              src="/brand/psl-labs-premium-synthesis-line-white.png" 
+              alt="PSL LABS - Premium Synthesis Line" 
+              className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-[1.02] hidden dark:block"
             />
           </Link>
 
@@ -65,40 +70,40 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* Trilingual Switcher (PT-BR vs EN vs PY) */}
-            <div className="flex items-center bg-slate-100 dark:bg-slate-800/90 rounded-xl p-1 border border-slate-300 dark:border-slate-700 font-mono text-xs">
+            {/* Prominent Language Switcher (PT-BR, EN, PY) */}
+            <div className="flex items-center bg-slate-100 dark:bg-slate-800/90 rounded-xl p-1 border border-slate-300 dark:border-slate-700 font-mono text-xs shadow-sm">
               <button
                 onClick={() => changeLang('pt')}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg font-bold transition-all ${
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg font-extrabold transition-all cursor-pointer ${
                   lang === 'pt'
-                    ? 'bg-emerald-700 text-white shadow-sm'
+                    ? 'bg-emerald-700 text-white shadow-sm ring-1 ring-emerald-500'
                     : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
                 }`}
-                title="Português (Brasil)"
+                title="Mudar idioma para Português (Brasil)"
               >
                 <span>🇧🇷</span>
-                <span>PT</span>
+                <span>PT-BR</span>
               </button>
               <button
                 onClick={() => changeLang('en')}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg font-bold transition-all ${
+                className={`flex items-center gap-1 px-2 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                   lang === 'en'
-                    ? 'bg-emerald-700 text-white shadow-sm'
+                    ? 'bg-emerald-700 text-white shadow-sm ring-1 ring-emerald-500'
                     : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
                 }`}
-                title="English (US)"
+                title="Switch language to English (US)"
               >
                 <span>🇺🇸</span>
                 <span>EN</span>
               </button>
               <button
                 onClick={() => changeLang('py')}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg font-bold transition-all ${
+                className={`flex items-center gap-1 px-2 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                   lang === 'py'
-                    ? 'bg-emerald-700 text-white shadow-sm'
+                    ? 'bg-emerald-700 text-white shadow-sm ring-1 ring-emerald-500'
                     : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
                 }`}
-                title="Español (Paraguay)"
+                title="Cambiar idioma a Español (Paraguay)"
               >
                 <span>🇵🇾</span>
                 <span>PY</span>

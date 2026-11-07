@@ -12,9 +12,9 @@ export default function Footer() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
               <img 
-                src="/brand/psl-labs-premium-synthesis-line.png" 
+                src="/brand/psl-labs-premium-synthesis-line-white.png" 
                 alt="PSL LABS" 
-                className="h-10 w-auto object-contain brightness-0 invert opacity-95"
+                className="h-10 w-auto object-contain"
               />
             </div>
             <p className="text-sm text-slate-400 max-w-md leading-relaxed mb-4">

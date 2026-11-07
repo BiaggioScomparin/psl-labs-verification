@@ -136,7 +136,12 @@ export default function LuxuryLandingPage() {
             <img 
               src="/brand/psl-labs-premium-synthesis-line.png" 
               alt="PSL LABS - Premium Synthesis Line" 
-              className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-[1.02] filter dark:brightness-110"
+              className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-[1.02] dark:hidden"
+            />
+            <img 
+              src="/brand/psl-labs-premium-synthesis-line-white.png" 
+              alt="PSL LABS - Premium Synthesis Line" 
+              className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-[1.02] hidden dark:block"
             />
           </Link>
 
@@ -759,9 +764,9 @@ export default function LuxuryLandingPage() {
             
             <div className="md:col-span-2 space-y-4">
               <img 
-                src="/brand/psl-labs-premium-synthesis-line.png" 
+                src="/brand/psl-labs-premium-synthesis-line-white.png" 
                 alt="PSL LABS" 
-                className="h-10 w-auto object-contain brightness-0 invert opacity-95 mb-2"
+                className="h-10 w-auto object-contain mb-2"
               />
               <p className="text-sm text-slate-400 max-w-sm leading-relaxed font-normal">
                 PSL Labs (Premium Synthesis Line) S.A. operates as a high-precision biotechnology facility dedicated to research-grade peptide synthesis, structural lyophilization, and clinical aesthetic protocols.
@@ -897,7 +902,8 @@ export default function LuxuryLandingPage() {
             </button>
 
             <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
-              <img src="/brand/psl-labs-premium-synthesis-line.png" alt="PSL LABS" className="h-8 w-auto filter dark:brightness-110" />
+              <img src="/brand/psl-labs-premium-synthesis-line.png" alt="PSL LABS" className="h-8 w-auto dark:hidden" />
+              <img src="/brand/psl-labs-premium-synthesis-line-white.png" alt="PSL LABS" className="h-8 w-auto hidden dark:block" />
               <div>
                 <h4 
                   className="font-bold text-base tracking-widest text-slate-950 dark:text-white uppercase"

@@ -793,7 +793,8 @@ export default function Home() {
             </button>
 
             <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
-              <img src="/brand/psl-labs-premium-synthesis-line.png" alt="PSL LABS" className="h-8 w-auto filter dark:brightness-110" />
+              <img src="/brand/psl-labs-premium-synthesis-line.png" alt="PSL LABS" className="h-8 w-auto dark:hidden" />
+              <img src="/brand/psl-labs-premium-synthesis-line-white.png" alt="PSL LABS" className="h-8 w-auto hidden dark:block" />
               <div>
                 <h4 
                   className="font-bold text-base tracking-widest text-slate-950 dark:text-white uppercase"
