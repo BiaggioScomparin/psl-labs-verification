@@ -4,12 +4,15 @@ import { translations } from '../lib/translations';
 const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
-  const [lang, setLang] = useState('py'); // default to PY (Español Paraguay)
+  // Default to PT-BR as requested by the user
+  const [lang, setLang] = useState('pt');
 
   useEffect(() => {
     const saved = localStorage.getItem('psl_lang');
-    if (saved && (saved === 'py' || saved === 'pt')) {
+    if (saved && (saved === 'pt' || saved === 'en' || saved === 'py')) {
       setLang(saved);
+    } else {
+      setLang('pt');
     }
   }, []);
 
@@ -20,7 +23,7 @@ export function LanguageProvider({ children }) {
     }
   };
 
-  const t = translations[lang] || translations.py;
+  const t = translations[lang] || translations.pt;
 
   return (
     <LanguageContext.Provider value={{ lang, changeLang, t }}>

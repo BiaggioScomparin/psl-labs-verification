@@ -5,67 +5,59 @@ export default function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-slate-100 dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800 pt-16 pb-12 transition-colors duration-200">
+    <footer className="bg-[#090D14] text-slate-300 border-t border-slate-800 pt-16 pb-12 transition-colors duration-200 text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <svg width="28" height="28" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="32" cy="32" r="30" stroke="#38bdf8" strokeWidth="2.2" />
-                <circle cx="32" cy="32" r="26" stroke="#38bdf8" strokeWidth="1" strokeDasharray="1.5 2" />
-                <polygon points="32,13 36.5,24 48,24.8 39.2,32.2 42,43.5 32,37.5 22,43.5 24.8,32.2 16,24.8 27.5,24" 
-                         fill="#10b981" stroke="#0a0f18" strokeWidth="1.2" strokeLinejoin="round" />
-                <circle cx="32" cy="32" r="3" fill="#ffffff" />
-              </svg>
-              <span className="font-extrabold text-2xl tracking-wider text-slate-900 dark:text-white">
-                PSL <span className="text-emerald-500 dark:text-emerald-400">LABS</span>
-              </span>
-              <span className="bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 border border-red-300 dark:border-red-700/60 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                🇵🇾 PY
-              </span>
+              <img 
+                src="/brand/psl-labs-premium-synthesis-line.png" 
+                alt="PSL LABS" 
+                className="h-10 w-auto object-contain brightness-0 invert opacity-95"
+              />
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md leading-relaxed mb-4">
+            <p className="text-sm text-slate-400 max-w-md leading-relaxed mb-4">
               {t.footer.disclaimer}
             </p>
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <MapPin className="w-4 h-4 text-emerald-500 dark:text-emerald-400 shrink-0" />
+            <div className="flex items-center gap-2 text-xs text-slate-500 font-mono">
+              <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
               <span>{t.footer.address}</span>
             </div>
           </div>
 
           <div>
-            <h4 className="text-slate-900 dark:text-white font-semibold text-sm mb-4 uppercase tracking-wider">
-              Qualidade & Normas
+            <h4 className="text-white font-bold text-xs mb-4 uppercase tracking-widest font-mono">
+              Qualidade &amp; Normas
             </h4>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2.5 text-xs text-slate-400 font-mono">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                 <span>HPLC Certified &gt; 99% Pure</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Liofilização Estéril</span>
+                <span>Liofilização Criogênica em Vácuo</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Rastreabilidade Criptográfica</span>
+                <span>Rastreabilidade Criptográfica SHA-256</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>ISO &amp; GMP Paraguay Standard</span>
+                <span>Padrão ISO/IEC 17025 Acreditado</span>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-slate-900 dark:text-white font-semibold text-sm mb-4 uppercase tracking-wider">
+            <h4 className="text-white font-bold text-xs mb-4 uppercase tracking-widest font-mono">
               Segurança do Consumidor
             </h4>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
-              Nunca consuma produtos cujo código QR já apresente múltiplas consultas ou lacre violado.
+            <p className="text-xs text-slate-400 leading-relaxed mb-3">
+              Nunca consuma produtos cujo código QR já apresente alerta de duplicidade ou selo de segurança com violação de abertura prévia.
             </p>
-            <div className="inline-flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800/60 px-3 py-1.5 rounded-lg">
+            <div className="inline-flex items-center gap-2 text-xs text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-3 py-1.5 rounded-lg font-mono">
               <Shield className="w-4 h-4" />
               <span>Canal Anti-Fraude Ativo</span>
             </div>
@@ -73,7 +65,7 @@ export default function Footer() {
 
         </div>
 
-        <div className="border-t border-slate-200 dark:border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <div className="border-t border-slate-800 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4 font-mono">
           <p>© {new Date().getFullYear()} PSL LABS S.A. {t.footer.rights}</p>
           <p>Asunción - Ciudad del Este | República del Paraguay</p>
         </div>
