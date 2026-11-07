@@ -58,6 +58,12 @@ export default function Navbar() {
               <Link href="/#quality" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
                 {t.nav.quality}
               </Link>
+              <Link 
+                href="/luxury" 
+                className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-500/40 bg-emerald-50 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition"
+              >
+                <span>✨ Premium Synthesis Line</span>
+              </Link>
             </nav>
 
             {/* Camera Quick Button in Nav */}
