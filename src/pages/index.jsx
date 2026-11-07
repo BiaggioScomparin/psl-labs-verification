@@ -70,13 +70,13 @@ export default function Home() {
       <Navbar />
 
       {/* TECHNICAL CLINICAL TICKER (HIGH CONTRAST) */}
-      <aside className="border-b border-slate-300 dark:border-slate-800 bg-white dark:bg-[#0D121F] py-2.5 px-4 text-xs font-mono tracking-wider text-slate-700 dark:text-slate-300 shadow-sm transition-colors">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
+      <aside className="border-b border-slate-300 dark:border-slate-800 bg-white dark:bg-[#0D121F] py-2 px-3 sm:px-4 text-[11px] sm:text-xs font-mono tracking-wider text-slate-700 dark:text-slate-300 shadow-sm transition-colors overflow-hidden">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse shrink-0" />
             <strong className="text-slate-900 dark:text-white font-bold tracking-wider">PSL LABS S.A.</strong>
             <span className="text-slate-400">|</span>
-            <span className="font-semibold text-emerald-800 dark:text-emerald-400">{t.hero.regLine}</span>
+            <span className="font-semibold text-emerald-800 dark:text-emerald-400 break-words">{t.hero.regLine}</span>
           </div>
           <div className="hidden md:flex items-center gap-5 text-slate-600 dark:text-slate-400 font-semibold">
             <span>SALA LIMPA CLASSE 100</span>
@@ -91,20 +91,20 @@ export default function Home() {
       <main className="flex-grow">
         
         {/* HERO SECTION: THE SCIENCE OF REGENERATION & BATCH VERIFICATION TERMINAL */}
-        <section id="verify" className="relative pt-14 pb-20 lg:pt-20 lg:pb-28 border-b border-slate-300 dark:border-slate-800 bg-white dark:bg-[#070A11] transition-colors">
+        <section id="verify" className="relative pt-8 sm:pt-14 pb-14 sm:pb-20 lg:pt-20 lg:pb-28 border-b border-slate-300 dark:border-slate-800 bg-white dark:bg-[#070A11] transition-colors">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
               
               {/* Left Column: Heading & Verification Terminal */}
-              <div className="lg:col-span-7 space-y-6">
+              <div className="lg:col-span-7 space-y-5 sm:space-y-6">
                 
-                <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-emerald-600/40 dark:border-emerald-500/50 bg-emerald-50 dark:bg-emerald-950/70 text-xs font-mono font-bold tracking-wider text-emerald-900 dark:text-emerald-300 shadow-sm">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400" />
-                  <span>{t.hero.badge}</span>
+                <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full border border-emerald-600/40 dark:border-emerald-500/50 bg-emerald-50 dark:bg-emerald-950/70 text-[11px] sm:text-xs font-mono font-bold tracking-wider text-emerald-900 dark:text-emerald-300 shadow-sm max-w-full">
+                  <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-400 shrink-0" />
+                  <span className="truncate">{t.hero.badge}</span>
                 </div>
 
                 <h1 
-                  className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[0.12em] uppercase text-slate-950 dark:text-white leading-[1.14]"
+                  className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-[0.03em] sm:tracking-[0.10em] uppercase text-slate-950 dark:text-white leading-[1.15] break-words"
                   style={{ fontFamily: 'Syne, sans-serif' }}
                 >
                   {t.hero.title}
@@ -167,31 +167,29 @@ export default function Home() {
                   </form>
 
                   {/* Micro Quick Samples */}
-                  <div className="mt-4 pt-3.5 border-t border-slate-300 dark:border-slate-800 text-xs flex flex-wrap items-center justify-between gap-2 font-mono">
-                    <span className="text-slate-500 dark:text-slate-400 text-xs font-semibold">
+                  <div className="mt-4 pt-3.5 border-t border-slate-300 dark:border-slate-800 text-xs font-mono">
+                    <span className="text-slate-500 dark:text-slate-400 text-xs font-semibold block mb-2">
                       {t.hero.quickExamples}
                     </span>
-                    <div className="flex items-center gap-2 font-bold">
+                    <div className="flex flex-wrap items-center gap-2 font-bold">
                       <button
                         type="button"
                         onClick={() => router.push('/v/GHK50-EO0HH')}
-                        className="text-emerald-700 dark:text-emerald-400 hover:underline"
+                        className="px-2.5 py-1.5 rounded-lg bg-emerald-100/80 hover:bg-emerald-200 dark:bg-emerald-950/70 dark:hover:bg-emerald-900/90 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/60 transition text-[11px] sm:text-xs cursor-pointer shadow-xs"
                       >
                         GHK50-EO0HH (1ª Consulta)
                       </button>
-                      <span className="text-slate-400">|</span>
                       <button
                         type="button"
                         onClick={() => router.push('/v/TRZ30-PY991')}
-                        className="text-sky-700 dark:text-sky-400 hover:underline"
+                        className="px-2.5 py-1.5 rounded-lg bg-sky-100/80 hover:bg-sky-200 dark:bg-sky-950/70 dark:hover:bg-sky-900/90 text-sky-800 dark:text-sky-300 border border-sky-300 dark:border-sky-700/60 transition text-[11px] sm:text-xs cursor-pointer shadow-xs"
                       >
                         TRZ30-PY991 (Tirzepatida)
                       </button>
-                      <span className="text-slate-400">|</span>
                       <button
                         type="button"
                         onClick={() => router.push('/v/PSL-ALERT-DEMO')}
-                        className="text-amber-700 dark:text-amber-400 hover:underline"
+                        className="px-2.5 py-1.5 rounded-lg bg-amber-100/80 hover:bg-amber-200 dark:bg-amber-950/70 dark:hover:bg-amber-900/90 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60 transition text-[11px] sm:text-xs cursor-pointer shadow-xs"
                       >
                         Alerta Duplicidade
                       </button>
@@ -201,18 +199,18 @@ export default function Home() {
                 </div>
 
                 {/* Assurance Metrics Row */}
-                <div className="grid grid-cols-3 gap-3 text-xs font-mono text-slate-700 dark:text-slate-300">
-                  <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-sm">
-                    <div className="text-slate-500 text-[10px] uppercase font-semibold">Pureza Mínima</div>
-                    <div className="text-emerald-700 dark:text-emerald-400 font-bold text-sm">≥ 99.2% HPLC</div>
+                <div className="grid grid-cols-3 gap-2 sm:gap-3 text-xs font-mono text-slate-700 dark:text-slate-300">
+                  <div className="p-2 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-sm text-center sm:text-left">
+                    <div className="text-slate-500 text-[9px] sm:text-[10px] uppercase font-semibold">Pureza Mínima</div>
+                    <div className="text-emerald-700 dark:text-emerald-400 font-bold text-xs sm:text-sm">≥ 99.2% HPLC</div>
                   </div>
-                  <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-sm">
-                    <div className="text-slate-500 text-[10px] uppercase font-semibold">Rastreamento</div>
-                    <div className="text-slate-950 dark:text-white font-bold text-sm">1 Código / Frasco</div>
+                  <div className="p-2 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-sm text-center sm:text-left">
+                    <div className="text-slate-500 text-[9px] sm:text-[10px] uppercase font-semibold">Rastreamento</div>
+                    <div className="text-slate-950 dark:text-white font-bold text-xs sm:text-sm">1 Cód / Frasco</div>
                   </div>
-                  <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-sm">
-                    <div className="text-slate-500 text-[10px] uppercase font-semibold">Origem Oficial</div>
-                    <div className="text-slate-950 dark:text-white font-bold text-sm">Paraguay S.A.</div>
+                  <div className="p-2 sm:p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-sm text-center sm:text-left">
+                    <div className="text-slate-500 text-[9px] sm:text-[10px] uppercase font-semibold">Origem Oficial</div>
+                    <div className="text-slate-950 dark:text-white font-bold text-xs sm:text-sm">Paraguay S.A.</div>
                   </div>
                 </div>
 
@@ -252,16 +250,16 @@ export default function Home() {
                   </div>
 
                   {/* Chemical Coordinates */}
-                  <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2.5 text-xs font-mono">
-                    <div className="flex justify-between items-center">
+                  <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2 text-xs font-mono">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-0.5">
                       <span className="text-slate-500 dark:text-slate-400">Active Tripeptide:</span>
                       <span className="font-bold text-slate-950 dark:text-white">Copper Tripeptide-1 (GHK-Cu)</span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-0.5">
                       <span className="text-slate-500 dark:text-slate-400">Molecular Weight:</span>
                       <span className="font-semibold text-slate-950 dark:text-white">403.94 g/mol</span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-0.5">
                       <span className="text-slate-500 dark:text-slate-400">Biological Function:</span>
                       <span className="text-emerald-700 dark:text-emerald-400 font-bold">Pro-Collagen I &amp; III Synthesis</span>
                     </div>
@@ -610,36 +608,36 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Lab Test Parameters Table */}
-                  <div className="border border-slate-300 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-[#05080E] text-xs font-mono shadow-sm">
-                    <table className="w-full text-left">
+                  {/* Lab Test Parameters Table (Responsive with Mobile Horizontal Scroll) */}
+                  <div className="border border-slate-300 dark:border-slate-800 rounded-xl overflow-x-auto bg-white dark:bg-[#05080E] text-xs font-mono shadow-sm">
+                    <table className="w-full text-left min-w-[420px]">
                       <thead className="bg-slate-100 dark:bg-slate-900 border-b border-slate-300 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 uppercase font-bold">
                         <tr>
-                          <th className="py-3 px-4">Test Parameter</th>
-                          <th className="py-3 px-4">Specification</th>
-                          <th className="py-3 px-4 text-right">Result</th>
+                          <th className="py-3 px-4">{t.chromatogram.tableParamHeader}</th>
+                          <th className="py-3 px-4">{t.chromatogram.tableSpecHeader}</th>
+                          <th className="py-3 px-4 text-right">{t.chromatogram.tableResultHeader}</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-slate-900 dark:text-slate-100 font-semibold">
                         <tr>
-                          <td className="py-2.5 px-4 text-slate-700 dark:text-slate-300">Appearance</td>
-                          <td className="py-2.5 px-4 text-slate-500 dark:text-slate-400">Fine white/blue cake</td>
-                          <td className="py-2.5 px-4 text-right text-emerald-700 dark:text-emerald-400 font-bold">Conforms</td>
+                          <td className="py-2.5 px-4 text-slate-700 dark:text-slate-300">{t.chromatogram.tableAppearanceLabel}</td>
+                          <td className="py-2.5 px-4 text-slate-500 dark:text-slate-400">{t.chromatogram.tableAppearanceSpec}</td>
+                          <td className="py-2.5 px-4 text-right text-emerald-700 dark:text-emerald-400 font-bold">{t.chromatogram.tableAppearanceResult}</td>
                         </tr>
                         <tr>
-                          <td className="py-2.5 px-4 text-slate-700 dark:text-slate-300">HPLC Chromatographic Purity</td>
+                          <td className="py-2.5 px-4 text-slate-700 dark:text-slate-300">{t.chromatogram.tablePurityLabel}</td>
                           <td className="py-2.5 px-4 text-slate-500 dark:text-slate-400">≥ 99.0%</td>
                           <td className="py-2.5 px-4 text-right font-extrabold text-emerald-700 dark:text-emerald-400">
                             {activeTabChromato === 'ghk' ? '99.41%' : '99.52%'}
                           </td>
                         </tr>
                         <tr>
-                          <td className="py-2.5 px-4 text-slate-700 dark:text-slate-300">Mass Spectrometry (ESI-MS)</td>
-                          <td className="py-2.5 px-4 text-slate-500 dark:text-slate-400">Theoretical ± 1.0 Da</td>
-                          <td className="py-2.5 px-4 text-right text-emerald-700 dark:text-emerald-400 font-bold">Confirmed</td>
+                          <td className="py-2.5 px-4 text-slate-700 dark:text-slate-300">{t.chromatogram.tableMsLabel}</td>
+                          <td className="py-2.5 px-4 text-slate-500 dark:text-slate-400">{t.chromatogram.tableMsSpec}</td>
+                          <td className="py-2.5 px-4 text-right text-emerald-700 dark:text-emerald-400 font-bold">{t.chromatogram.tableMsResult}</td>
                         </tr>
                         <tr>
-                          <td className="py-2.5 px-4 text-slate-700 dark:text-slate-300">Bacterial Endotoxins</td>
+                          <td className="py-2.5 px-4 text-slate-700 dark:text-slate-300">{t.chromatogram.tableEndoLabel}</td>
                           <td className="py-2.5 px-4 text-slate-500 dark:text-slate-400">&lt; 0.05 EU/mg</td>
                           <td className="py-2.5 px-4 text-right text-emerald-700 dark:text-emerald-400 font-bold">&lt; 0.01 EU/mg</td>
                         </tr>
@@ -784,59 +782,61 @@ export default function Home() {
       {/* CoA Official Modal */}
       {isCoaModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-300 dark:border-slate-800 max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto text-slate-900 dark:text-white">
+          <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-300 dark:border-slate-800 max-w-2xl w-full p-4 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto text-slate-900 dark:text-white">
             <button 
               onClick={() => setIsCoaModalOpen(false)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-slate-950 dark:hover:text-white p-1 cursor-pointer"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-slate-950 dark:hover:text-white p-1 cursor-pointer"
             >
               <X className="w-6 h-6" />
             </button>
 
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800 pr-8">
               <img src="/brand/psl-labs-premium-synthesis-line.png" alt="PSL LABS" className="h-8 w-auto dark:hidden" />
               <img src="/brand/psl-labs-premium-synthesis-line-white.png" alt="PSL LABS" className="h-8 w-auto hidden dark:block" />
               <div>
                 <h4 
-                  className="font-bold text-base tracking-widest text-slate-950 dark:text-white uppercase"
+                  className="font-bold text-sm sm:text-base tracking-widest text-slate-950 dark:text-white uppercase"
                   style={{ fontFamily: 'Syne, sans-serif' }}
                 >
                   Official Certificate of Analysis
                 </h4>
-                <span className="text-xs font-mono text-slate-500 font-semibold">DOCUMENT ID: COA-GHK-2026-X1 • ACCREDITED TESTING</span>
+                <span className="text-[10px] sm:text-xs font-mono text-slate-500 font-semibold block">DOCUMENT ID: COA-GHK-2026-X1 • ISO/IEC 17025</span>
               </div>
             </div>
 
             <div className="space-y-4 text-xs font-mono">
-              <div className="grid grid-cols-2 gap-3 bg-slate-50 dark:bg-[#05080E] p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 dark:bg-[#05080E] p-3.5 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800">
                 <div>
-                  <span className="text-[11px] text-slate-500 uppercase block font-semibold">Compound Name:</span>
-                  <strong className="text-slate-950 dark:text-white text-sm">GHK-Cu (Copper Tripeptide-1)</strong>
+                  <span className="text-[10px] sm:text-[11px] text-slate-500 uppercase block font-semibold">Composto / Peptide:</span>
+                  <strong className="text-slate-950 dark:text-white text-xs sm:text-sm">GHK-Cu (Copper Tripeptide-1)</strong>
                 </div>
                 <div>
-                  <span className="text-[11px] text-slate-500 uppercase block font-semibold">Batch Number:</span>
-                  <strong className="text-slate-950 dark:text-white text-sm">#PSL-2026-X1</strong>
+                  <span className="text-[10px] sm:text-[11px] text-slate-500 uppercase block font-semibold">Lote / Batch Number:</span>
+                  <strong className="text-slate-950 dark:text-white text-xs sm:text-sm">#PSL-2026-X1</strong>
                 </div>
                 <div>
-                  <span className="text-[11px] text-slate-500 uppercase block font-semibold">Production Date:</span>
-                  <span className="text-slate-700 dark:text-slate-300 font-semibold">November 2026</span>
+                  <span className="text-[10px] sm:text-[11px] text-slate-500 uppercase block font-semibold">Data de Fabricação:</span>
+                  <span className="text-slate-700 dark:text-slate-300 font-semibold">Novembro 2026</span>
                 </div>
                 <div>
-                  <span className="text-[11px] text-slate-500 uppercase block font-semibold">Certified Purity:</span>
-                  <strong className="text-emerald-700 dark:text-emerald-400 font-extrabold text-sm">99.41% (RP-HPLC)</strong>
+                  <span className="text-[10px] sm:text-[11px] text-slate-500 uppercase block font-semibold">Pureza Homologada:</span>
+                  <strong className="text-emerald-700 dark:text-emerald-400 font-extrabold text-xs sm:text-sm">99.41% (RP-HPLC)</strong>
                 </div>
               </div>
 
-              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
-                This certifies that the referenced peptide batch was synthesized under standard GMP cleanroom guidelines, confirmed through electrospray ionization mass spectrometry (ESI-MS), and packaged under inert pharmaceutical grade nitrogen atmosphere.
+              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
+                {lang === 'py'
+                  ? "Certifica que el lote de péptidos referenciado fue sintetizado según las pautas de sala limpia GMP, confirmado por espectrometría de masas (ESI-MS) y envasado en atmósfera inerte de nitrógeno farmacéutico."
+                  : "Certifica-se por meio deste laudo oficial que o lote de peptídeo referenciado foi sintetizado sob as diretrizes de sala limpa GMP Classe 100, confirmado por espectrometria de massas (ESI-MS) e selado sob atmosfera de nitrogênio inerte de grau farmacêutico."}
               </p>
 
-              <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                <div className="text-xs text-slate-600 dark:text-slate-400">
-                  Verified by: <strong className="text-slate-950 dark:text-white block font-bold">Dr. M. Benítez, PhD</strong> Head of Analytical Chemistry, PSL LABS S.A.
+              <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400">
+                  Responsável Técnico: <strong className="text-slate-950 dark:text-white block font-bold">Dr. M. Benítez, PhD</strong> Química Analítica, PSL LABS S.A.
                 </div>
                 <button 
                   onClick={() => window.print()}
-                  className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs transition cursor-pointer flex items-center gap-1.5"
+                  className="w-full sm:w-auto bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs transition cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   <Printer className="w-4 h-4" />
                   <span>{t.chromatogram.printCOA}</span>

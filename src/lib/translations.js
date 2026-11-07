@@ -56,7 +56,18 @@ export const translations = {
       printCOA: "Imprimir Certificado",
       trustPill1: "Pureza Mínima Homologada ≥ 99.0% (Lotes abaixo são descartados)",
       trustPill2: "Ensaio de Endotoxinas < 0.01 EU/mg (Zero resíduo pirogênico)",
-      trustPill3: "Liofilização Criogênica sob Nitrogênio Inerte (24 meses de estabilidade)"
+      trustPill3: "Liofilização Criogênica sob Nitrogênio Inerte (24 meses de estabilidade)",
+      tableParamHeader: "Parâmetro Analítico",
+      tableSpecHeader: "Especificação",
+      tableResultHeader: "Resultado",
+      tableAppearanceLabel: "Aparência Física",
+      tableAppearanceSpec: "Bolo liofilizado uniforme",
+      tableAppearanceResult: "Conforme",
+      tablePurityLabel: "Pureza Cromatográfica HPLC",
+      tableMsLabel: "Espectrometria de Massas (ESI-MS)",
+      tableMsSpec: "Teórico ± 1.0 Da",
+      tableMsResult: "Confirmado",
+      tableEndoLabel: "Endotoxinas Bacterianas"
     },
     protocol: {
       badge: "PREPARO CLÍNICO DOMICILIAR",
@@ -161,7 +172,18 @@ export const translations = {
       printCOA: "Print Certificate",
       trustPill1: "Certified Purity Floor ≥ 99.0% (Substandard batches rejected)",
       trustPill2: "Endotoxin Assay < 0.01 EU/mg (Zero pyrogenic microbial trace)",
-      trustPill3: "Cryogenic Lyophilization Sealed under Nitrogen (24-month stability)"
+      trustPill3: "Cryogenic Lyophilization Sealed under Nitrogen (24-month stability)",
+      tableParamHeader: "Test Parameter",
+      tableSpecHeader: "Specification",
+      tableResultHeader: "Result",
+      tableAppearanceLabel: "Physical Appearance",
+      tableAppearanceSpec: "Uniform lyophilized cake",
+      tableAppearanceResult: "Conforms",
+      tablePurityLabel: "HPLC Chromatographic Purity",
+      tableMsLabel: "Mass Spectrometry (ESI-MS)",
+      tableMsSpec: "Theoretical ± 1.0 Da",
+      tableMsResult: "Confirmed",
+      tableEndoLabel: "Bacterial Endotoxins"
     },
     protocol: {
       badge: "CLINICAL AT-HOME PREPARATION",
@@ -266,7 +288,18 @@ export const translations = {
       printCOA: "Imprimir Certificado",
       trustPill1: "Pureza Mínima Homologada ≥ 99.0% (Lotes menores son descartados)",
       trustPill2: "Ensayo de Endotoxinas < 0.01 EU/mg (Cero residuo pirogénico)",
-      trustPill3: "Liofilización Criogénica bajo Nitrógeno Inerte (24 meses de estabilidad)"
+      trustPill3: "Liofilización Criogénica bajo Nitrógeno Inerte (24 meses de estabilidad)",
+      tableParamHeader: "Parámetro Analítico",
+      tableSpecHeader: "Especificación",
+      tableResultHeader: "Resultado",
+      tableAppearanceLabel: "Apariencia Física",
+      tableAppearanceSpec: "Torta liofilizada uniforme",
+      tableAppearanceResult: "Conforme",
+      tablePurityLabel: "Pureza Cromatográfica HPLC",
+      tableMsLabel: "Espectrometría de Masas (ESI-MS)",
+      tableMsSpec: "Teórico ± 1.0 Da",
+      tableMsResult: "Confirmado",
+      tableEndoLabel: "Endotoxinas Bacterianas"
     },
     protocol: {
       badge: "PREPARACIÓN CLÍNICA EN CASA",

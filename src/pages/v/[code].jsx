@@ -171,7 +171,7 @@ export default function VerificationPage() {
                         <span>{t.status.firstScanAt}: <strong className="text-slate-900 dark:text-white">{formatDate(data.firstScannedAt)}</strong></span>
                       </div>
                       <div className="flex items-center gap-1.5 bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-700/60 text-emerald-800 dark:text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">
-                        <span>Total de consultas: 1</span>
+                        <span>{t.status.scanCounter}: 1</span>
                       </div>
                     </div>
                   </div>
@@ -246,7 +246,7 @@ export default function VerificationPage() {
                   <div className="text-[11px] text-slate-500 uppercase tracking-wider mb-1">
                     {t.status.codeLabel}
                   </div>
-                  <div className="text-sm font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                  <div className="text-sm font-mono font-bold text-emerald-600 dark:text-emerald-400 break-all">
                     {data.code}
                   </div>
                 </div>

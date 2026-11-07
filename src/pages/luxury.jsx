@@ -136,12 +136,12 @@ export default function LuxuryLandingPage() {
             <img 
               src="/brand/psl-labs-premium-synthesis-line.png" 
               alt="PSL LABS - Premium Synthesis Line" 
-              className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-[1.02] dark:hidden"
+              className="h-8 sm:h-12 w-auto max-w-[130px] sm:max-w-none object-contain transition-transform group-hover:scale-[1.02] dark:hidden"
             />
             <img 
               src="/brand/psl-labs-premium-synthesis-line-white.png" 
               alt="PSL LABS - Premium Synthesis Line" 
-              className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-[1.02] hidden dark:block"
+              className="h-8 sm:h-12 w-auto max-w-[130px] sm:max-w-none object-contain transition-transform group-hover:scale-[1.02] hidden dark:block"
             />
           </Link>
 
@@ -216,7 +216,7 @@ export default function LuxuryLandingPage() {
 
                 {/* Mandated User Headline with High-Contrast Punch */}
                 <h1 
-                  className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[0.12em] uppercase text-slate-950 dark:text-white leading-[1.14]"
+                  className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-[0.03em] sm:tracking-[0.10em] uppercase text-slate-950 dark:text-white leading-[1.15] break-words"
                   style={{ fontFamily: 'Syne, sans-serif' }}
                 >
                   THE SCIENCE OF REGENERATION.
@@ -228,7 +228,7 @@ export default function LuxuryLandingPage() {
                 </p>
 
                 {/* Technical Coordinates Grid with Distinct Card Frames */}
-                <div className="pt-2 border-t border-slate-200 dark:border-slate-800 grid grid-cols-3 gap-3 text-xs font-mono text-slate-700 dark:text-slate-300">
+                <div className="pt-2 border-t border-slate-200 dark:border-slate-800 grid grid-cols-3 gap-2 sm:gap-3 text-xs font-mono text-slate-700 dark:text-slate-300">
                   <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
                     <span className="block text-[11px] text-slate-500 dark:text-slate-400 uppercase font-semibold">Formulation</span>
                     <span className="font-bold text-slate-950 dark:text-white text-sm">Bioactive Lyophilized</span>
