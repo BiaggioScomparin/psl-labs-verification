@@ -1,1426 +1,1154 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useTheme } from '../context/ThemeContext';
-import { useLanguage } from '../context/LanguageContext';
-import QRCameraScanner from '../components/QRCameraScanner';
+import compoundsData from '../data/compounds.json';
 import { 
-  ShieldCheck, 
-  Check, 
-  ArrowRight, 
   ShoppingBag, 
+  Search, 
   X, 
-  FlaskConical, 
-  Award, 
-  Clock, 
-  Sparkles,
-  ExternalLink,
-  Sun,
-  Moon,
-  ChevronDown,
-  ChevronRight,
-  Layers,
-  Thermometer,
-  Printer,
-  CheckCircle2,
-  Info,
-  Truck,
-  MessageCircle,
-  HelpCircle,
-  Zap,
-  Star,
+  Check, 
+  Plus, 
+  Minus, 
+  Trash2, 
+  MessageCircle, 
+  Sparkles, 
+  Zap, 
+  ShieldCheck, 
+  HelpCircle, 
+  FileText, 
+  Layers, 
+  Truck, 
   QrCode,
-  Shield,
-  FileCheck2,
-  Lock,
-  Camera
+  ArrowRight
 } from 'lucide-react';
 
-export default function SalesLandingPage() {
-  const { theme, toggleTheme } = useTheme();
-  const { lang, changeLang } = useLanguage();
-  const [activeTabChromato, setActiveTabChromato] = useState('ghk');
-  const [isCoaModalOpen, setIsCoaModalOpen] = useState(false);
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const [openFaq, setOpenFaq] = useState(0);
-  const [selectedKit, setSelectedKit] = useState('duo'); // 'single', 'duo', 'vip'
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-  const [customerName, setCustomerName] = useState('');
-  const [customerPhone, setCustomerPhone] = useState('');
-  const [customerCity, setCustomerCity] = useState('');
+export default function PSLMarketplaceLP() {
+  // Current view: 'catalog' | 'calc'
+  const [currentView, setCurrentView] = useState('catalog');
 
-  // WhatsApp Concierge Number (Configure your WhatsApp Business)
-  const WHATSAPP_PHONE = "5511999999999"; // Format: DDI + DDD + Number
+  // Tier: 'b2c' (1 Frasco) | 'b2b' (Atacado 10 Frascos)
+  const [tier, setTier] = useState('b2c');
 
-  const kits = {
-    single: {
-      id: 'single',
-      name: 'Kit Ciclo Essencial (30 Dias)',
-      subtitle: '1x Frasco GHK-Cu 50mg + Veículo Estéril 5ml',
-      vials: 1,
-      badge: 'INICIANTE',
-      pricePix: 390,
-      priceInstallments: '12x de R$ 39,90',
-      economy: null,
-      featured: false,
-      shipping: 'Frete Seguro com Rastreamento',
-      items: [
-        '1x Frasco Âmbar GHK-Cu 50mg (Liofilizado Cryo-Dry)',
-        '1x Diluente Bacteriostático Estéril de 5.0ml',
-        '1x Cânula dosadora de transferência asséptica',
-        '1x Dosador conta-gotas de precisão dérmica',
-        'Laudo Analítico HPLC > 99% incluso',
-        'Selo QR Code de autenticidade unitária'
-      ]
-    },
-    duo: {
-      id: 'duo',
-      name: 'Protocolo Renovação Total (60 Dias)',
-      subtitle: '2x Frascos GHK-Cu 50mg + 2x Veículos Estéreis 5ml',
-      vials: 2,
-      badge: 'MAIS ESCOLHIDO • ECONOMIZE R$ 100',
-      pricePix: 680,
-      priceInstallments: '12x de R$ 69,90',
-      economy: 'Economia imediata de R$ 100',
-      featured: true,
-      shipping: 'FRETE PRIORITÁRIO GRÁTIS',
-      items: [
-        '2x Frascos Âmbar GHK-Cu 50mg (100mg no total)',
-        '2x Diluentes Bacteriostáticos Estéreis de 5.0ml',
-        '2x Cânulas e 2x dosadores conta-gotas de precisão',
-        '1x Estojo térmico protetor de transporte',
-        'Frete Expresso Prioritário para todo o Brasil Grátis',
-        'Laudos Cromatográficos HPLC independentes',
-        'Acesso direto ao Concierge Lab para suporte'
-      ]
-    },
-    vip: {
-      id: 'vip',
-      name: 'Protocolo Bio-Regenerativo Duo',
-      subtitle: '1x GHK-Cu 50mg + 1x BPC-157 10mg (Alta Regeneração)',
-      vials: 2,
-      badge: 'LONGEVIDADE CELULAR AVANÇADA',
-      pricePix: 850,
-      priceInstallments: '12x de R$ 87,50',
-      economy: 'Combo Exclusivo',
-      featured: false,
-      shipping: 'FRETE EXPRESSO GRÁTIS',
-      items: [
-        '1x Frasco GHK-Cu 50mg (Derme e Pró-Colágeno)',
-        '1x Frasco BPC-157 10mg (Regeneração Tecidual Sistêmica)',
-        '2x Soluções estéreis de reconstituição',
-        'Kit completo de aplicação e conservação',
-        'Protocolo de dosagem personalizado com Concierge',
-        'Frete Expresso Prioritário com cadeia de frio'
-      ]
+  // Search and Category Filter
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('TODOS');
+
+  // Selected dose index for each compound: { [compoundId]: number }
+  const [selectedDoses, setSelectedDoses] = useState({});
+
+  // Cart: Array of { compoundId, name, doseCode, doseLabel, isB2B, unitPrice, qty, stockStatus }
+  const [cart, setCart] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [shippingMethod, setShippingMethod] = useState('sedex'); // 'uber' | 'sedex'
+  const [clientName, setClientName] = useState('');
+  const [clientAddress, setClientAddress] = useState('');
+
+  // Seller WhatsApp number
+  const [sellerWhatsapp] = useState('5511999999999');
+
+  // Calculator State
+  const [calcPeptideSelect, setCalcPeptideSelect] = useState('10');
+  const [calcManualMg, setCalcManualMg] = useState(10);
+  const [calcWaterMl, setCalcWaterMl] = useState(2.0);
+  const [calcDoseAmount, setCalcDoseAmount] = useState(500);
+  const [calcDoseUnit, setCalcDoseUnit] = useState('mcg'); // 'mcg' | 'mg'
+  const [calcSyringeType, setCalcSyringeType] = useState(100); // 100 | 50 | 30
+
+  // Initialize selected doses and inventory status
+  const compounds = useMemo(() => {
+    return compoundsData.map((comp) => {
+      // In PSL Labs real stock, GHK-Cu 50mg (CU50) has ready stock in SP, others are on-demand
+      const doses = comp.doses.map((dose) => {
+        const isCu50 = dose.code === 'CU50' || comp.id === 'ghk-cu';
+        const stockQty = isCu50 ? 29 : 0;
+        return {
+          ...dose,
+          stockQty,
+          stockStatus: stockQty > 0 ? 'in_stock' : 'pre_order'
+        };
+      });
+
+      const hasStock = doses.some(d => d.stockStatus === 'in_stock');
+      return {
+        ...comp,
+        doses,
+        stockStatus: hasStock ? 'in_stock' : 'pre_order',
+        defaultDoseIndex: comp.defaultDoseIndex || 0
+      };
+    });
+  }, []);
+
+  // Set default doses on first load
+  useEffect(() => {
+    const initialDoses = {};
+    compounds.forEach((comp) => {
+      initialDoses[comp.id] = comp.defaultDoseIndex || 0;
+    });
+    setSelectedDoses(initialDoses);
+  }, [compounds]);
+
+  // Load saved cart from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('psl_cart');
+      if (saved) setCart(JSON.parse(saved));
+    } catch (e) {
+      console.warn(e);
     }
-  };
+  }, []);
 
-  const getWhatsAppLink = (kitKey = selectedKit) => {
-    const k = kits[kitKey] || kits.duo;
-    const text = encodeURIComponent(
-      `Olá! Tenho interesse no *${k.name}* da PSL Labs (GHK-Cu Liofilizado). Gostaria de tirar dúvidas e garantir meu pedido com a condição especial de R$ ${k.pricePix}.`
-    );
-    return `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
-  };
-
-  const handleOrderSubmit = (e) => {
-    e.preventDefault();
-    const k = kits[selectedKit] || kits.duo;
-    const message = encodeURIComponent(
-      `*NOVO PEDIDO PSL LABS*\n\n` +
-      `*Cliente:* ${customerName || 'Não informado'}\n` +
-      `*WhatsApp:* ${customerPhone || 'Não informado'}\n` +
-      `*Cidade/UF:* ${customerCity || 'Não informado'}\n` +
-      `*Plano Escolhido:* ${k.name}\n` +
-      `*Valor:* R$ ${k.pricePix} (ou ${k.priceInstallments})\n\n` +
-      `Gostaria de receber a chave PIX ou link de pagamento no cartão para finalizar!`
-    );
-    window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${message}`, '_blank');
-    setIsOrderModalOpen(false);
-  };
-
-  const faqs = [
-    {
-      q: 'Por que o peptídeo liofilizado (pó) é superior aos séruns prontos de farmácia?',
-      a: 'Peptídeos em solução aquosa líquida sofrem hidrólise natural e começam a perder suas pontes moleculares em cerca de 2 a 3 semanas nas prateleiras comerciais. Ao adquirir o GHK-Cu em pó liofilizado criogênico sob vácuo inerte, ele permanece 100% estável por até 24 meses. A molécula só é ativada quando você mistura o diluente estéril imediatamente antes de iniciar o seu ciclo, garantindo potência e bioatividade máximas a cada gota.'
-    },
-    {
-      q: 'Como é feito o preparo (reconstituição) e aplicação?',
-      a: 'O processo leva menos de 1 minuto e é feito em 3 passos: com a cânula estéril que acompanha o kit, você transfere o veículo estéril para dentro do frasco de pó. Em seguida, realiza movimentos circulares suaves por 20 segundos (sem agitar bruscamente). O pó se dissolve instantaneamente formando uma solução límpida azulada característica do cobre quelado. Aplique de 4 a 6 gotas à noite na pele limpa.'
-    },
-    {
-      q: 'Como devo armazenar o frasco após misturado?',
-      a: 'Antes da reconstituição (em pó seco), o frasco pode ser mantido em temperatura ambiente (15°C a 25°C) protegido da luz direta. Após misturar o líquido, o frasco deve ser mantido na geladeira (entre 2°C e 8°C) e utilizado em até 30 a 45 dias para preservar o pico de integridade biológica.'
-    },
-    {
-      q: 'Como funciona a verificação de autenticidade por QR Code?',
-      a: 'Cada frasco da PSL Labs possui um selo de segurança com código criptográfico único e irrepetível. Ao apontar a câmera do celular para o QR Code da caixa, o sistema oficial abre a tela de verificação informando o número de vezes que aquele código foi consultado, o lote exato e o Certificado de Análise HPLC correspondente.'
-    },
-    {
-      q: 'Qual o prazo e a forma de envio para o Brasil?',
-      a: 'Os envios são despachados diariamente com código de rastreamento direto para o seu WhatsApp e e-mail. A embalagem é reforçada e com isolamento térmico protetor. O prazo médio de entrega para o Brasil é de 4 a 8 dias úteis conforme a sua região.'
-    },
-    {
-      q: 'Preciso de receita médica para adquirir?',
-      a: 'O GHK-Cu (Tripeptídeo de Cobre-1) é um composto peptídico de aplicação tópica e regeneração dérmica. Nosso produto é fornecido para protocolos individuais estéticos e de biohacking de alta pureza. Nosso Concierge Lab fica disponível via WhatsApp para sanar quaisquer dúvidas de uso e dosagem.'
+  // Save cart to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('psl_cart', JSON.stringify(cart));
+    } catch (e) {
+      console.warn(e);
     }
-  ];
+  }, [cart]);
+
+  // Handle select dose for a compound
+  const handleSelectDose = (compoundId, doseIdx) => {
+    setSelectedDoses(prev => ({
+      ...prev,
+      [compoundId]: doseIdx
+    }));
+  };
+
+  // Add item to cart
+  const addToCart = (compound) => {
+    const doseIdx = selectedDoses[compound.id] ?? (compound.defaultDoseIndex || 0);
+    const dose = compound.doses[doseIdx] || compound.doses[0];
+    const isB2B = tier === 'b2b';
+    const unitPrice = isB2B ? dose.b2bBoxPrice : dose.suggestedPriceB2C;
+
+    setCart(prev => {
+      const existingIdx = prev.findIndex(item => item.compoundId === compound.id && item.doseCode === dose.code && item.isB2B === isB2B);
+      if (existingIdx >= 0) {
+        const updated = [...prev];
+        updated[existingIdx].qty += 1;
+        return updated;
+      } else {
+        return [
+          ...prev,
+          {
+            compoundId: compound.id,
+            name: compound.name,
+            doseCode: dose.code,
+            doseLabel: dose.label,
+            isB2B,
+            unitPrice,
+            qty: 1,
+            stockStatus: dose.stockStatus
+          }
+        ];
+      }
+    });
+
+    setIsCartOpen(true);
+  };
+
+  const updateCartQty = (index, delta) => {
+    setCart(prev => {
+      const updated = [...prev];
+      const newQty = updated[index].qty + delta;
+      if (newQty <= 0) {
+        return updated.filter((_, i) => i !== index);
+      }
+      updated[index].qty = newQty;
+      return updated;
+    });
+  };
+
+  const removeCartItem = (index) => {
+    setCart(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const cartTotal = cart.reduce((acc, item) => acc + (item.unitPrice * item.qty), 0);
+  const cartCount = cart.reduce((acc, item) => acc + item.qty, 0);
+
+  // Filter compounds based on Search & Category
+  const filteredCompounds = useMemo(() => {
+    return compounds.filter((comp) => {
+      // Category Match
+      if (selectedCategory === 'PRONTA_ENTREGA') {
+        const hasStock = comp.doses.some(d => d.stockStatus === 'in_stock');
+        if (!hasStock) return false;
+      } else if (selectedCategory !== 'TODOS') {
+        if (!comp.line?.toLowerCase().includes(selectedCategory.toLowerCase())) {
+          return false;
+        }
+      }
+
+      // Search Query Match
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase().trim();
+        const matchesName = comp.name?.toLowerCase().includes(query);
+        const matchesDesc = comp.desc?.toLowerCase().includes(query);
+        const matchesDose = comp.doses?.some(d => d.label?.toLowerCase().includes(query) || d.code?.toLowerCase().includes(query));
+        if (!matchesName && !matchesDesc && !matchesDose) return false;
+      }
+
+      return true;
+    });
+  }, [compounds, selectedCategory, searchQuery]);
+
+  // Jump to Calculator pre-filling product dose
+  const openCalculatorForProduct = (doseNum, doseUnit) => {
+    setCurrentView('calc');
+    if (doseUnit === 'mg' && ['5', '10', '15', '20', '30', '50', '60'].includes(String(doseNum))) {
+      setCalcPeptideSelect(String(doseNum));
+    } else {
+      setCalcPeptideSelect('custom');
+      setCalcManualMg(doseUnit === 'mcg' ? doseNum / 1000 : doseNum);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Calculator calculations
+  const calcResults = useMemo(() => {
+    const vialMg = calcPeptideSelect === 'custom' 
+      ? (parseFloat(calcManualMg) || 10) 
+      : (parseFloat(calcPeptideSelect) || 10);
+    const waterMl = parseFloat(calcWaterMl) || 2.0;
+    const targetDose = parseFloat(calcDoseAmount) || 500;
+    const targetDoseMg = calcDoseUnit === 'mcg' ? targetDose / 1000 : targetDose;
+
+    const concentrationMgPerMl = vialMg / waterMl;
+    const neededMl = targetDoseMg / concentrationMgPerMl;
+    const units = neededMl * 100;
+    const totalDoses = Math.max(1, Math.floor(vialMg / targetDoseMg));
+    const roundedUnits = Math.round(units * 10) / 10;
+
+    // SVG Syringe fill calculations
+    const ratio = Math.min(Math.max(roundedUnits / calcSyringeType, 0), 1);
+    const barrelWidth = 230;
+    const filledWidth = Math.max(ratio * barrelWidth, 4);
+
+    return {
+      vialMg,
+      waterMl,
+      concentrationMgPerMl,
+      roundedUnits,
+      totalDoses,
+      filledWidth,
+      plungerX: 30 + filledWidth,
+      rodX: 30 + filledWidth + 2,
+      thumbX: 30 + filledWidth + 140
+    };
+  }, [calcPeptideSelect, calcManualMg, calcWaterMl, calcDoseAmount, calcDoseUnit, calcSyringeType]);
+
+  // Format and send order to WhatsApp
+  const handleCheckoutWhatsApp = () => {
+    if (cart.length === 0) return;
+
+    let hasInStock = false;
+    let hasPreOrder = false;
+
+    let msg = "*NOVO PEDIDO • PSL LABS (PREMIUM SYNTHESIS LINE)*\n";
+    msg += "=========================================\n\n";
+
+    cart.forEach(item => {
+      const sub = item.unitPrice * item.qty;
+      const inStock = item.stockStatus === 'in_stock';
+      if (inStock) hasInStock = true;
+      else hasPreOrder = true;
+
+      const stockTag = inStock ? "[⚡ Pronta Entrega SP]" : "[⏳ Sob Encomenda 3-5d]";
+      const tierTag = item.isB2B ? "Caixa c/ 10 Frascos" : "1 Frasco";
+
+      msg += `• ${item.qty}x ${item.name} (${item.doseLabel}) [${tierTag}] ${stockTag} = R$ ${sub.toFixed(2).replace('.', ',')}\n`;
+    });
+
+    msg += "\n-----------------------------------------\n";
+    msg += `*TOTAL DO PEDIDO:* R$ ${cartTotal.toFixed(2).replace('.', ',')}\n\n`;
+
+    if (hasPreOrder && hasInStock) {
+      msg += "*DISPONIBILIDADE:* ⚠️ *Pedido Misto* (Itens Pronta Entrega SP e Sob Encomenda - Prazo 3 a 5 dias úteis)\n";
+    } else if (hasPreOrder) {
+      msg += "*DISPONIBILIDADE:* ⏳ *Sob Encomenda* (Envio em 3 a 5 dias úteis)\n";
+    } else {
+      msg += "*DISPONIBILIDADE:* ⚡ *Pronta Entrega SP* (Envio imediato hoje via Motoboy Flash SP ou Sedex!)\n";
+    }
+
+    const shippingLabel = shippingMethod === 'uber' 
+      ? "🛵 Uber Moto / Flash (São Paulo - até 2h para Pronta Entrega)" 
+      : "📦 Correios Sedex (Todo Brasil)";
+    msg += `*FORMA DE ENVIO:* ${shippingLabel}\n`;
+    msg += `*NOME:* ${clientName || 'A informar'}\n`;
+    msg += `*ENDEREÇO / CIDADE:* ${clientAddress || 'A informar'}\n\n`;
+    msg += "Gostaria de confirmar a disponibilidade e receber a chave Pix para pagamento!";
+
+    const encoded = encodeURIComponent(msg);
+    window.open(`https://wa.me/${sellerWhatsapp}?text=${encoded}`, '_blank');
+  };
+
+  const handleSupportWhatsApp = () => {
+    const msg = encodeURIComponent("Olá, PSL Labs! Gostaria de tirar dúvidas sobre os peptídeos, dosagens e pronta entrega.");
+    window.open(`https://wa.me/${sellerWhatsapp}?text=${msg}`, '_blank');
+  };
 
   return (
-    <div className="min-h-screen bg-[#FAFBF9] dark:bg-[#070A11] text-[#0F172A] dark:text-[#F8FAFC] selection:bg-[#047857] selection:text-white font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] font-sans antialiased pb-20 md:pb-10 selection:bg-[#145C46] selection:text-white">
       <Head>
-        <title>GHK-Cu 50mg Liofilizado Puro | PSL LABS — The Science of Regeneration</title>
-        <meta name="description" content="Adquira GHK-Cu (Tripeptídeo de Cobre Puro 50mg) em pó liofilizado criogênico. Pureza atestada por HPLC ≥ 99.4%, diluente estéril e rastreabilidade por QR Code unitário. PSL LABS." />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <title>PSL Labs — Premium Synthesis Line | Peptídeos de Alta Pureza</title>
+        <meta name="description" content="Catálogo Oficial PSL Labs. Peptídeos liofilizados de alta pureza HPLC ≥ 99.4%, pronta entrega em São Paulo e envio nacional." />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        <meta name="theme-color" content="#145C46" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Montserrat:wght@600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </Head>
 
-      {/* TOP ANNOUNCEMENT BAR (URGENCY & SAFETY) */}
-      <div className="bg-emerald-950 text-emerald-200 border-b border-emerald-900 py-2 px-3 text-[11px] sm:text-xs font-mono tracking-wider shadow-inner">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 truncate">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-            <span className="truncate">
-              <strong>LOTE #2026-X1 DISPONÍVEL:</strong> PUREZA HPLC ≥ 99.41% • CADEIA DE FRIO GARANTIDA
-            </span>
-          </div>
-          <a
-            href={getWhatsAppLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 text-white hover:text-emerald-300 font-bold transition shrink-0"
-          >
-            <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Atendimento Concierge Lab</span>
-          </a>
-        </div>
+      {/* TOP ANNOUNCEMENT FLASH BAR */}
+      <div className="bg-gradient-to-r from-[#064E3B] via-[#145C46] to-[#064E3B] text-white py-2 px-3 text-center text-xs font-semibold flex items-center justify-center gap-2">
+        <span className="bg-white/20 text-white px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider">
+          ⚡ Flash SP
+        </span>
+        <span className="truncate">
+          Entrega em até <strong>2h na Grande SP</strong> via Uber Moto • Sedex Brasil com gelo reutilizável
+        </span>
       </div>
 
-      {/* STICKY LUXURY NAVIGATION */}
-      <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#070A11]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+      {/* STICKY HEADER */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between gap-3">
           
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-2 group shrink-0">
+          <div 
+            onClick={() => setCurrentView('catalog')} 
+            className="cursor-pointer flex items-center shrink-0"
+            title="PSL Labs - Catálogo Oficial"
+          >
             <img 
               src="/brand/psl-labs-premium-synthesis-line.png" 
-              alt="PSL LABS - Premium Synthesis Line" 
-              className="h-8 sm:h-11 w-auto max-w-[130px] sm:max-w-none object-contain transition-transform group-hover:scale-[1.02] dark:hidden"
+              alt="PSL Labs - Premium Synthesis Line" 
+              className="h-9 sm:h-11 w-auto max-w-[140px] sm:max-w-none object-contain transition-transform hover:scale-102"
             />
-            <img 
-              src="/brand/psl-labs-premium-synthesis-line-white.png" 
-              alt="PSL LABS - Premium Synthesis Line" 
-              className="h-8 sm:h-11 w-auto max-w-[130px] sm:max-w-none object-contain transition-transform group-hover:scale-[1.02] hidden dark:block"
-            />
-          </Link>
+          </div>
 
-          {/* Quick Nav Links (Desktop) */}
-          <nav className="hidden lg:flex items-center gap-7 text-xs font-bold tracking-[0.12em] text-slate-700 dark:text-slate-300 uppercase" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            <a href="#diferencial" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-2">Por que Liofilizado?</a>
-            <a href="#beneficios" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-2">Benefícios</a>
-            <a href="#laudo" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-2">Laudo HPLC</a>
-            <a href="#protocolo" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-2">Como Usar</a>
-            <a href="#kits" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-2">Escolher Kit</a>
-            <a href="#faq" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-2">Dúvidas</a>
-          </nav>
-
-          {/* Actions & CTA */}
           <div className="flex items-center gap-2 sm:gap-3">
             
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 sm:p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700 dark:text-amber-400 transition cursor-pointer shadow-sm"
-              title="Alternar Modo Claro / Escuro"
-              aria-label="Alternar tema"
-            >
-              {theme === 'dark' ? (
-                <Sun className="w-4 h-4 text-amber-400" />
-              ) : (
-                <Moon className="w-4 h-4 text-slate-800" />
-              )}
-            </button>
+            {/* Desktop Navigation Tabs */}
+            <div className="hidden md:flex items-center gap-2">
+              <div className="flex bg-slate-100 p-1 rounded-full">
+                <button
+                  onClick={() => setCurrentView('catalog')}
+                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                    currentView === 'catalog' 
+                      ? 'bg-[#145C46] text-white shadow-xs' 
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  📦 Catálogo
+                </button>
+                <button
+                  onClick={() => setCurrentView('calc')}
+                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                    currentView === 'calc' 
+                      ? 'bg-[#145C46] text-white shadow-xs' 
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  🧪 Calculadora
+                </button>
+              </div>
 
-            {/* Verification Terminal Direct Shortcut */}
-            <Link
-              href="/"
-              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono font-bold text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:border-emerald-600 px-3 py-2 rounded-xl transition shadow-sm"
-              title="Acessar Terminal de Validação de QR Code"
-            >
-              <QrCode className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Verificar Frasco</span>
-            </Link>
+              {/* Verify Bottle Link */}
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-[#145C46] border border-slate-200 px-3 py-1.5 rounded-full transition"
+                title="Ir para o Terminal de Validação de QR Code"
+              >
+                <QrCode className="w-3.5 h-3.5 text-[#145C46]" />
+                <span>Verificar Frasco</span>
+              </Link>
 
-            {/* Primary Buy CTA */}
-            <a
-              href="#kits"
-              className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.10em] bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] text-white px-3.5 sm:px-5 py-2.5 rounded-xl transition shadow-md shadow-emerald-900/20 cursor-pointer"
-              style={{ fontFamily: 'Montserrat, sans-serif' }}
-            >
-              <ShoppingBag className="w-4 h-4" />
-              <span className="hidden sm:inline">ADQUIRIR PROTOCOLO</span>
-              <span className="sm:hidden">COMPRAR</span>
-            </a>
+              {/* Desktop Cart Button */}
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className="bg-[#0F172A] hover:bg-slate-800 text-white font-bold text-xs px-4 py-2 rounded-full flex items-center gap-1.5 transition cursor-pointer shadow-xs"
+              >
+                <ShoppingBag className="w-3.5 h-3.5" />
+                <span>Pedido ({cartCount})</span>
+              </button>
+            </div>
+
+            {/* Tier Switcher (B2C vs B2B) */}
+            <div className="flex items-center bg-[#E8F5EE] border border-[#A3D4C1] rounded-full p-0.5">
+              <button
+                onClick={() => setTier('b2c')}
+                className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all cursor-pointer ${
+                  tier === 'b2c' 
+                    ? 'bg-[#145C46] text-white shadow-xs' 
+                    : 'text-[#0D4131] hover:text-[#145C46]'
+                }`}
+              >
+                🏷️ 1 Frasco
+              </button>
+              <button
+                onClick={() => setTier('b2b')}
+                className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all cursor-pointer ${
+                  tier === 'b2b' 
+                    ? 'bg-[#145C46] text-white shadow-xs' 
+                    : 'text-[#0D4131] hover:text-[#145C46]'
+                }`}
+              >
+                📦 Atacado (10 un)
+              </button>
+            </div>
 
           </div>
 
         </div>
       </header>
 
-      <main>
+      {/* MAIN CONTAINER */}
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-6">
         
-        {/* HERO SECTION: THE SCIENCE OF REGENERATION (DIRECT RESPONSE HIGH-TICKET) */}
-        <section className="relative pt-10 sm:pt-16 pb-16 sm:pb-24 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-b from-white via-[#FAFBF9] to-slate-100 dark:from-[#070A11] dark:via-[#090D17] dark:to-[#070A11] transition-colors overflow-hidden">
-          
-          {/* Subtle laboratory glow */}
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+        {/* ================= CATALOG VIEW ================= */}
+        {currentView === 'catalog' && (
+          <div>
+            
+            {/* Search and Category Filter Panel */}
+            <div className="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-xs mb-4">
               
-              {/* Left Column: Monograph & High-Impact Copy */}
-              <div className="lg:col-span-7 space-y-6">
-                
-                {/* Clinical Pill Badge */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-600/40 bg-emerald-50 dark:bg-emerald-950/70 text-xs font-mono font-bold tracking-wider text-emerald-900 dark:text-emerald-300 shadow-sm">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400 animate-pulse" />
-                  <span>PREMIUM SYNTHESIS LINE</span>
-                  <span className="text-slate-400">|</span>
-                  <span className="font-extrabold uppercase">PROTOCOLO DE BIOESTIMULAÇÃO #01</span>
-                </div>
+              {/* Search Row */}
+              <div className="relative mb-3">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Buscar peptídeo (ex: Retatrutide, BPC-157, GHK-Cu, Tirzepatide)..."
+                  className="w-full pl-10 pr-4 py-2.5 bg-[#FAFCFB] border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#145C46] focus:bg-white transition"
+                />
+                {searchQuery && (
+                  <button 
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
 
-                {/* Primary Headline */}
-                <h1 
-                  className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-[0.03em] sm:tracking-[0.08em] uppercase text-slate-950 dark:text-white leading-[1.12] break-words"
-                  style={{ fontFamily: 'Syne, sans-serif' }}
+              {/* Category Chips with Horizontal Touch Scroll */}
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                <button
+                  onClick={() => setSelectedCategory('TODOS')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer shrink-0 ${
+                    selectedCategory === 'TODOS'
+                      ? 'bg-[#145C46] text-white'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
+                  }`}
                 >
-                  THE SCIENCE OF REGENERATION.
-                </h1>
+                  📦 Todos
+                </button>
 
-                {/* Subheadline with Medical Authority */}
-                <p className="text-base sm:text-lg text-slate-700 dark:text-slate-300 leading-relaxed font-normal max-w-2xl">
-                  <strong>Tripeptídeo de Cobre Puro (GHK-Cu 50mg) em pó liofilizado criogênico a vácuo.</strong> Pureza superior a <strong className="text-emerald-700 dark:text-emerald-400 font-bold">99.4% (HPLC)</strong> para estímulo direto da síntese de pró-colágeno I e III, aumento de densidade dérmica e rejuvenescimento biológico profundo — sem diluições cosméticas comerciais.
-                </p>
-
-                {/* Dual Call To Actions */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-                  <a
-                    href="#kits"
-                    className="flex items-center justify-center gap-2.5 bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] text-white font-bold text-xs uppercase tracking-[0.14em] py-4 px-8 rounded-xl transition shadow-lg shadow-emerald-900/20 cursor-pointer"
-                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                  >
-                    <span>ESCOLHER MEU PROTOCOLO</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </a>
-
-                  <a
-                    href={getWhatsAppLink()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2.5 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 font-bold text-xs uppercase tracking-[0.12em] py-4 px-6 rounded-xl transition cursor-pointer shadow-sm"
-                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                  >
-                    <MessageCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                    <span>Falar com Concierge Lab</span>
-                  </a>
-                </div>
-
-                {/* Assurance Trust Pillars */}
-                <div className="pt-4 border-t border-slate-200 dark:border-slate-800 grid grid-cols-3 gap-2.5 sm:gap-4 text-xs font-mono text-slate-700 dark:text-slate-300">
-                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <span className="block text-[10px] text-slate-500 uppercase font-semibold">Pureza Mínima</span>
-                    <span className="font-bold text-emerald-700 dark:text-emerald-400 text-xs sm:text-sm">≥ 99.4% HPLC</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <span className="block text-[10px] text-slate-500 uppercase font-semibold">Estabilidade</span>
-                    <span className="font-bold text-slate-950 dark:text-white text-xs sm:text-sm">24 Meses (Seco)</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <span className="block text-[10px] text-slate-500 uppercase font-semibold">Autenticidade</span>
-                    <span className="font-bold text-slate-950 dark:text-white text-xs sm:text-sm">1 QR / Frasco</span>
-                  </div>
-                </div>
-
-              </div>
-
-              {/* Right Column: Hero Specimen Visual Card */}
-              <div className="lg:col-span-5">
-                <div className="relative rounded-3xl bg-white dark:bg-[#0D121F] border border-slate-300 dark:border-slate-800 p-6 sm:p-8 shadow-2xl overflow-hidden">
-                  
-                  {/* Card Micro Header */}
-                  <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200 dark:border-slate-800 text-xs font-mono">
-                    <div>
-                      <span className="text-[10px] text-slate-500 uppercase block font-semibold">COMPOSTO ATIVO</span>
-                      <strong className="text-slate-950 dark:text-white text-sm">GHK-Cu (Tripeptide-1)</strong>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-[10px] text-slate-500 uppercase block font-semibold">LAUDO ANALÍTICO</span>
-                      <strong className="text-emerald-700 dark:text-emerald-400 font-extrabold text-sm">99.41% Aprovado</strong>
-                    </div>
-                  </div>
-
-                  {/* Specimen Render */}
-                  <div className="relative h-72 sm:h-80 bg-slate-50 dark:bg-[#05080E] rounded-2xl overflow-hidden flex items-center justify-center p-6 border border-slate-200 dark:border-slate-800/80 group">
-                    <img 
-                      src="/images/ghk-cu-50mg-vial-50x30.jpg" 
-                      alt="Frasco de GHK-Cu 50mg liofilizado PSL LABS" 
-                      className="max-h-full max-w-full object-contain filter drop-shadow-2xl group-hover:scale-105 transition-transform duration-500"
-                    />
-
-                    {/* Badge Pill Overlay */}
-                    <div className="absolute bottom-3 left-3 bg-white/95 dark:bg-slate-900/95 border border-slate-300 dark:border-slate-700 px-3 py-1.5 rounded-xl text-[11px] font-mono font-bold text-slate-900 dark:text-white shadow-md">
-                      50mg Pó Liofilizado + Veículo 5ml
-                    </div>
-                    <div className="absolute top-3 right-3 bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider shadow-sm">
-                      Lote: #2026-X1
-                    </div>
-                  </div>
-
-                  {/* Chemical Specs Breakdown */}
-                  <div className="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2 text-xs font-mono">
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-500">Massa Molecular:</span>
-                      <span className="font-semibold text-slate-900 dark:text-white">403.94 g/mol</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-500">Sequência Bioativa:</span>
-                      <span className="font-semibold text-slate-900 dark:text-white">Gly-His-Lys:Cu²⁺</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-500">Ação Principal:</span>
-                      <span className="font-bold text-emerald-700 dark:text-emerald-400">Síntese de Colágeno I &amp; III</span>
-                    </div>
-                  </div>
-
-                  {/* Fast Action Footer */}
-                  <div className="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center gap-3">
-                    <button
-                      onClick={() => setIsCoaModalOpen(true)}
-                      className="flex-1 text-center py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-xs uppercase tracking-wider transition cursor-pointer"
-                      style={{ fontFamily: 'Montserrat, sans-serif' }}
-                    >
-                      Ver Laudo HPLC
-                    </button>
-                    <a
-                      href="#kits"
-                      className="flex-1 text-center py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] text-white font-bold text-xs uppercase tracking-wider transition shadow-sm cursor-pointer"
-                      style={{ fontFamily: 'Montserrat, sans-serif' }}
-                    >
-                      Garantir Frasco
-                    </a>
-                  </div>
-
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* SECTION 2: THE PARADIGM SHIFT (WHY LYOPHILIZED DESTROYS REGULAR SERUMS) */}
-        <section id="diferencial" className="py-20 sm:py-24 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#070A11] transition-colors">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-              <span className="text-xs font-mono tracking-[0.2em] text-emerald-700 dark:text-emerald-400 uppercase font-extrabold block">
-                O FIM DOS COSMÉTICOS DILUÍDOS
-              </span>
-              <h2 
-                className="text-2xl sm:text-4xl font-extrabold tracking-[0.06em] uppercase text-slate-950 dark:text-white"
-                style={{ fontFamily: 'Syne, sans-serif' }}
-              >
-                POR QUE PEPTÍDEOS EM SÉRUM COMUM NÃO FUNCIONAM COMO PROMETIDO?
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
-                Peptídeos são biomoléculas delicadas. Entenda a diferença científica fundamental entre comprar um frasco comercial de prateleira e utilizar o protocolo liofilizado da PSL Labs.
-              </p>
-            </div>
-
-            {/* Visual Comparison Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-              
-              {/* Common Market Serums */}
-              <div className="rounded-3xl border border-red-200 dark:border-red-950/60 bg-red-50/40 dark:bg-red-950/20 p-8 flex flex-col justify-between shadow-sm relative">
-                <div>
-                  <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-mono text-xs font-extrabold uppercase tracking-wider mb-3">
-                    <X className="w-4 h-4 stroke-[3]" />
-                    <span>Séruns e Cremes Comerciais de Prateleira</span>
-                  </div>
-                  
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
-                    Degradação Molecúlar Prévia em Solução Aquosa
-                  </h3>
-
-                  <ul className="space-y-4 text-sm text-slate-700 dark:text-slate-300">
-                    <li className="flex items-start gap-3">
-                      <span className="w-5 h-5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">✕</span>
-                      <span><strong>Hidrólise Prematura:</strong> Peptídeos misturados em água decompõem suas cadeias ativas após 15 a 30 dias na prateleira.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="w-5 h-5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">✕</span>
-                      <span><strong>Concentrações Irrisórias:</strong> A maioria das marcas utiliza menos de 0.2% a 0.5% de ativo real, preenchendo o volume com espessantes e silicones.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="w-5 h-5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">✕</span>
-                      <span><strong>Zero Transparência Analítica:</strong> Não fornecem laudo HPLC de pureza por lote nem garantia de ausência de endotoxinas.</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="mt-8 pt-4 border-t border-red-200 dark:border-red-900/40 text-xs font-mono text-red-700 dark:text-red-400 font-semibold">
-                  Resultado: Você paga caro por um cosmético que já perdeu a maior parte do poder regenerativo antes de você abrir.
-                </div>
-              </div>
-
-              {/* PSL Labs Cryo-Dry Protocol */}
-              <div className="rounded-3xl border-2 border-emerald-600 dark:border-emerald-500 bg-white dark:bg-[#0D121F] p-8 flex flex-col justify-between shadow-xl shadow-emerald-950/10 relative">
-                <div className="absolute -top-3.5 right-6 bg-emerald-700 text-white text-[11px] font-mono font-extrabold uppercase px-3 py-0.5 rounded-full shadow-sm">
-                  PADRÃO LABORATORIAL
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-mono text-xs font-extrabold uppercase tracking-wider mb-3">
-                    <CheckCircle2 className="w-4 h-4 stroke-[3]" />
-                    <span>PSL LABS • Liofilização Criogênica a Vácuo</span>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
-                    Ativação Fresca Imediata no Momento do Uso
-                  </h3>
-
-                  <ul className="space-y-4 text-sm text-slate-700 dark:text-slate-300">
-                    <li className="flex items-start gap-3">
-                      <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">✓</span>
-                      <span><strong>Potência Biológica Preservada:</strong> O peptídeo permanece inerte a vácuo sob atmosfera de nitrogênio, mantendo 100% da integridade estrutural por até 24 meses.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">✓</span>
-                      <span><strong>Dosagem Terapêutica Real (50mg):</strong> Concentração clínica pura. Cada frasco entrega peptídeo verdadeiro para um ciclo de 30 a 45 dias de tratamento profundo.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">✓</span>
-                      <span><strong>Cromatografia HPLC Atestada:</strong> Cada lote possui laudo analítico oficial auditável com pureza certificada superior a 99.4%.</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="mt-8 pt-4 border-t border-slate-200 dark:border-slate-800 text-xs font-mono text-emerald-800 dark:text-emerald-300 font-semibold">
-                  Resultado: Máxima absorção celular e estímulo verdadeiro de colágeno desde a primeira aplicação.
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </section>
-
-        {/* SECTION 3: CLINICAL BENEFITS (THE PROVEN MECHANISMS) */}
-        <section id="beneficios" className="py-20 sm:py-24 border-b border-slate-200 dark:border-slate-800 bg-[#F4F6F8] dark:bg-[#070A11] transition-colors">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-              <span className="text-xs font-mono tracking-[0.2em] text-emerald-700 dark:text-emerald-400 uppercase font-extrabold block">
-                EVIDÊNCIAS MOLECULARES
-              </span>
-              <h2 
-                className="text-2xl sm:text-4xl font-extrabold tracking-[0.06em] uppercase text-slate-950 dark:text-white"
-                style={{ fontFamily: 'Syne, sans-serif' }}
-              >
-                O QUE O GHK-Cu PROVOCA NA SUA PELE
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
-                Descoberto pelo Dr. Loren Pickart, o tripeptídeo de cobre é o padrão-ouro de bioestimulação não invasiva na literatura médica internacional.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              
-              <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-md flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center text-emerald-700 dark:text-emerald-400 mb-5">
-                    <Sparkles className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-bold text-base text-slate-900 dark:text-white mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
-                    Estímulo de Pró-Colágeno I e III
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Estimula fibroblastos de forma até 70% mais eficiente que a vitamina C pura, promovendo recuperação do tônus, firmeza e sustentação dérmica.
-                  </p>
-                </div>
-                <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">
-                  + Firmeza e Densidade
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-md flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center text-emerald-700 dark:text-emerald-400 mb-5">
-                    <Layers className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-bold text-base text-slate-900 dark:text-white mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
-                    Remodelação da Matriz Extracelular
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Auxilia na quebra de agregados de colágeno envelhecido e desorganizado, substituindo-os por novas fibras elásticas saudáveis e organizadas.
-                  </p>
-                </div>
-                <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">
-                  Atenuação de Rugas Finas
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-md flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center text-emerald-700 dark:text-emerald-400 mb-5">
-                    <ShieldCheck className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-bold text-base text-slate-900 dark:text-white mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
-                    Ação Antioxidante &amp; Anti-Inflamatória
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Neutraliza radicais livres e modula a produção de citocinas inflamatórias, auxiliando na cicatrização pós-procedimentos (microagulhamento, laser).
-                  </p>
-                </div>
-                <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">
-                  Recuperação e Reparação
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-md flex flex-col justify-between">
-                <div>
-                  <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-300 dark:border-emerald-700/60 flex items-center justify-center text-emerald-700 dark:text-emerald-400 mb-5">
-                    <Zap className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-bold text-base text-slate-900 dark:text-white mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
-                    Estímulo Folicular e Capilar
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Melhora a microcirculação periférica e o aporte de nutrientes aos folículos, promovendo espessamento da haste capilar e vitalidade do couro cabeludo.
-                  </p>
-                </div>
-                <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">
-                  Uso Dérmico e Capilar
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </section>
-
-        {/* SECTION 4: PURITY & HPLC CHROMATOGRAM SHOWCASE */}
-        <section id="laudo" className="py-20 sm:py-24 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#070A11] transition-colors">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-              
-              <div className="lg:col-span-5 space-y-5">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-600/40 bg-emerald-50 dark:bg-emerald-950/70 text-xs font-mono font-bold text-emerald-900 dark:text-emerald-300">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 dark:bg-emerald-400" />
-                  <span>TRANSPARÊNCIA ANALÍTICA ABSOLUTA</span>
-                </div>
-
-                <h2 
-                  className="text-2xl sm:text-4xl font-extrabold tracking-[0.06em] uppercase text-slate-950 dark:text-white"
-                  style={{ fontFamily: 'Syne, sans-serif' }}
+                <button
+                  onClick={() => setSelectedCategory('PRONTA_ENTREGA')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-extrabold whitespace-nowrap transition cursor-pointer shrink-0 ${
+                    selectedCategory === 'PRONTA_ENTREGA'
+                      ? 'bg-[#10B981] text-white'
+                      : 'bg-[#ECFDF5] text-[#065F46] border border-[#10B981]'
+                  }`}
                 >
-                  CERTIFICADO DE ANÁLISE HPLC &amp; ESI-MS
-                </h2>
+                  ⚡ Pronta Entrega SP
+                </button>
 
-                <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
-                  Não confie em alegações vazias de marketing. A PSL Labs opera sob a norma internacional <strong>ISO/IEC 17025</strong>. Cada lote sintetizado passa por cromatografia líquida de alta performance e espectrometria de massas para comprovação molecular real.
-                </p>
+                <button
+                  onClick={() => setSelectedCategory('Metabolismo & Shape')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer shrink-0 ${
+                    selectedCategory === 'Metabolismo & Shape'
+                      ? 'bg-[#145C46] text-white'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  🔥 Emagrecimento &amp; GLP-1
+                </button>
 
-                <div className="space-y-3 pt-2">
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <span><strong>Pureza Homologada de 99.41%:</strong> Lotes abaixo de 99.0% são descartados sumariamente.</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <span><strong>Ensaio LAL de Endotoxinas:</strong> Menor que 0.01 EU/mg (Zero risco de contaminantes pirogênicos).</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                    <span><strong>Rastreabilidade Criptográfica:</strong> Cada frasco é único e auditável pelo terminal do site.</span>
-                  </div>
-                </div>
+                <button
+                  onClick={() => setSelectedCategory('Regeneração & Articulações')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer shrink-0 ${
+                    selectedCategory === 'Regeneração & Articulações'
+                      ? 'bg-[#145C46] text-white'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  🧬 Regeneração &amp; Articulações
+                </button>
 
-                <div className="pt-3">
-                  <button
-                    onClick={() => setIsCoaModalOpen(true)}
-                    className="inline-flex items-center gap-2 bg-slate-950 hover:bg-emerald-700 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 text-white font-bold text-xs uppercase tracking-[0.12em] py-3.5 px-6 rounded-xl transition cursor-pointer shadow-md"
-                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                  >
-                    <FileCheck2 className="w-4 h-4" />
-                    <span>Abrir Laudo Oficial CoA Completo</span>
-                  </button>
-                </div>
-              </div>
+                <button
+                  onClick={() => setSelectedCategory('Longevidade & Biohacking')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer shrink-0 ${
+                    selectedCategory === 'Longevidade & Biohacking'
+                      ? 'bg-[#145C46] text-white'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  ✨ Longevidade &amp; NAD+
+                </button>
 
-              {/* Chromatogram Panel */}
-              <div className="lg:col-span-7">
-                <div className="bg-[#F8FAF8] dark:bg-[#0D121F] rounded-3xl border border-slate-300 dark:border-slate-800 p-6 sm:p-8 shadow-xl">
-                  
-                  <div className="border-b border-slate-200 dark:border-slate-800 pb-4 mb-5 flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <span className="text-[10px] font-mono uppercase text-slate-500 font-bold block">GRÁFICO ANALÍTICO RP-HPLC</span>
-                      <strong className="text-sm font-bold text-slate-950 dark:text-white uppercase font-mono">
-                        ESPECTRO DE ABSORBÂNCIA UV [λ = 214nm]
-                      </strong>
-                    </div>
-                    <span className="text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100/70 dark:bg-emerald-950/70 px-2.5 py-1 rounded-lg border border-emerald-300 dark:border-emerald-700/60">
-                      Pico Principal: 99.41% Área
-                    </span>
-                  </div>
+                <button
+                  onClick={() => setSelectedCategory('Cérebro & Foco')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer shrink-0 ${
+                    selectedCategory === 'Cérebro & Foco'
+                      ? 'bg-[#145C46] text-white'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  🧠 Cérebro &amp; Foco
+                </button>
 
-                  {/* SVG Chromatogram Plot */}
-                  <div className="bg-white dark:bg-[#05080E] rounded-2xl border border-slate-300 dark:border-slate-800 p-4 mb-5 shadow-inner">
-                    <div className="h-44 w-full">
-                      <svg className="w-full h-full" viewBox="0 0 500 150" fill="none">
-                        <line x1="20" y1="130" x2="480" y2="130" stroke="#94A3B8" strokeWidth="1.5" />
-                        <line x1="20" y1="90" x2="480" y2="90" stroke="#CBD5E1" strokeWidth="1" strokeDasharray="3 3" />
-                        <line x1="20" y1="50" x2="480" y2="50" stroke="#CBD5E1" strokeWidth="1" strokeDasharray="3 3" />
+                <button
+                  onClick={() => setSelectedCategory('Estética & Pele')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer shrink-0 ${
+                    selectedCategory === 'Estética & Pele'
+                      ? 'bg-[#145C46] text-white'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  💎 Estética &amp; Pele
+                </button>
 
-                        <path 
-                          d="M20 130 L160 130 Q185 129 195 110 Q205 70 210 20 Q212 12 215 20 Q220 70 230 110 Q240 129 270 130 L480 130 Z" 
-                          fill="rgba(5, 150, 105, 0.18)" 
-                        />
-                        <path 
-                          d="M20 130 L160 130 Q185 129 195 110 Q205 70 210 20 Q212 12 215 20 Q220 70 230 110 Q240 129 270 130 L480 130" 
-                          stroke="#059669" 
-                          strokeWidth="2.5" 
-                          fill="none" 
-                        />
-                        <circle cx="212" cy="14" r="4" fill="#059669" />
-                        <line x1="212" y1="14" x2="250" y2="14" stroke="#059669" strokeWidth="1.5" />
-                        <text x="256" y="18" fill="#059669" fontSize="11" fontFamily="monospace" fontWeight="bold">
-                          tR: 4.82 min (Pureza: 99.41%)
-                        </text>
-                      </svg>
-                    </div>
+                <button
+                  onClick={() => setSelectedCategory('Massa Magra & GH')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer shrink-0 ${
+                    selectedCategory === 'Massa Magra & GH'
+                      ? 'bg-[#145C46] text-white'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  💪 Massa Magra &amp; GH
+                </button>
 
-                    <div className="flex justify-between text-xs font-mono text-slate-500 pt-1 font-semibold">
-                      <span>0.0 min</span>
-                      <span>3.0 min</span>
-                      <span>6.0 min</span>
-                      <span>9.0 min</span>
-                      <span>12.0 min</span>
-                    </div>
-                  </div>
-
-                  {/* Test Parameters Table */}
-                  <div className="border border-slate-300 dark:border-slate-800 rounded-xl overflow-x-auto bg-white dark:bg-[#05080E] text-xs font-mono shadow-sm">
-                    <table className="w-full text-left min-w-[380px]">
-                      <thead className="bg-slate-100 dark:bg-slate-900 border-b border-slate-300 dark:border-slate-800 text-[11px] text-slate-700 dark:text-slate-300 uppercase font-bold">
-                        <tr>
-                          <th className="py-2.5 px-3.5">Parâmetro Analítico</th>
-                          <th className="py-2.5 px-3.5">Especificação</th>
-                          <th className="py-2.5 px-3.5 text-right">Resultado</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-slate-900 dark:text-slate-100 font-semibold text-[11px]">
-                        <tr>
-                          <td className="py-2 px-3.5 text-slate-700 dark:text-slate-300">Aparência Física</td>
-                          <td className="py-2 px-3.5 text-slate-500">Bolo liofilizado azul/branco</td>
-                          <td className="py-2 px-3.5 text-right text-emerald-700 dark:text-emerald-400 font-bold">Conforme</td>
-                        </tr>
-                        <tr>
-                          <td className="py-2 px-3.5 text-slate-700 dark:text-slate-300">Pureza Cromatográfica HPLC</td>
-                          <td className="py-2 px-3.5 text-slate-500">≥ 99.0%</td>
-                          <td className="py-2 px-3.5 text-right font-extrabold text-emerald-700 dark:text-emerald-400">99.41%</td>
-                        </tr>
-                        <tr>
-                          <td className="py-2 px-3.5 text-slate-700 dark:text-slate-300">Espectrometria de Massas (ESI-MS)</td>
-                          <td className="py-2 px-3.5 text-slate-500">Teórico ± 1.0 Da (403.94)</td>
-                          <td className="py-2 px-3.5 text-right text-emerald-700 dark:text-emerald-400 font-bold">Confirmado</td>
-                        </tr>
-                        <tr>
-                          <td className="py-2 px-3.5 text-slate-700 dark:text-slate-300">Endotoxinas Bacterianas (LAL)</td>
-                          <td className="py-2 px-3.5 text-slate-500">&lt; 0.05 EU/mg</td>
-                          <td className="py-2 px-3.5 text-right text-emerald-700 dark:text-emerald-400 font-bold">&lt; 0.01 EU/mg</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                </div>
+                <button
+                  onClick={() => setSelectedCategory('Imunidade & Vitalidade')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer shrink-0 ${
+                    selectedCategory === 'Imunidade & Vitalidade'
+                      ? 'bg-[#145C46] text-white'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
+                  }`}
+                >
+                  🛡️ Imunidade
+                </button>
               </div>
 
             </div>
 
-          </div>
-        </section>
-
-        {/* SECTION 5: HOW TO USE IN 3 STEPS (THE PROTOCOL) */}
-        <section id="protocolo" className="py-20 sm:py-24 border-b border-slate-200 dark:border-slate-800 bg-[#F4F6F8] dark:bg-[#070A11] transition-colors">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-              <span className="text-xs font-mono tracking-[0.2em] text-emerald-700 dark:text-emerald-400 uppercase font-extrabold block">
-                SIMPLICIDADE &amp; MÁXIMO FRESCOR
+            {/* Section Title & Counters */}
+            <div className="flex items-center justify-between mb-3 px-1 text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <span>Catálogo Oficial PSL Labs ({filteredCompounds.length} compostos)</span>
+              <span className="text-[#145C46] bg-[#E8F5EE] px-2 py-0.5 rounded-md font-mono text-[11px]">
+                🔥 Mais Procurados
               </span>
-              <h2 
-                className="text-2xl sm:text-4xl font-extrabold tracking-[0.06em] uppercase text-slate-950 dark:text-white"
-                style={{ fontFamily: 'Syne, sans-serif' }}
-              >
-                O PROTOCOLO EM 3 PASSOS RÁPIDOS
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
-                Você mesmo mistura o frasco no conforto da sua casa em menos de 1 minuto, garantindo a molécula mais fresca e ativa do mercado.
-              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              
-              {/* STEP 1 */}
-              <div className="bg-white dark:bg-[#0D121F] rounded-3xl border border-slate-300 dark:border-slate-800 p-8 shadow-lg flex flex-col justify-between hover:border-emerald-600 transition">
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="text-4xl font-extrabold text-emerald-700 dark:text-emerald-400" style={{ fontFamily: 'Syne, sans-serif' }}>01</span>
-                    <span className="bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-mono font-bold px-3 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                      TRANSFERÊNCIA
-                    </span>
-                  </div>
+            {/* Products Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+              {filteredCompounds.map((comp) => {
+                const doseIdx = selectedDoses[comp.id] ?? (comp.defaultDoseIndex || 0);
+                const currentDose = comp.doses[doseIdx] || comp.doses[0];
+                const isB2B = tier === 'b2b';
+                const price = isB2B ? currentDose.b2bBoxPrice : currentDose.suggestedPriceB2C;
+                const isReadyStock = currentDose.stockStatus === 'in_stock';
 
-                  <div className="h-32 mb-6 flex items-center justify-center bg-slate-50 dark:bg-[#05080E] rounded-2xl border border-slate-200 dark:border-slate-800">
-                    <FlaskConical className="w-14 h-14 text-emerald-700 dark:text-emerald-400" />
-                  </div>
-
-                  <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
-                    Adicione o Diluente Estéril
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Com a cânula estéril inclusa no kit, transfira suavemente os 5.0ml do veículo bacteriostático pela parede interna do frasco âmbar.
-                  </p>
-                </div>
-                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs font-mono text-slate-500 font-semibold">
-                  Ambiente asséptico e prático
-                </div>
-              </div>
-
-              {/* STEP 2 */}
-              <div className="bg-white dark:bg-[#0D121F] rounded-3xl border border-slate-300 dark:border-slate-800 p-8 shadow-lg flex flex-col justify-between hover:border-emerald-600 transition">
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="text-4xl font-extrabold text-emerald-700 dark:text-emerald-400" style={{ fontFamily: 'Syne, sans-serif' }}>02</span>
-                    <span className="bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-mono font-bold px-3 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                      SOLUBILIZAÇÃO
-                    </span>
-                  </div>
-
-                  <div className="h-32 mb-6 flex items-center justify-center bg-slate-50 dark:bg-[#05080E] rounded-2xl border border-slate-200 dark:border-slate-800">
-                    <Sparkles className="w-14 h-14 text-emerald-700 dark:text-emerald-400" />
-                  </div>
-
-                  <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
-                    Rotação Suave (20 Segundos)
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Faça movimentos circulares lentos com as mãos por 20 segundos. O pó liofilizado dissolverá perfeitamente. Nunca agite com força.
-                  </p>
-                </div>
-                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs font-mono text-slate-500 font-semibold">
-                  Preserva as ligações peptídicas
-                </div>
-              </div>
-
-              {/* STEP 3 */}
-              <div className="bg-white dark:bg-[#0D121F] rounded-3xl border border-slate-300 dark:border-slate-800 p-8 shadow-lg flex flex-col justify-between hover:border-emerald-600 transition">
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="text-4xl font-extrabold text-emerald-700 dark:text-emerald-400" style={{ fontFamily: 'Syne, sans-serif' }}>03</span>
-                    <span className="bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-mono font-bold px-3 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                      APLICAÇÃO
-                    </span>
-                  </div>
-
-                  <div className="h-32 mb-6 flex items-center justify-center bg-slate-50 dark:bg-[#05080E] rounded-2xl border border-slate-200 dark:border-slate-800">
-                    <Clock className="w-14 h-14 text-emerald-700 dark:text-emerald-400" />
-                  </div>
-
-                  <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
-                    4 a 6 Gotas Noturnas
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Encaixe o dosador conta-gotas. Aplique diretamente na face ou couro cabeludo antes de dormir. Guarde o frasco reconstituído na geladeira.
-                  </p>
-                </div>
-                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs font-mono text-slate-500 font-semibold">
-                  Conservar refrigerado (2°C a 8°C)
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </section>
-
-        {/* SECTION 6: PRICING / KITS SELECTION (THE CORE CONVERSION ENGINE) */}
-        <section id="kits" className="py-20 sm:py-28 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#070A11] transition-colors relative">
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            
-            <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-              <span className="text-xs font-mono tracking-[0.2em] text-emerald-700 dark:text-emerald-400 uppercase font-extrabold block">
-                CONDIÇÃO DIRETA DO LABORATÓRIO
-              </span>
-              <h2 
-                className="text-3xl sm:text-5xl font-extrabold tracking-[0.06em] uppercase text-slate-950 dark:text-white"
-                style={{ fontFamily: 'Syne, sans-serif' }}
-              >
-                ESCOLHA O SEU PROTOCOLO
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
-                Envios diretos com embalagem térmica reforçada, código de rastreamento prioritário e suporte técnico especializado.
-              </p>
-            </div>
-
-            {/* Pricing Cards Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-              
-              {/* KIT 1: ESSENTIAL */}
-              <div className="bg-[#FAFBF9] dark:bg-[#0D121F] rounded-3xl border border-slate-300 dark:border-slate-800 p-8 flex flex-col justify-between shadow-lg relative">
-                <div>
-                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 block mb-2">
-                    {kits.single.badge}
-                  </span>
-                  <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
-                    {kits.single.name}
-                  </h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-6">
-                    {kits.single.subtitle}
-                  </p>
-
-                  <div className="mb-6 p-4 rounded-2xl bg-white dark:bg-[#05080E] border border-slate-200 dark:border-slate-800">
-                    <div className="text-xs font-mono text-slate-500 uppercase">Valor Especial à Vista (PIX):</div>
-                    <div className="text-3xl font-extrabold text-slate-950 dark:text-white tracking-tight my-1">
-                      R$ {kits.single.pricePix}
-                    </div>
-                    <div className="text-xs text-emerald-700 dark:text-emerald-400 font-bold font-mono">
-                      ou em até {kits.single.priceInstallments}
-                    </div>
-                  </div>
-
-                  <ul className="space-y-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-8">
-                    {kits.single.items.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5">
-                        <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
-                  <button
-                    onClick={() => {
-                      setSelectedKit('single');
-                      setIsOrderModalOpen(true);
-                    }}
-                    className="w-full bg-slate-900 hover:bg-emerald-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200 text-white font-bold text-xs uppercase tracking-wider py-3.5 px-4 rounded-xl transition cursor-pointer shadow-md text-center"
-                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                  >
-                    Quero o Kit 30 Dias
-                  </button>
-                  <a
-                    href={getWhatsAppLink('single')}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-emerald-600 py-1 font-semibold"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5" />
-                    <span>Dúvidas? Falar com Concierge</span>
-                  </a>
-                </div>
-              </div>
-
-              {/* KIT 2: DUO FULL (FEATURED / BEST VALUE) */}
-              <div className="bg-white dark:bg-[#0D121F] rounded-3xl border-2 border-emerald-600 dark:border-emerald-500 p-8 sm:p-9 flex flex-col justify-between shadow-2xl relative lg:-translate-y-3 ring-4 ring-emerald-600/10">
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-700 text-white text-[11px] font-mono font-extrabold uppercase px-4 py-1 rounded-full shadow-md tracking-wider">
-                  {kits.duo.badge}
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="flex text-amber-400 text-xs">★★★★★</span>
-                    <span className="text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold uppercase">Ciclo Recomendado</span>
-                  </div>
-                  <h3 className="text-2xl font-extrabold text-slate-950 dark:text-white mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
-                    {kits.duo.name}
-                  </h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-6">
-                    {kits.duo.subtitle}
-                  </p>
-
-                  <div className="mb-6 p-5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
-                    <div className="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase">Valor Especial à Vista (PIX):</div>
-                    <div className="text-4xl font-extrabold text-emerald-800 dark:text-emerald-300 tracking-tight my-1">
-                      R$ {kits.duo.pricePix}
-                    </div>
-                    <div className="text-xs text-slate-700 dark:text-slate-300 font-bold font-mono">
-                      ou em até {kits.duo.priceInstallments}
-                    </div>
-                    <div className="mt-2 text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">
-                      ✓ {kits.duo.economy} + {kits.duo.shipping}
-                    </div>
-                  </div>
-
-                  <ul className="space-y-3.5 text-xs sm:text-sm text-slate-800 dark:text-slate-200 mb-8 font-medium">
-                    {kits.duo.items.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5">
-                        <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5 stroke-[2.5]" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
-                  <button
-                    onClick={() => {
-                      setSelectedKit('duo');
-                      setIsOrderModalOpen(true);
-                    }}
-                    className="w-full bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] text-white font-bold text-xs uppercase tracking-[0.14em] py-4 px-4 rounded-xl transition cursor-pointer shadow-lg shadow-emerald-900/30 text-center"
-                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                  >
-                    Garantir Oferta de 60 Dias
-                  </button>
-                  <a
-                    href={getWhatsAppLink('duo')}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-1.5 text-xs text-emerald-700 dark:text-emerald-400 hover:underline py-1 font-bold"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5" />
-                    <span>Tirar dúvidas no WhatsApp antes de fechar</span>
-                  </a>
-                </div>
-              </div>
-
-              {/* KIT 3: BIO-REGENERATIVE DUO (GHK + BPC) */}
-              <div className="bg-[#FAFBF9] dark:bg-[#0D121F] rounded-3xl border border-slate-300 dark:border-slate-800 p-8 flex flex-col justify-between shadow-lg relative">
-                <div>
-                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 block mb-2">
-                    {kits.vip.badge}
-                  </span>
-                  <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
-                    {kits.vip.name}
-                  </h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-6">
-                    {kits.vip.subtitle}
-                  </p>
-
-                  <div className="mb-6 p-4 rounded-2xl bg-white dark:bg-[#05080E] border border-slate-200 dark:border-slate-800">
-                    <div className="text-xs font-mono text-slate-500 uppercase">Valor Especial à Vista (PIX):</div>
-                    <div className="text-3xl font-extrabold text-slate-950 dark:text-white tracking-tight my-1">
-                      R$ {kits.vip.pricePix}
-                    </div>
-                    <div className="text-xs text-emerald-700 dark:text-emerald-400 font-bold font-mono">
-                      ou em até {kits.vip.priceInstallments}
-                    </div>
-                  </div>
-
-                  <ul className="space-y-3 text-xs sm:text-sm text-slate-700 dark:text-slate-300 mb-8">
-                    {kits.vip.items.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5">
-                        <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
-                  <button
-                    onClick={() => {
-                      setSelectedKit('vip');
-                      setIsOrderModalOpen(true);
-                    }}
-                    className="w-full bg-slate-900 hover:bg-emerald-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200 text-white font-bold text-xs uppercase tracking-wider py-3.5 px-4 rounded-xl transition cursor-pointer shadow-md text-center"
-                    style={{ fontFamily: 'Montserrat, sans-serif' }}
-                  >
-                    Quero o Protocolo Duo
-                  </button>
-                  <a
-                    href={getWhatsAppLink('vip')}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex items-center justify-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-emerald-600 py-1 font-semibold"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5" />
-                    <span>Consultoria Especializada VIP</span>
-                  </a>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Security Micro Footer Banner */}
-            <div className="mt-14 p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-around gap-6 text-xs text-slate-600 dark:text-slate-400 font-mono">
-              <div className="flex items-center gap-2">
-                <Truck className="w-4 h-4 text-emerald-600" />
-                <span>Envio Imediato com Rastreamento</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Lock className="w-4 h-4 text-emerald-600" />
-                <span>Pagamento 100% Blindado</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Garantia de Pureza HPLC ≥ 99.4%</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MessageCircle className="w-4 h-4 text-emerald-600" />
-                <span>Suporte Clínico via WhatsApp</span>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* SECTION 7: SCIENTIFIC FAQ (OVERCOMING EVERY OBJECTION) */}
-        <section id="faq" className="py-20 sm:py-24 border-b border-slate-200 dark:border-slate-800 bg-[#FAFBF9] dark:bg-[#070A11] transition-colors">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="text-center mb-16 space-y-3">
-              <span className="text-xs font-mono tracking-[0.2em] text-emerald-700 dark:text-emerald-400 uppercase font-extrabold block">
-                ESCLARECIMENTOS TÉCNICOS
-              </span>
-              <h2 
-                className="text-2xl sm:text-4xl font-extrabold tracking-[0.06em] uppercase text-slate-950 dark:text-white"
-                style={{ fontFamily: 'Syne, sans-serif' }}
-              >
-                PERGUNTAS FREQUENTES
-              </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
-                Tudo o que você precisa saber antes de iniciar o seu protocolo com a PSL Labs.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {faqs.map((faq, index) => {
-                const isOpen = openFaq === index;
                 return (
                   <div
-                    key={index}
-                    className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0D121F] overflow-hidden transition shadow-sm"
+                    key={comp.id}
+                    className={`bg-white rounded-2xl border p-4 sm:p-5 flex flex-col justify-between shadow-xs transition-all ${
+                      comp.isTopSeller 
+                        ? 'border-emerald-300 bg-gradient-to-b from-white to-[#FAFCFB]' 
+                        : 'border-slate-200'
+                    }`}
                   >
-                    <button
-                      onClick={() => setOpenFaq(isOpen ? -1 : index)}
-                      className="w-full text-left p-5 sm:p-6 flex items-center justify-between gap-4 cursor-pointer"
-                    >
-                      <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-white leading-snug">
-                        {faq.q}
-                      </span>
-                      <ChevronDown
-                        className={`w-5 h-5 text-emerald-600 shrink-0 transition-transform duration-300 ${
-                          isOpen ? 'rotate-180' : ''
-                        }`}
-                      />
-                    </button>
+                    <div>
+                      
+                      {/* Card Top Badges */}
+                      <div className="flex items-center justify-between gap-1.5 mb-2.5 flex-wrap">
+                        <span className="text-[10px] font-bold text-[#145C46] bg-[#E8F5EE] px-2 py-0.5 rounded-full">
+                          {comp.line}
+                        </span>
 
-                    {isOpen && (
-                      <div className="px-5 sm:px-6 pb-6 pt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800/80">
-                        {faq.a}
+                        <div className="flex items-center gap-1">
+                          {comp.isTopSeller && (
+                            <span className="text-[10px] font-extrabold text-[#9A3412] bg-[#FFEDD5] px-1.5 py-0.5 rounded-md">
+                              🔥 Top
+                            </span>
+                          )}
+                          <span className="text-[10px] font-bold text-[#065F46] bg-[#D1FAE5] px-1.5 py-0.5 rounded-md">
+                            ≥ 99.4% HPLC
+                          </span>
+                        </div>
                       </div>
-                    )}
+
+                      {/* Compound Name */}
+                      <h3 className="text-lg font-black text-[#0F172A] leading-tight mb-1">
+                        {comp.name}
+                      </h3>
+
+                      {/* Compound Description */}
+                      <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-3">
+                        {comp.desc}
+                      </p>
+
+                      {/* Dose Selector Box */}
+                      <div className="bg-[#F8FAFC] border border-slate-200 rounded-xl p-2.5 mb-3">
+                        <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                          <span>Selecione a Dosagem:</span>
+                          <span className="text-slate-400">{comp.doses.length} opções</span>
+                        </div>
+
+                        {/* If many doses (like Tirzepatide/Retatrutide), render select, otherwise pills */}
+                        {comp.doses.length > 5 ? (
+                          <select
+                            value={doseIdx}
+                            onChange={(e) => handleSelectDose(comp.id, parseInt(e.target.value))}
+                            className="w-full h-9 px-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900 focus:outline-none focus:border-[#145C46]"
+                          >
+                            {comp.doses.map((d, i) => (
+                              <option key={d.code} value={i}>
+                                {d.label} {d.stockStatus === 'in_stock' ? '• (⚡ Pronta Entrega SP)' : '• (⏳ Sob Encomenda)'}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <div className="flex flex-wrap gap-1.5">
+                            {comp.doses.map((d, i) => {
+                              const isActive = doseIdx === i;
+                              return (
+                                <button
+                                  key={d.code}
+                                  onClick={() => handleSelectDose(comp.id, i)}
+                                  className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                                    isActive
+                                      ? 'bg-[#145C46] text-white shadow-xs'
+                                      : 'bg-white border border-slate-200 text-slate-700 hover:border-slate-300'
+                                  }`}
+                                >
+                                  {d.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {/* Current Dose Stock Indicator */}
+                        <div className="mt-2 pt-1.5 border-t border-slate-200/80 flex items-center justify-between text-[11px]">
+                          <span className="text-slate-500 font-medium">Disponibilidade:</span>
+                          {isReadyStock ? (
+                            <span className="text-emerald-700 font-bold flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                              ⚡ Pronta Entrega SP
+                            </span>
+                          ) : (
+                            <span className="text-slate-600 font-semibold flex items-center gap-1">
+                              ⏳ Sob Encomenda (3-5d)
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Card Pricing Box */}
+                      <div className="bg-slate-100 p-2.5 rounded-xl mb-3">
+                        <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                          {isB2B ? 'Preço Atacado (Caixa c/ 10 Frascos):' : 'Preço Unitário Varejo (1 Frasco):'}
+                        </div>
+                        <div className="text-2xl font-black text-[#145C46] my-0.5">
+                          R$ {price.toFixed(2).replace('.', ',')}
+                        </div>
+                        <div className="text-[11px] text-emerald-700 font-bold flex items-center gap-1">
+                          <Check className="w-3.5 h-3.5" />
+                          <span>À vista via Pix ou Cartão em até 12x</span>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    {/* Card Actions */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => addToCart(comp)}
+                        className="flex-1 h-11 bg-[#145C46] hover:bg-[#0D4131] active:scale-98 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
+                      >
+                        <Plus className="w-4 h-4 stroke-[3]" />
+                        <span>Adicionar</span>
+                      </button>
+
+                      <button
+                        onClick={() => openCalculatorForProduct(currentDose.doseNum, currentDose.doseUnit)}
+                        className="h-11 px-3 bg-white hover:bg-[#E8F5EE] border border-[#A3D4C1] text-[#145C46] font-bold text-xs rounded-xl transition cursor-pointer flex items-center gap-1"
+                        title="Calcular dosagem na seringa de insulina"
+                      >
+                        <span>🧪 Calcular</span>
+                      </button>
+                    </div>
+
                   </div>
                 );
               })}
             </div>
 
-            {/* Direct Question Banner */}
-            <div className="mt-12 text-center p-8 rounded-3xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
-              <h4 className="font-bold text-base text-emerald-950 dark:text-emerald-200 mb-1">
-                Ainda possui alguma dúvida clínica sobre o seu caso?
-              </h4>
-              <p className="text-xs sm:text-sm text-emerald-800 dark:text-emerald-300 mb-4">
-                Nosso Concierge Lab está à disposição para tirar dúvidas sobre aplicação, dosagem e rotina personalizada.
+          </div>
+        )}
+
+        {/* ================= CALCULATOR VIEW ================= */}
+        {currentView === 'calc' && (
+          <div className="bg-white rounded-3xl border border-slate-200 p-4 sm:p-8 shadow-xs max-w-4xl mx-auto">
+            
+            <div className="text-center mb-6">
+              <span className="text-xs font-mono font-bold uppercase text-[#145C46] tracking-wider block mb-1">
+                FERRAMENTA CLÍNICA INTERATIVA
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-[#145C46]">
+                🧪 Calculadora de Reconstituição
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                Saiba exatamente quantos tracinhos (UI) puxar na seringa de insulina com segurança matemática.
               </p>
-              <a
-                href={getWhatsAppLink()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider py-3 px-6 rounded-xl transition shadow-md"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Conversar com Concierge no WhatsApp</span>
-              </a>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-start mb-8">
+              
+              {/* Left Column: Form Controls */}
+              <div className="space-y-4">
+                
+                {/* 1. Concentration */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    1. Concentração do Frasco (Pó)
+                  </label>
+                  <select
+                    value={calcPeptideSelect}
+                    onChange={(e) => setCalcPeptideSelect(e.target.value)}
+                    className="w-full h-11 px-3 bg-white border border-slate-300 rounded-xl text-sm font-semibold focus:outline-none focus:border-[#145C46]"
+                  >
+                    <option value="5">5 mg (ex: BPC-157 5mg, Retatrutide 5mg)</option>
+                    <option value="10">10 mg (Padrão: BPC-157 10mg, Tirzepatide 10mg)</option>
+                    <option value="15">15 mg (ex: Tirzepatide 15mg)</option>
+                    <option value="20">20 mg (ex: Retatrutide 20mg)</option>
+                    <option value="30">30 mg (ex: Tirzepatide 30mg)</option>
+                    <option value="50">50 mg (ex: GHK-Cu 50mg, NAD+ 50mg)</option>
+                    <option value="60">60 mg (ex: Tirzepatide 60mg)</option>
+                    <option value="custom">Outro valor manual...</option>
+                  </select>
+                </div>
+
+                {calcPeptideSelect === 'custom' && (
+                  <div>
+                    <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                      Digite os mg no frasco:
+                    </label>
+                    <input
+                      type="number"
+                      value={calcManualMg}
+                      onChange={(e) => setCalcManualMg(e.target.value)}
+                      className="w-full h-11 px-3 bg-white border border-slate-300 rounded-xl text-sm font-semibold focus:outline-none focus:border-[#145C46]"
+                    />
+                  </div>
+                )}
+
+                {/* 2. Water added */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    2. Água Bacteriostática Adicionada (ml)
+                  </label>
+                  <select
+                    value={calcWaterMl}
+                    onChange={(e) => setCalcWaterMl(parseFloat(e.target.value))}
+                    className="w-full h-11 px-3 bg-white border border-slate-300 rounded-xl text-sm font-semibold focus:outline-none focus:border-[#145C46]"
+                  >
+                    <option value="1.0">1.0 ml (Mais concentrado)</option>
+                    <option value="2.0">2.0 ml (Recomendado na maioria dos casos)</option>
+                    <option value="2.5">2.5 ml</option>
+                    <option value="3.0">3.0 ml (Ampola BAC 3ml)</option>
+                    <option value="5.0">5.0 ml (Diluição Dérmica / GHK-Cu)</option>
+                  </select>
+                </div>
+
+                {/* 3. Desired Dose */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    3. Dose Desejada por Aplicação
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={calcDoseAmount}
+                      onChange={(e) => setCalcDoseAmount(parseFloat(e.target.value) || 0)}
+                      className="flex-1 h-11 px-3 bg-white border border-slate-300 rounded-xl text-sm font-semibold focus:outline-none focus:border-[#145C46]"
+                    />
+                    <select
+                      value={calcDoseUnit}
+                      onChange={(e) => setCalcDoseUnit(e.target.value)}
+                      className="w-24 h-11 px-2 bg-white border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:border-[#145C46]"
+                    >
+                      <option value="mcg">mcg</option>
+                      <option value="mg">mg</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* 4. Syringe type */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
+                    4. Tipo de Seringa de Insulina
+                  </label>
+                  <select
+                    value={calcSyringeType}
+                    onChange={(e) => setCalcSyringeType(parseInt(e.target.value))}
+                    className="w-full h-11 px-3 bg-white border border-slate-300 rounded-xl text-sm font-semibold focus:outline-none focus:border-[#145C46]"
+                  >
+                    <option value={100}>Seringa U-100 (1.0 ml = 100 UI)</option>
+                    <option value={50}>Seringa U-50 (0.5 ml = 50 UI)</option>
+                    <option value={30}>Seringa U-30 (0.3 ml = 30 UI)</option>
+                  </select>
+                </div>
+
+              </div>
+
+              {/* Right Column: Visual Syringe & Exact Result */}
+              <div className="bg-slate-100 border border-slate-200 rounded-2xl p-5 text-center">
+                
+                <div className="bg-[#145C46] text-white p-4 rounded-xl mb-4 shadow-sm">
+                  <div className="text-[11px] font-mono uppercase text-emerald-200 font-bold">
+                    Puxe na seringa exatamente até:
+                  </div>
+                  <div className="text-4xl font-black my-1">
+                    {calcResults.roundedUnits} UI
+                  </div>
+                  <div className="text-xs text-white/90">
+                    {calcResults.roundedUnits} Unidades de Insulina
+                  </div>
+                </div>
+
+                {/* Interactive Dynamic SVG Syringe */}
+                <div className="w-full py-2">
+                  <svg viewBox="0 0 320 80" className="w-full h-auto max-h-20">
+                    {/* Barrel */}
+                    <rect x="30" y="20" width="230" height="40" rx="4" fill="#FFFFFF" stroke="#334155" strokeWidth="2" />
+                    {/* Fluid */}
+                    <rect x="30" y="22" width={calcResults.filledWidth} height="36" fill="#10B981" opacity="0.75" />
+                    {/* Plunger */}
+                    <rect x={calcResults.plungerX} y="16" width="6" height="48" fill="#145C46" rx="2" />
+                    {/* Rod */}
+                    <rect x={calcResults.rodX} y="36" width="140" height="8" fill="#94A3B8" />
+                    {/* Thumb Rest */}
+                    <rect x={calcResults.thumbX} y="22" width="12" height="36" rx="3" fill="#64748B" />
+                    {/* Tip & Needle */}
+                    <polygon points="30,28 16,36 16,44 30,52" fill="#94A3B8" />
+                    <line x1="16" y1="40" x2="0" y2="40" stroke="#64748B" strokeWidth="2" />
+                    {/* Ruler ticks */}
+                    <g stroke="#475569" strokeWidth="1.5">
+                      <line x1="30" y1="20" x2="30" y2="32" />
+                      <line x1="76" y1="20" x2="76" y2="30" />
+                      <line x1="122" y1="20" x2="122" y2="30" />
+                      <line x1="168" y1="20" x2="168" y2="30" />
+                      <line x1="214" y1="20" x2="214" y2="30" />
+                      <line x1="260" y1="20" x2="260" y2="32" />
+                    </g>
+                    {/* Labels */}
+                    <text x="30" y="14" fontSize="9" fontWeight="700" fill="#64748B" textAnchor="middle">0</text>
+                    <text x="76" y="14" fontSize="9" fontWeight="700" fill="#145C46" textAnchor="middle">20</text>
+                    <text x="145" y="14" fontSize="9" fontWeight="700" fill="#64748B" textAnchor="middle">50</text>
+                    <text x="260" y="14" fontSize="9" fontWeight="700" fill="#64748B" textAnchor="middle">{calcSyringeType} UI</text>
+                  </svg>
+                </div>
+
+                <div className="text-xs font-bold text-slate-700 mt-2">
+                  Rendimento: <strong>{calcResults.totalDoses} aplicações</strong>
+                </div>
+                <div className="text-[11px] text-emerald-700 font-semibold mt-1">
+                  Concentração: {calcResults.concentrationMgPerMl.toFixed(2)} mg/ml ({(calcResults.concentrationMgPerMl * 10).toFixed(0)} mcg a cada 10 UI)
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-slate-200">
+                  <button
+                    onClick={() => setCurrentView('catalog')}
+                    className="w-full py-2.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-700 transition cursor-pointer"
+                  >
+                    ← Voltar ao Catálogo
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* Reconstitution 3 Steps Guide */}
+            <div className="pt-6 border-t border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-[#FAFCFB] border border-slate-200 p-4 rounded-xl">
+                <div className="w-6 h-6 rounded-full bg-[#E8F5EE] text-[#145C46] flex items-center justify-center font-black text-xs mb-2">
+                  1
+                </div>
+                <div className="font-bold text-xs text-slate-900 mb-1">Higienização</div>
+                <p className="text-[11px] text-slate-600 leading-relaxed">
+                  Passe álcool 70% na tampa de borracha do frasco de peptídeo e da água bacteriostática estéril.
+                </p>
+              </div>
+
+              <div className="bg-[#FAFCFB] border border-slate-200 p-4 rounded-xl">
+                <div className="w-6 h-6 rounded-full bg-[#E8F5EE] text-[#145C46] flex items-center justify-center font-black text-xs mb-2">
+                  2
+                </div>
+                <div className="font-bold text-xs text-slate-900 mb-1">Transferência Lenta</div>
+                <p className="text-[11px] text-slate-600 leading-relaxed">
+                  Injete a água pelas paredes de vidro do frasco. Não mire direto no pó liofilizado.
+                </p>
+              </div>
+
+              <div className="bg-[#FAFCFB] border border-slate-200 p-4 rounded-xl">
+                <div className="w-6 h-6 rounded-full bg-[#E8F5EE] text-[#145C46] flex items-center justify-center font-black text-xs mb-2">
+                  3
+                </div>
+                <div className="font-bold text-xs text-slate-900 mb-1">Dissolução &amp; Geladeira</div>
+                <p className="text-[11px] text-slate-600 leading-relaxed">
+                  Gire suavemente por 20s até ficar translúcido (sem agitar). Guarde na geladeira entre 2°C e 8°C.
+                </p>
+              </div>
             </div>
 
           </div>
-        </section>
+        )}
 
       </main>
 
-      {/* FOOTER */}
-      <footer className="bg-[#090D14] text-slate-300 border-t border-slate-800 pt-16 pb-24 lg:pb-12 text-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-            
-            <div className="md:col-span-2">
-              <img 
-                src="/brand/psl-labs-premium-synthesis-line-white.png" 
-                alt="PSL LABS" 
-                className="h-10 w-auto object-contain mb-4"
-              />
-              <p className="text-sm text-slate-400 max-w-md leading-relaxed mb-4">
-                PSL Labs (Premium Synthesis Line) S.A. Instalação biotecnológica de síntese peptídica, liofilização estrutural e protocolos clínicos com pureza cromatográfica atestada superior a 99%.
-              </p>
-              <div className="text-xs text-slate-500 font-mono">
-                Parque Industrial Tecnológico • Assunção / Cidade do Leste • República do Paraguai.
-              </div>
-            </div>
+      {/* FLOATING DIRECT SUPPORT BUTTON (WHATSAPP) */}
+      <button
+        onClick={handleSupportWhatsApp}
+        className="fixed right-4 bottom-20 md:bottom-6 z-30 bg-[#25D366] hover:bg-[#20ba5a] active:scale-95 text-white font-bold text-xs px-4 py-3 rounded-full shadow-lg flex items-center gap-2 cursor-pointer transition"
+        title="Falar no WhatsApp oficial da PSL Labs"
+      >
+        <MessageCircle className="w-5 h-5" />
+        <span className="hidden sm:inline">Dúvidas? Fale no WhatsApp</span>
+      </button>
 
-            <div>
-              <h4 className="text-white font-bold text-xs mb-4 uppercase tracking-widest font-mono">
-                Padrões &amp; Normas
-              </h4>
-              <ul className="space-y-2 text-xs text-slate-400 font-mono">
-                <li>• Pureza HPLC ≥ 99.4%</li>
-                <li>• Sala Limpa Classe 100 GMP</li>
-                <li>• Ensaio de Endotoxinas LAL</li>
-                <li>• Liofilização sob Nitrogênio</li>
-                <li>• Acreditado ISO/IEC 17025</li>
-              </ul>
-            </div>
+      {/* MOBILE BOTTOM NAVIGATION BAR (NATIVE APP STYLE) */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 h-16 flex items-center justify-around md:hidden shadow-lg">
+        <button
+          onClick={() => {
+            setCurrentView('catalog');
+            setSelectedCategory('TODOS');
+          }}
+          className={`flex flex-col items-center justify-center flex-1 h-full text-[10px] font-bold cursor-pointer ${
+            currentView === 'catalog' && selectedCategory === 'TODOS' ? 'text-[#145C46]' : 'text-slate-500'
+          }`}
+        >
+          <span className="text-lg">📦</span>
+          <span>Catálogo</span>
+        </button>
 
-            <div>
-              <h4 className="text-white font-bold text-xs mb-4 uppercase tracking-widest font-mono">
-                Navegação
-              </h4>
-              <ul className="space-y-2 text-xs text-slate-400">
-                <li><a href="#diferencial" className="hover:text-emerald-400 transition">Por que Liofilizado?</a></li>
-                <li><a href="#laudo" className="hover:text-emerald-400 transition">Laudo Analítico HPLC</a></li>
-                <li><a href="#kits" className="hover:text-emerald-400 transition">Kits e Preços</a></li>
-                <li><Link href="/" className="hover:text-emerald-400 transition font-bold text-emerald-400">Terminal de Verificação de Frascos →</Link></li>
-              </ul>
-            </div>
+        <button
+          onClick={() => {
+            setCurrentView('catalog');
+            setSelectedCategory('PRONTA_ENTREGA');
+          }}
+          className={`flex flex-col items-center justify-center flex-1 h-full text-[10px] font-bold cursor-pointer ${
+            currentView === 'catalog' && selectedCategory === 'PRONTA_ENTREGA' ? 'text-[#145C46]' : 'text-slate-500'
+          }`}
+        >
+          <span className="text-lg">⚡</span>
+          <span>Pronta SP</span>
+        </button>
 
-          </div>
+        <button
+          onClick={() => setCurrentView('calc')}
+          className={`flex flex-col items-center justify-center flex-1 h-full text-[10px] font-bold cursor-pointer ${
+            currentView === 'calc' ? 'text-[#145C46]' : 'text-slate-500'
+          }`}
+        >
+          <span className="text-lg">🧪</span>
+          <span>Calculadora</span>
+        </button>
 
-          <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
-            <div>
-              © 2026 PSL LABS S.A. Todos os direitos reservados.
-            </div>
-            <div>
-              Compostos formulados para protocolos avançados. Desenvolvido com padrão estético e científico de alta fidelidade.
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      {/* MOBILE STICKY BOTTOM BAR (CONVERSION BOOSTER) */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0A0E17]/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 p-3 sm:hidden shadow-2xl flex items-center justify-between gap-3">
-        <div>
-          <span className="text-[10px] text-slate-500 font-mono block">PLANO RECOMENDADO</span>
-          <div className="text-sm font-extrabold text-emerald-800 dark:text-emerald-400 font-mono">
-            R$ 680 <span className="text-[10px] text-slate-500 font-normal">(60 Dias)</span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <a
-            href={getWhatsAppLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2.5 rounded-xl bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700"
-            title="WhatsApp"
-          >
-            <MessageCircle className="w-5 h-5" />
-          </a>
-
-          <a
-            href="#kits"
-            className="bg-emerald-700 active:scale-[0.98] text-white font-bold text-xs uppercase tracking-wider py-3 px-4 rounded-xl transition shadow-md"
-            style={{ fontFamily: 'Montserrat, sans-serif' }}
-          >
-            Garantir Protocolo
-          </a>
-        </div>
+        <button
+          onClick={() => setIsCartOpen(true)}
+          className="flex flex-col items-center justify-center flex-1 h-full text-[10px] font-bold text-slate-500 relative cursor-pointer"
+        >
+          <span className="text-lg">🛒</span>
+          <span>Pedido</span>
+          {cartCount > 0 && (
+            <span className="absolute top-2 right-1/4 bg-red-500 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">
+              {cartCount}
+            </span>
+          )}
+        </button>
       </div>
 
-      {/* ORDER MODAL (DIRECT CHECKOUT DIALOG) */}
-      {isOrderModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-[#0D121F] rounded-3xl border border-slate-300 dark:border-slate-800 max-w-lg w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto text-slate-900 dark:text-white">
+      {/* CART MODAL / SLIDE-OVER */}
+      {isCartOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl border border-slate-200 max-w-lg w-full p-5 sm:p-7 shadow-2xl relative max-h-[92vh] flex flex-col justify-between">
             
-            <button
-              onClick={() => setIsOrderModalOpen(false)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-slate-900 dark:hover:text-white p-1 cursor-pointer"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-slate-200 dark:border-slate-800">
-              <ShoppingBag className="w-5 h-5 text-emerald-600" />
-              <h3 className="font-bold text-base uppercase tracking-wider font-mono">
-                Finalizar Pedido • PSL LABS
-              </h3>
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
+              <div className="flex items-center gap-2">
+                <ShoppingBag className="w-5 h-5 text-[#145C46]" />
+                <h3 className="font-black text-base uppercase tracking-wider">
+                  Seu Pedido • PSL Labs
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsCartOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
-            {/* Selected Kit Summary */}
-            <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4 mb-5">
-              <div className="flex justify-between items-start">
+            {/* Cart Items List */}
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[40vh]">
+              {cart.length === 0 ? (
+                <div className="text-center py-8 text-slate-500">
+                  <ShoppingBag className="w-12 h-12 text-slate-300 mx-auto mb-2" />
+                  <p className="text-sm font-semibold">Seu carrinho está vazio.</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Adicione compostos do catálogo para avançar.</p>
+                </div>
+              ) : (
+                cart.map((item, idx) => {
+                  const isStock = item.stockStatus === 'in_stock';
+                  return (
+                    <div 
+                      key={`${item.compoundId}-${item.doseCode}-${item.isB2B}-${idx}`}
+                      className="bg-slate-50 border border-slate-200 p-3 rounded-2xl flex items-center justify-between gap-3 text-xs"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="font-extrabold text-slate-900 truncate">
+                          {item.name}
+                        </div>
+                        <div className="text-slate-500 text-[11px] mt-0.5">
+                          {item.doseLabel} • {item.isB2B ? 'Caixa 10 Un' : '1 Frasco'}
+                        </div>
+                        <div className="mt-1">
+                          {isStock ? (
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">
+                              ⚡ Pronta Entrega SP
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-semibold text-slate-600 bg-slate-200 px-1.5 py-0.5 rounded">
+                              ⏳ Sob Encomenda (3-5d)
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Quantity & Subtotal */}
+                      <div className="flex flex-col items-end gap-1.5 shrink-0">
+                        <div className="font-black text-sm text-[#145C46]">
+                          R$ {(item.unitPrice * item.qty).toFixed(2).replace('.', ',')}
+                        </div>
+                        
+                        <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-lg p-0.5">
+                          <button
+                            onClick={() => updateCartQty(idx, -1)}
+                            className="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-100 rounded cursor-pointer"
+                          >
+                            <Minus className="w-3 h-3" />
+                          </button>
+                          <span className="text-xs font-bold px-1 min-w-4 text-center">
+                            {item.qty}
+                          </span>
+                          <button
+                            onClick={() => updateCartQty(idx, 1)}
+                            className="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-100 rounded cursor-pointer"
+                          >
+                            <Plus className="w-3 h-3" />
+                          </button>
+                          <button
+                            onClick={() => removeCartItem(idx)}
+                            className="w-6 h-6 flex items-center justify-center text-red-500 hover:bg-red-50 rounded ml-1 cursor-pointer"
+                            title="Remover"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Cart Footer & Form */}
+            {cart.length > 0 && (
+              <div className="pt-4 border-t border-slate-200 mt-4 space-y-3">
+                
+                {/* Shipping Method */}
                 <div>
-                  <span className="text-[10px] font-mono font-bold text-emerald-800 dark:text-emerald-300 uppercase">
-                    PRODUTO SELECIONADO:
-                  </span>
-                  <h4 className="font-extrabold text-slate-950 dark:text-white text-base">
-                    {kits[selectedKit]?.name}
-                  </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                    {kits[selectedKit]?.subtitle}
-                  </p>
+                  <label className="block text-[11px] font-bold uppercase text-slate-600 mb-1">
+                    Forma de Entrega:
+                  </label>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setShippingMethod('sedex')}
+                      className={`p-2 rounded-xl border text-left font-semibold transition cursor-pointer ${
+                        shippingMethod === 'sedex' 
+                          ? 'border-[#145C46] bg-[#E8F5EE] text-[#145C46]' 
+                          : 'border-slate-200 text-slate-600'
+                      }`}
+                    >
+                      📦 Sedex Correios (Brasil)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShippingMethod('uber')}
+                      className={`p-2 rounded-xl border text-left font-semibold transition cursor-pointer ${
+                        shippingMethod === 'uber' 
+                          ? 'border-[#145C46] bg-[#E8F5EE] text-[#145C46]' 
+                          : 'border-slate-200 text-slate-600'
+                      }`}
+                    >
+                      🛵 Uber Moto / Flash (SP)
+                    </button>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <span className="text-xl font-extrabold text-emerald-800 dark:text-emerald-300">
-                    R$ {kits[selectedKit]?.pricePix}
-                  </span>
-                  <div className="text-[10px] font-mono text-slate-500">ou {kits[selectedKit]?.priceInstallments}</div>
+
+                {/* Name & Address */}
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    value={clientName}
+                    onChange={(e) => setClientName(e.target.value)}
+                    placeholder="Seu Nome / WhatsApp"
+                    className="h-10 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-[#145C46]"
+                  />
+                  <input
+                    type="text"
+                    value={clientAddress}
+                    onChange={(e) => setClientAddress(e.target.value)}
+                    placeholder="Cidade / Estado"
+                    className="h-10 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-[#145C46]"
+                  />
                 </div>
-              </div>
-            </div>
 
-            <form onSubmit={handleOrderSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-mono font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
-                  Seu Nome Completo:
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="Ex: Dra. Juliana Santos"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-[#05080E] border border-slate-300 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
-                />
-              </div>
+                {/* Subtotal */}
+                <div className="flex items-center justify-between pt-1">
+                  <span className="text-xs font-bold text-slate-500 uppercase">Total do Pedido:</span>
+                  <span className="text-xl font-black text-[#145C46]">
+                    R$ {cartTotal.toFixed(2).replace('.', ',')}
+                  </span>
+                </div>
 
-              <div>
-                <label className="block text-xs font-mono font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
-                  WhatsApp com DDD:
-                </label>
-                <input
-                  type="tel"
-                  required
-                  value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
-                  placeholder="Ex: (11) 98765-4321"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-[#05080E] border border-slate-300 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono font-bold uppercase text-slate-700 dark:text-slate-300 mb-1">
-                  Cidade / Estado para Entrega:
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={customerCity}
-                  onChange={(e) => setCustomerCity(e.target.value)}
-                  placeholder="Ex: São Paulo / SP"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-[#05080E] border border-slate-300 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600"
-                />
-              </div>
-
-              <div className="pt-2">
+                {/* WhatsApp Checkout Button */}
                 <button
-                  type="submit"
-                  className="w-full bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] text-white font-bold text-xs uppercase tracking-[0.14em] py-4 px-4 rounded-xl transition shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2 cursor-pointer"
-                  style={{ fontFamily: 'Montserrat, sans-serif' }}
+                  onClick={handleCheckoutWhatsApp}
+                  className="w-full h-12 bg-[#25D366] hover:bg-[#20ba5a] active:scale-98 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl transition cursor-pointer shadow-md flex items-center justify-center gap-2"
                 >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>Concluir Pedido no WhatsApp Concierge</span>
+                  <MessageCircle className="w-5 h-5" />
+                  <span>Concluir Pedido no WhatsApp</span>
                 </button>
-                <p className="text-[11px] text-center text-slate-500 mt-2 font-mono">
-                  Você será direcionado ao atendimento oficial para confirmação do endereço e chave PIX/Cartão.
+
+                <p className="text-[10px] text-center text-slate-400">
+                  Ao clicar, uma mensagem pré-formatada será aberta no WhatsApp da PSL Labs com seu pedido e cálculo de entrega.
                 </p>
+
               </div>
-            </form>
+            )}
 
           </div>
         </div>
       )}
-
-      {/* COA OFFICIAL MODAL */}
-      {isCoaModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-[#0D121F] rounded-3xl border border-slate-300 dark:border-slate-800 max-w-2xl w-full p-4 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto text-slate-900 dark:text-white">
-            <button 
-              onClick={() => setIsCoaModalOpen(false)}
-              className="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-slate-950 dark:hover:text-white p-1 cursor-pointer"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800 pr-8">
-              <img src="/brand/psl-labs-premium-synthesis-line.png" alt="PSL LABS" className="h-8 w-auto dark:hidden" />
-              <img src="/brand/psl-labs-premium-synthesis-line-white.png" alt="PSL LABS" className="h-8 w-auto hidden dark:block" />
-              <div>
-                <h4 
-                  className="font-bold text-sm sm:text-base tracking-widest text-slate-950 dark:text-white uppercase"
-                  style={{ fontFamily: 'Syne, sans-serif' }}
-                >
-                  Official Certificate of Analysis
-                </h4>
-                <span className="text-[10px] sm:text-xs font-mono text-slate-500 font-semibold block">DOCUMENT ID: COA-GHK-2026-X1 • ISO/IEC 17025</span>
-              </div>
-            </div>
-
-            <div className="space-y-4 text-xs font-mono">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 dark:bg-[#05080E] p-3.5 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800">
-                <div>
-                  <span className="text-[10px] sm:text-[11px] text-slate-500 uppercase block font-semibold">Composto / Peptide:</span>
-                  <strong className="text-slate-950 dark:text-white text-xs sm:text-sm">GHK-Cu (Copper Tripeptide-1)</strong>
-                </div>
-                <div>
-                  <span className="text-[10px] sm:text-[11px] text-slate-500 uppercase block font-semibold">Lote / Batch Number:</span>
-                  <strong className="text-slate-950 dark:text-white text-xs sm:text-sm">#PSL-2026-X1</strong>
-                </div>
-                <div>
-                  <span className="text-[10px] sm:text-[11px] text-slate-500 uppercase block font-semibold">Data de Fabricação:</span>
-                  <span className="text-slate-700 dark:text-slate-300 font-semibold">Novembro 2026</span>
-                </div>
-                <div>
-                  <span className="text-[10px] sm:text-[11px] text-slate-500 uppercase block font-semibold">Pureza Homologada:</span>
-                  <strong className="text-emerald-700 dark:text-emerald-400 font-extrabold text-xs sm:text-sm">99.41% (RP-HPLC)</strong>
-                </div>
-              </div>
-
-              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
-                Certifica-se por meio deste laudo oficial que o lote de peptídeo referenciado foi sintetizado sob as diretrizes de sala limpa GMP Classe 100, confirmado por espectrometria de massas (ESI-MS) e purificado em atmosfera de nitrogênio inerte de grau farmacêutico.
-              </p>
-
-              <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400">
-                  Responsável Técnico: <strong className="text-slate-950 dark:text-white block font-bold">Dr. M. Benítez, PhD</strong> Química Analítica, PSL LABS S.A.
-                </div>
-                <button 
-                  onClick={() => window.print()}
-                  className="w-full sm:w-auto bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs transition cursor-pointer flex items-center justify-center gap-1.5"
-                >
-                  <Printer className="w-4 h-4" />
-                  <span>Imprimir Certificado</span>
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      )}
-
-      {/* QR CAMERA MODAL */}
-      <QRCameraScanner
-        isOpen={isCameraOpen}
-        onClose={() => setIsCameraOpen(false)}
-      />
 
     </div>
   );
