@@ -431,6 +431,19 @@ export default function Home() {
               })}
             </div>
 
+            {/* View Full 47 Compounds Catalog & Pricing */}
+            <div className="mt-14 text-center">
+              <Link
+                href="/lp"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-[#145C46] hover:bg-[#0D4131] active:scale-98 text-white font-extrabold text-sm uppercase tracking-wider transition shadow-lg shadow-emerald-950/20"
+                style={{ fontFamily: 'Montserrat, sans-serif' }}
+              >
+                <Sparkles className="w-5 h-5 text-emerald-300" />
+                <span>Explorar Todos os 47 Compostos &amp; Tabela de Preços</span>
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
+
           </div>
         </section>
 
