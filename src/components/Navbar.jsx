@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import QRCameraScanner from './QRCameraScanner';
-import { ShieldCheck, Lock, Camera, Sun, Moon, Globe } from 'lucide-react';
+import { ShieldCheck, Lock, Camera, Sun, Moon, Globe, Sparkles } from 'lucide-react';
 
 export default function Navbar() {
   const { lang, changeLang, t } = useLanguage();
@@ -32,6 +32,10 @@ export default function Navbar() {
           {/* Navigation Links & Action Controls */}
           <div className="flex items-center gap-1.5 sm:gap-3">
             <nav className="hidden lg:flex items-center gap-6 text-xs font-bold tracking-[0.12em] text-slate-700 dark:text-slate-200 uppercase" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+              <Link href="/lp" className="text-emerald-700 dark:text-emerald-400 font-extrabold hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors py-2 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Comprar Protocolo GHK-Cu</span>
+              </Link>
               <Link href="/#verify" className="hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-2">
                 {t.nav.verify}
               </Link>
@@ -45,6 +49,16 @@ export default function Navbar() {
                 {t.nav.protocol}
               </Link>
             </nav>
+
+            {/* Direct Shop Button */}
+            <Link
+              href="/lp"
+              className="flex items-center gap-1.5 text-xs bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-600/40 text-emerald-800 dark:text-emerald-300 font-bold px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl transition cursor-pointer shrink-0 shadow-xs"
+              title="Adquirir Protocolo GHK-Cu 50mg"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="hidden sm:inline">Comprar GHK-Cu</span>
+            </Link>
 
             {/* Camera Quick Button in Nav */}
             <button
