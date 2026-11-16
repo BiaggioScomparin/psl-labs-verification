@@ -54,13 +54,29 @@ export default function PSLMarketplaceLP() {
   const [calcDoseUnit, setCalcDoseUnit] = useState('mcg'); // 'mcg' | 'mg'
   const [calcSyringeType, setCalcSyringeType] = useState(100); // 100 | 50 | 30
 
+  // Dynamic Live Stock from Supabase / API
+  const [liveStock, setLiveStock] = useState({});
+
+  useEffect(() => {
+    fetch('/api/admin/inventory')
+      .then(res => res.json())
+      .then(items => {
+        if (Array.isArray(items) && items.length > 0) {
+          const map = {};
+          items.forEach(it => { map[it.code] = it; });
+          setLiveStock(map);
+        }
+      })
+      .catch(console.warn);
+  }, []);
+
   // Initialize selected doses and inventory status
   const compounds = useMemo(() => {
     return compoundsData.map((comp) => {
-      // In PSL Labs real stock, GHK-Cu 50mg (CU50) has ready stock in SP, others are on-demand
       const doses = comp.doses.map((dose) => {
+        const live = liveStock[dose.code];
         const isCu50 = dose.code === 'CU50' || comp.id === 'ghk-cu';
-        const stockQty = isCu50 ? 29 : 0;
+        const stockQty = live !== undefined ? (live.stock_qty || 0) : (isCu50 ? 29 : 0);
         return {
           ...dose,
           stockQty,
@@ -76,7 +92,7 @@ export default function PSLMarketplaceLP() {
         defaultDoseIndex: comp.defaultDoseIndex || 0
       };
     });
-  }, []);
+  }, [liveStock]);
 
   // Set default doses on first load
   useEffect(() => {
@@ -280,6 +296,24 @@ export default function PSLMarketplaceLP() {
 
     const encoded = encodeURIComponent(msg);
     window.open(`https://wa.me/${sellerWhatsapp}?text=${encoded}`, '_blank');
+
+    // Persist order in Supabase / Cloud Database
+    try {
+      fetch('/api/orders/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          client_name: clientName || 'Cliente WhatsApp',
+          client_address: clientAddress || '',
+          items: cart,
+          delivery_method: shippingMethod,
+          subtotal: cartTotal,
+          total: cartTotal
+        })
+      }).catch(err => console.warn('Could not record order:', err));
+    } catch (e) {
+      console.warn(e);
+    }
   };
 
   const handleSupportWhatsApp = () => {

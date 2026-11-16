@@ -20,15 +20,24 @@ import {
   Edit3,
   Image as ImageIcon,
   Upload,
-  X
+  X,
+  Package,
+  ShoppingCart,
+  DollarSign,
+  AlertOctagon
 } from 'lucide-react';
+import AdminDRE from '../components/admin/AdminDRE';
+import AdminStock from '../components/admin/AdminStock';
+import AdminCompras from '../components/admin/AdminCompras';
+import AdminVendas from '../components/admin/AdminVendas';
+import AdminPerdas from '../components/admin/AdminPerdas';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState(false);
 
-  const [activeTab, setActiveTab] = useState('labels'); // 'labels', 'products', 'batches', 'logs'
+  const [activeTab, setActiveTab] = useState('dre'); // 'dre', 'stock', 'compras', 'vendas', 'perdas', 'labels', 'batches', 'products', 'logs'
   const [stats, setStats] = useState(null);
   const [products, setProducts] = useState([]);
   const [batches, setBatches] = useState([]);
@@ -367,8 +376,68 @@ export default function AdminPage() {
         {/* Tab Navigation */}
         <div className="flex items-center gap-2 border-b border-slate-800 pb-4 mb-6 overflow-x-auto">
           <button
+            onClick={() => setActiveTab('dre')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+              activeTab === 'dre'
+                ? 'bg-emerald-600 text-white shadow'
+                : 'bg-slate-900 text-slate-400 hover:text-white'
+            }`}
+          >
+            <TrendingUp className="w-4 h-4" />
+            <span>DRE &amp; Financeiro</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('stock')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+              activeTab === 'stock'
+                ? 'bg-emerald-600 text-white shadow'
+                : 'bg-slate-900 text-slate-400 hover:text-white'
+            }`}
+          >
+            <Package className="w-4 h-4" />
+            <span>Estoque SP (47 Compostos)</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('compras')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+              activeTab === 'compras'
+                ? 'bg-emerald-600 text-white shadow'
+                : 'bg-slate-900 text-slate-400 hover:text-white'
+            }`}
+          >
+            <ShoppingCart className="w-4 h-4" />
+            <span>Compras / Entradas</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('vendas')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+              activeTab === 'vendas'
+                ? 'bg-emerald-600 text-white shadow'
+                : 'bg-slate-900 text-slate-400 hover:text-white'
+            }`}
+          >
+            <DollarSign className="w-4 h-4" />
+            <span>Vendas &amp; Faturamento</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('perdas')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+              activeTab === 'perdas'
+                ? 'bg-emerald-600 text-white shadow'
+                : 'bg-slate-900 text-slate-400 hover:text-white'
+            }`}
+          >
+            <AlertOctagon className="w-4 h-4 text-red-400" />
+            <span>Perdas &amp; Avarias</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('labels')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
               activeTab === 'labels'
                 ? 'bg-emerald-600 text-white shadow'
                 : 'bg-slate-900 text-slate-400 hover:text-white'
@@ -380,7 +449,7 @@ export default function AdminPage() {
 
           <button
             onClick={() => setActiveTab('batches')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
               activeTab === 'batches'
                 ? 'bg-emerald-600 text-white shadow'
                 : 'bg-slate-900 text-slate-400 hover:text-white'
@@ -392,28 +461,43 @@ export default function AdminPage() {
 
           <button
             onClick={() => setActiveTab('products')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
               activeTab === 'products'
                 ? 'bg-emerald-600 text-white shadow'
                 : 'bg-slate-900 text-slate-400 hover:text-white'
             }`}
           >
             <FlaskConical className="w-4 h-4" />
-            <span>Catálogo de Produtos</span>
+            <span>Catálogo Clínico</span>
           </button>
 
           <button
             onClick={() => setActiveTab('logs')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
               activeTab === 'logs'
                 ? 'bg-emerald-600 text-white shadow'
                 : 'bg-slate-900 text-slate-400 hover:text-white'
             }`}
           >
             <AlertTriangle className="w-4 h-4" />
-            <span>Auditoria &amp; Logs de Consulta</span>
+            <span>Auditoria &amp; Logs</span>
           </button>
         </div>
+
+        {/* TAB 0.1: DRE */}
+        {activeTab === 'dre' && <AdminDRE />}
+
+        {/* TAB 0.2: STOCK */}
+        {activeTab === 'stock' && <AdminStock />}
+
+        {/* TAB 0.3: COMPRAS */}
+        {activeTab === 'compras' && <AdminCompras />}
+
+        {/* TAB 0.4: VENDAS */}
+        {activeTab === 'vendas' && <AdminVendas />}
+
+        {/* TAB 0.5: PERDAS */}
+        {activeTab === 'perdas' && <AdminPerdas />}
 
         {/* TAB 1: SPIRAL A4351 PRINT GENERATOR */}
         {activeTab === 'labels' && (

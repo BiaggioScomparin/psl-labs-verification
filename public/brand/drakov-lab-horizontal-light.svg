@@ -1,0 +1,71 @@
+<svg width="600" height="120" viewBox="0 0 600 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Crimson Gradient Light -->
+    <linearGradient id="crimsonLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E11D48" />
+      <stop offset="100%" stop-color="#9F1239" />
+    </linearGradient>
+
+    <!-- Dark Metal for Light Theme -->
+    <linearGradient id="slateDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#1E293B" />
+    </linearGradient>
+  </defs>
+
+  <!-- EMBLEM ICON (LEFT) -->
+  <g transform="translate(15, 10)">
+    <!-- Outer Tactical Hexagon -->
+    <polygon points="50,4 88,26 88,74 50,96 12,74 12,26" 
+             stroke="#0F172A" stroke-width="2.5" fill="#F8FAFC" />
+    
+    <!-- Tech Markings -->
+    <polygon points="50,11 82,29 82,71 50,89 18,71 18,29" 
+             stroke="#CBD5E1" stroke-width="1" stroke-dasharray="4 3" fill="none" />
+
+    <!-- Red Corner Pins -->
+    <circle cx="50" cy="4" r="2.5" fill="#E11D48" />
+    <circle cx="88" cy="26" r="2.5" fill="#E11D48" />
+    <circle cx="88" cy="74" r="2.5" fill="#E11D48" />
+    <circle cx="50" cy="96" r="2.5" fill="#E11D48" />
+    <circle cx="12" cy="74" r="2.5" fill="#E11D48" />
+    <circle cx="12" cy="26" r="2.5" fill="#E11D48" />
+
+    <!-- Scaled D / Dragon Monogram -->
+    <g transform="translate(3, -2)">
+      <!-- Left Stem -->
+      <polygon points="32,28 41,28 41,74 32,74" fill="#0F172A" />
+      <!-- Dragon Arch & Wing -->
+      <path d="M41,28 L57,28 Q68,28 68,40 Q68,50 56,53 L69,74 L58,74 L48,55 L41,55 L41,46 L54,46 Q60,46 60,40 Q60,36 54,36 L41,36 Z" 
+            fill="url(#crimsonLight)" />
+      <!-- Eye Dot -->
+      <polygon points="46,39 50,41 46,43 44,41" fill="#FFFFFF" />
+    </g>
+  </g>
+
+  <!-- BRAND TYPOGRAPHY (RIGHT) -->
+  <g transform="translate(130, 0)">
+    <!-- Main Title: DRAKOV LAB -->
+    <text x="0" y="58" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="38" fill="url(#slateDark)" letter-spacing="3">
+      DRAKOV <tspan fill="url(#crimsonLight)">LAB</tspan>
+    </text>
+
+    <!-- High-tech Sub-badge -->
+    <rect x="290" y="32" width="62" height="20" rx="4" fill="#F1F5F9" stroke="#E11D48" stroke-width="1" />
+    <text x="321" y="46" font-family="'Courier New', monospace" font-size="10" font-weight="800" fill="#BE123C" text-anchor="middle" letter-spacing="1.5">
+      PHARMA
+    </text>
+
+    <!-- Subtitle Line -->
+    <text x="2" y="82" font-family="'Courier New', monospace" font-size="11" font-weight="700" fill="#475569" letter-spacing="3.5">
+      SYNTHESIS RESEARCH // CLINICAL PEPTIDES
+    </text>
+
+    <!-- Subtle Technical Line -->
+    <line x1="2" y1="94" x2="420" y2="94" stroke="#CBD5E1" stroke-width="1" />
+    <circle cx="2" cy="94" r="2" fill="#E11D48" />
+    <text x="12" y="105" font-family="'Courier New', monospace" font-size="8.5" font-weight="600" fill="#64748B" letter-spacing="1.5">
+      HPLC VERIFIED ≥ 99.4% • STERILE LYOPHILIZED VIALS
+    </text>
+  </g>
+</svg>

@@ -1,0 +1,75 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background Radial Glow -->
+    <radialGradient id="drakovGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E11D48" stop-opacity="0.25" />
+      <stop offset="70%" stop-color="#0F172A" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Crimson Metal Gradient -->
+    <linearGradient id="crimsonMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF3366" />
+      <stop offset="50%" stop-color="#E11D48" />
+      <stop offset="100%" stop-color="#9F1239" />
+    </linearGradient>
+
+    <!-- Titanium Silver Gradient -->
+    <linearGradient id="titaniumMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="50%" stop-color="#CBD5E1" />
+      <stop offset="100%" stop-color="#64748B" />
+    </linearGradient>
+
+    <!-- Dark Carbon Metal -->
+    <linearGradient id="carbonMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0A0F1D" />
+    </linearGradient>
+  </defs>
+
+  <!-- Ambient Glow Behind Emblem -->
+  <circle cx="200" cy="200" r="180" fill="url(#drakovGlow)" />
+
+  <!-- Outer Hexagonal Tactical Ring -->
+  <polygon points="200,28 340,108 340,292 200,372 60,292 60,108" 
+           stroke="url(#titaniumMetal)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="url(#carbonMetal)" />
+  
+  <!-- Inner Segmented Tech Markings -->
+  <polygon points="200,42 326,116 326,284 200,358 74,284 74,116" 
+           stroke="#334155" stroke-width="1.5" stroke-dasharray="8 6" fill="none" />
+
+  <!-- Corner Calibration Nodes -->
+  <circle cx="200" cy="28" r="4" fill="#E11D48" />
+  <circle cx="340" cy="108" r="4" fill="#E11D48" />
+  <circle cx="340" cy="292" r="4" fill="#E11D48" />
+  <circle cx="200" cy="372" r="4" fill="#E11D48" />
+  <circle cx="60" cy="292" r="4" fill="#E11D48" />
+  <circle cx="60" cy="108" r="4" fill="#E11D48" />
+
+  <!-- The "DRAKOV" Stylized Dragon / D-Monogram Core -->
+  <g transform="translate(10, 0)">
+    <!-- Vertical Spine (Molecular Backbone) -->
+    <path d="M135,110 L135,290 L165,290 L165,225 L180,225 L215,290 L255,290 L205,212 C235,200 255,175 255,145 C255,110 220,110 180,110 Z" 
+          fill="none" stroke="none" />
+
+    <!-- Sharp Dragon Monogram Silhouette forming a D -->
+    <!-- Left Stem: Chiseled Heavy Pillar with Tech Cuts -->
+    <polygon points="125,105 160,105 160,295 125,295" fill="url(#titaniumMetal)" />
+    
+    <!-- Dragon Wing & Horn upper sweep -->
+    <path d="M160,105 L225,105 Q265,105 265,150 Q265,185 220,195 L270,295 L228,295 L185,205 L160,205 L160,170 L210,170 Q232,170 232,150 Q232,135 210,135 L160,135 Z" 
+          fill="url(#crimsonMetal)" />
+
+    <!-- Center Dragon Eye / Molecular Core -->
+    <polygon points="182,142 195,150 182,158 174,150" fill="#FFFFFF" />
+    
+    <!-- Laser Cutout Accent -->
+    <line x1="115" y1="175" x2="160" y2="175" stroke="#0F172A" stroke-width="4" />
+    <line x1="115" y1="225" x2="160" y2="225" stroke="#0F172A" stroke-width="4" />
+  </g>
+
+  <!-- Technical Monospace Subtext Arc -->
+  <text x="200" y="338" font-family="'Courier New', monospace" font-size="11" font-weight="900" fill="#94A3B8" letter-spacing="4" text-anchor="middle">
+    DRAKOV • LAB
+  </text>
+</svg>
