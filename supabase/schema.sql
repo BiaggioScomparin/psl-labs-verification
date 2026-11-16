@@ -325,3 +325,15 @@ VALUES
   ('PRD-001', '2026-11-11', 'peptide', 'ghk-cu', 'CU50', 'GHK-Cu', '50mg', 10, 25.40, 254.00, 'Fornecedor não enviou', 'Faltaram 10 frascos na remessa do fornecedor'),
   ('PRD-002', '2026-11-12', 'peptide', 'ghk-cu', 'CU50', 'GHK-Cu', '50mg', 1, 25.40, 25.40, 'Uso próprio', 'Retirado 1 frasco para protocolo pessoal')
 ON CONFLICT (id) DO NOTHING;
+
+-- 13. FUNÇÃO RPC PARA BAIXA EM VENDAS
+CREATE OR REPLACE FUNCTION fn_decrement_stock(p_code TEXT, p_qty INT)
+RETURNS VOID AS $$
+BEGIN
+  UPDATE psl_inventory
+  SET stock_qty = GREATEST(0, stock_qty - p_qty),
+      is_ready_sp = (stock_qty - p_qty > 0),
+      updated_at = NOW()
+  WHERE code = p_code;
+END;
+$$ LANGUAGE plpgsql;
