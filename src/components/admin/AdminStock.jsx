@@ -454,7 +454,99 @@ export default function AdminStock() {
         </div>
       ) : (
         <div className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
-          <div className="overflow-x-auto">
+          {/* Mobile View: Cards for each stock item */}
+          <div className="block md:hidden divide-y divide-slate-800/80">
+            {filtered.map(item => {
+              const currentQty = qtyInputs[item.code] ?? item.stock_qty ?? 0;
+              const isReady = currentQty > 0;
+              const isSaving = savingCode === item.code;
+              const isLowStock = currentQty <= (item.min_stock || 5) && currentQty > 0;
+
+              return (
+                <div key={item.code} className="p-4 space-y-3 bg-slate-900/60 hover:bg-slate-900 transition">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-white text-sm">{item.name}</span>
+                        <span className="bg-slate-800 text-slate-200 px-2 py-0.5 rounded text-[10px] font-bold border border-slate-700/50">
+                          {item.dosage}
+                        </span>
+                      </div>
+                      <span className="text-[11px] font-mono text-emerald-400 font-bold block">{item.code}</span>
+                    </div>
+                    {isReady ? (
+                      <span className="inline-flex items-center gap-1 bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                        <Zap className="w-2.5 h-2.5 text-emerald-400" />
+                        <span>Pronta Entrega</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 bg-slate-800/80 text-slate-400 border border-slate-700/40 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                        <span>Sob Encomenda</span>
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80 text-center text-xs">
+                    <div>
+                      <span className="text-[10px] text-slate-400 block">Custo</span>
+                      <span className="font-mono text-slate-300 font-semibold">R$ {Number(item.unit_cost || 0).toFixed(2)}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 block">Venda Varejo</span>
+                      <span className="font-mono text-emerald-400 font-bold">R$ {Number(item.price_b2c || 0).toFixed(2)}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 block">Caixa B2B</span>
+                      <span className="font-mono text-amber-400 font-semibold">{item.price_b2b ? `R$ ${Number(item.price_b2b).toFixed(2)}` : '-'}</span>
+                    </div>
+                  </div>
+
+                  {/* Stock Adjust and Buttons */}
+                  <div className="flex items-center justify-between gap-2 pt-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs text-slate-400">Estoque:</span>
+                      <button
+                        onClick={() => handleQuickAdjust(item.code, -1)}
+                        disabled={currentQty <= 0 || isSaving}
+                        className="w-7 h-7 bg-slate-800 hover:bg-slate-700 disabled:opacity-30 text-slate-200 rounded-lg flex items-center justify-center transition cursor-pointer"
+                      >
+                        <Minus className="w-3.5 h-3.5" />
+                      </button>
+                      <span className="font-mono font-bold text-white text-sm px-1.5">{currentQty}</span>
+                      <button
+                        onClick={() => handleQuickAdjust(item.code, 1)}
+                        disabled={isSaving}
+                        className="w-7 h-7 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-40 text-white rounded-lg flex items-center justify-center transition cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEdit(item)}
+                        className="py-1.5 px-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl flex items-center gap-1 shadow-md shadow-emerald-950/40 transition cursor-pointer"
+                      >
+                        <Pencil className="w-3 h-3" />
+                        <span>Editar</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDeletingItem(item)}
+                        className="py-1.5 px-2 bg-slate-800 hover:bg-rose-600 hover:text-white text-slate-400 text-xs rounded-xl flex items-center justify-center transition cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead className="bg-slate-950/90 text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-800">
                 <tr>
@@ -479,10 +571,19 @@ export default function AdminStock() {
 
                   return (
                     <tr key={item.code} className="hover:bg-slate-800/40 transition">
-                      {/* Name */}
+                      {/* Name & Quick Edit */}
                       <td className="py-3 px-4 font-bold text-white">
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <span>{item.name}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEdit(item)}
+                            className="px-2 py-0.5 bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-600 hover:text-white rounded text-[10px] font-bold flex items-center gap-1 transition cursor-pointer"
+                            title="Editar dados deste item"
+                          >
+                            <Pencil className="w-2.5 h-2.5" />
+                            <span>Editar</span>
+                          </button>
                           {isLowStock && (
                             <span title="Estoque baixo (próximo do limite de segurança)">
                               <AlertTriangle className="w-3 h-3 text-amber-400" />
@@ -583,21 +684,25 @@ export default function AdminStock() {
 
                       {/* Actions: Edit & Delete */}
                       <td className="py-3 px-4 text-center">
-                        <div className="inline-flex items-center gap-1 justify-center">
+                        <div className="inline-flex items-center gap-1.5 justify-center">
                           <button
+                            type="button"
                             onClick={() => handleOpenEdit(item)}
-                            className="p-1.5 bg-slate-800 hover:bg-emerald-600 hover:text-white text-slate-300 rounded-lg transition cursor-pointer"
+                            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition cursor-pointer flex items-center gap-1.5 font-bold shadow text-xs"
                             title="Editar Dados do Composto"
                           >
                             <Pencil className="w-3.5 h-3.5" />
+                            <span>Editar</span>
                           </button>
 
                           <button
+                            type="button"
                             onClick={() => setDeletingItem(item)}
-                            className="p-1.5 bg-slate-800 hover:bg-rose-600 hover:text-white text-slate-400 rounded-lg transition cursor-pointer"
+                            className="px-2.5 py-1.5 bg-slate-800 hover:bg-rose-600 hover:text-white text-slate-400 rounded-lg transition cursor-pointer flex items-center gap-1 text-xs"
                             title="Excluir Composto do Catálogo"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
+                            <span>Excluir</span>
                           </button>
                         </div>
                       </td>

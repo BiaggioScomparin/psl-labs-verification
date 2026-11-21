@@ -337,6 +337,84 @@ export async function addPurchase(purchase) {
   return newPurchase;
 }
 
+export async function updatePurchase(purchaseData) {
+  const purchaseId = purchaseData.id;
+  if (!purchaseId) throw new Error('ID da compra é obrigatório');
+
+  const updateFields = {};
+  if (purchaseData.name !== undefined) updateFields.name = purchaseData.name;
+  if (purchaseData.code !== undefined) updateFields.code = purchaseData.code;
+  if (purchaseData.dosage !== undefined) updateFields.dosage = purchaseData.dosage;
+  if (purchaseData.category !== undefined) updateFields.category = purchaseData.category;
+  if (purchaseData.supplier !== undefined) updateFields.supplier = purchaseData.supplier;
+  if (purchaseData.notes !== undefined) updateFields.notes = purchaseData.notes;
+  if (purchaseData.date !== undefined) updateFields.date = purchaseData.date;
+  if (purchaseData.qty !== undefined) updateFields.qty = parseInt(purchaseData.qty, 10) || 0;
+  if (purchaseData.unit_cost !== undefined) updateFields.unit_cost = parseFloat(purchaseData.unit_cost) || 0;
+  if (purchaseData.qty !== undefined || purchaseData.unit_cost !== undefined) {
+    const qty = updateFields.qty !== undefined ? updateFields.qty : parseInt(purchaseData.qty, 10) || 0;
+    const unitCost = updateFields.unit_cost !== undefined ? updateFields.unit_cost : parseFloat(purchaseData.unit_cost) || 0;
+    updateFields.total_cost = qty * unitCost;
+  }
+
+  if (isSupabaseAdminConfigured) {
+    const { data, error } = await supabaseAdmin
+      .from('psl_purchases')
+      .update(updateFields)
+      .eq('id', purchaseId)
+      .select()
+      .single();
+    if (error) {
+      console.error("Supabase updatePurchase error:", error);
+      throw new Error(error.message || 'Erro ao atualizar compra');
+    }
+    const db = getLocalDb();
+    if (db.purchases) {
+      const idx = db.purchases.findIndex(p => p.id === purchaseId);
+      if (idx !== -1) {
+        db.purchases[idx] = { ...db.purchases[idx], ...updateFields };
+        saveLocalDb(db);
+      }
+    }
+    return data;
+  }
+
+  const db = getLocalDb();
+  db.purchases = db.purchases || [];
+  const idx = db.purchases.findIndex(p => p.id === purchaseId);
+  if (idx === -1) throw new Error(`Compra com ID ${purchaseId} não encontrada`);
+  db.purchases[idx] = { ...db.purchases[idx], ...updateFields };
+  saveLocalDb(db);
+  return db.purchases[idx];
+}
+
+export async function deletePurchase(purchaseId) {
+  if (!purchaseId) throw new Error('ID da compra é obrigatório');
+
+  if (isSupabaseAdminConfigured) {
+    const { data, error } = await supabaseAdmin
+      .from('psl_purchases')
+      .delete()
+      .eq('id', purchaseId)
+      .select();
+    if (error) {
+      console.error("Supabase deletePurchase error:", error);
+      throw new Error(error.message || 'Erro ao excluir compra');
+    }
+    const db = getLocalDb();
+    if (db.purchases) {
+      db.purchases = db.purchases.filter(p => p.id !== purchaseId);
+      saveLocalDb(db);
+    }
+    return { success: true, deletedId: purchaseId, data };
+  }
+
+  const db = getLocalDb();
+  db.purchases = (db.purchases || []).filter(p => p.id !== purchaseId);
+  saveLocalDb(db);
+  return { success: true, deletedId: purchaseId };
+}
+
 // 3. VENDAS (SALES)
 export async function getSales() {
   if (isSupabaseAdminConfigured) {
@@ -608,6 +686,84 @@ export async function addLoss(loss) {
   db.losses.unshift(newLoss);
   saveLocalDb(db);
   return newLoss;
+}
+
+export async function updateLoss(lossData) {
+  const lossId = lossData.id;
+  if (!lossId) throw new Error('ID da perda é obrigatório');
+
+  const updateFields = {};
+  if (lossData.name !== undefined) updateFields.name = lossData.name;
+  if (lossData.code !== undefined) updateFields.code = lossData.code;
+  if (lossData.dosage !== undefined) updateFields.dosage = lossData.dosage;
+  if (lossData.category !== undefined) updateFields.category = lossData.category;
+  if (lossData.reason !== undefined) updateFields.reason = lossData.reason;
+  if (lossData.notes !== undefined) updateFields.notes = lossData.notes;
+  if (lossData.date !== undefined) updateFields.date = lossData.date;
+  if (lossData.qty !== undefined) updateFields.qty = parseInt(lossData.qty, 10) || 0;
+  if (lossData.unit_cost !== undefined) updateFields.unit_cost = parseFloat(lossData.unit_cost) || 0;
+  if (lossData.qty !== undefined || lossData.unit_cost !== undefined) {
+    const qty = updateFields.qty !== undefined ? updateFields.qty : parseInt(lossData.qty, 10) || 0;
+    const unitCost = updateFields.unit_cost !== undefined ? updateFields.unit_cost : parseFloat(lossData.unit_cost) || 0;
+    updateFields.loss_total = qty * unitCost;
+  }
+
+  if (isSupabaseAdminConfigured) {
+    const { data, error } = await supabaseAdmin
+      .from('psl_losses')
+      .update(updateFields)
+      .eq('id', lossId)
+      .select()
+      .single();
+    if (error) {
+      console.error("Supabase updateLoss error:", error);
+      throw new Error(error.message || 'Erro ao atualizar perda');
+    }
+    const db = getLocalDb();
+    if (db.losses) {
+      const idx = db.losses.findIndex(l => l.id === lossId);
+      if (idx !== -1) {
+        db.losses[idx] = { ...db.losses[idx], ...updateFields };
+        saveLocalDb(db);
+      }
+    }
+    return data;
+  }
+
+  const db = getLocalDb();
+  db.losses = db.losses || [];
+  const idx = db.losses.findIndex(l => l.id === lossId);
+  if (idx === -1) throw new Error(`Perda com ID ${lossId} não encontrada`);
+  db.losses[idx] = { ...db.losses[idx], ...updateFields };
+  saveLocalDb(db);
+  return db.losses[idx];
+}
+
+export async function deleteLoss(lossId) {
+  if (!lossId) throw new Error('ID da perda é obrigatório');
+
+  if (isSupabaseAdminConfigured) {
+    const { data, error } = await supabaseAdmin
+      .from('psl_losses')
+      .delete()
+      .eq('id', lossId)
+      .select();
+    if (error) {
+      console.error("Supabase deleteLoss error:", error);
+      throw new Error(error.message || 'Erro ao excluir perda');
+    }
+    const db = getLocalDb();
+    if (db.losses) {
+      db.losses = db.losses.filter(l => l.id !== lossId);
+      saveLocalDb(db);
+    }
+    return { success: true, deletedId: lossId, data };
+  }
+
+  const db = getLocalDb();
+  db.losses = (db.losses || []).filter(l => l.id !== lossId);
+  saveLocalDb(db);
+  return { success: true, deletedId: lossId };
 }
 
 // 5. PEDIDOS (ORDERS)
