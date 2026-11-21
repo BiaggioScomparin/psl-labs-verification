@@ -24,7 +24,8 @@ import {
   Package,
   ShoppingCart,
   DollarSign,
-  AlertOctagon
+  AlertOctagon,
+  Trash2
 } from 'lucide-react';
 import AdminDRE from '../components/admin/AdminDRE';
 import AdminStock from '../components/admin/AdminStock';
@@ -205,6 +206,29 @@ export default function AdminPage() {
       }
     } catch (err) {
       alert("Erro ao comunicar com o servidor");
+    }
+  };
+
+  const handleDeleteProduct = async (productId, productName) => {
+    const confirmDelete = window.confirm(`Tem certeza que deseja excluir o produto "${productName || productId}"? Esta ação removerá o produto permanentemente.`);
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`/api/admin/products?id=${encodeURIComponent(productId)}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        alert("Produto excluído com sucesso!");
+        if (editingProductId === productId) {
+          handleCancelEdit();
+        }
+        loadData();
+      } else {
+        const err = await res.json();
+        alert(err.error || "Erro ao excluir produto");
+      }
+    } catch (err) {
+      alert("Erro de comunicação ao excluir produto");
     }
   };
 
@@ -987,16 +1011,28 @@ export default function AdminPage() {
                         </div>
                       </div>
 
-                      <div className="border-t border-slate-800/80 pt-3 flex items-center justify-between">
-                        <span className="text-[10px] text-slate-500 font-mono">ID: {p.id}</span>
-                        <button
-                          type="button"
-                          onClick={() => handleStartEditProduct(p)}
-                          className="text-xs bg-slate-800 hover:bg-amber-600 text-slate-200 hover:text-white px-3 py-1.5 rounded-lg transition cursor-pointer flex items-center gap-1.5 font-semibold"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                          <span>Editar Produto &amp; Foto</span>
-                        </button>
+                      <div className="border-t border-slate-800/80 pt-3 flex items-center justify-between gap-2">
+                        <span className="text-[10px] text-slate-500 font-mono truncate max-w-[120px]">ID: {p.id}</span>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => handleStartEditProduct(p)}
+                            className="text-xs bg-slate-800 hover:bg-amber-600 text-slate-200 hover:text-white px-3 py-1.5 rounded-lg transition cursor-pointer flex items-center gap-1.5 font-semibold"
+                            title="Editar Produto &amp; Foto"
+                          >
+                            <Edit3 className="w-3.5 h-3.5" />
+                            <span>Editar</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteProduct(p.id, p.name)}
+                            className="text-xs bg-red-950/60 hover:bg-red-600 border border-red-800/80 text-red-300 hover:text-white px-3 py-1.5 rounded-lg transition cursor-pointer flex items-center gap-1.5 font-semibold"
+                            title="Excluir produto permanentemente"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>Excluir</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   );

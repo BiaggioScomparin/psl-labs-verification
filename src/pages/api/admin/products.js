@@ -1,8 +1,9 @@
-import { getProducts, addProduct, updateProduct } from '../../../lib/db';
+import { getProducts, addProduct, updateProduct, deleteProduct } from '../../../lib/db.js';
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method === 'GET') {
-    return res.status(200).json(getProducts());
+    const products = await getProducts();
+    return res.status(200).json(products);
   }
 
   if (req.method === 'POST') {
@@ -29,8 +30,8 @@ export default function handler(req, res) {
       active: true
     };
 
-    addProduct(newProduct);
-    return res.status(201).json(newProduct);
+    const created = await addProduct(newProduct);
+    return res.status(201).json(created);
   }
 
   if (req.method === 'PUT') {
@@ -40,7 +41,7 @@ export default function handler(req, res) {
       return res.status(400).json({ error: 'ID do produto é obrigatório para atualização' });
     }
 
-    const updated = updateProduct(id, {
+    const updated = await updateProduct(id, {
       name,
       chemicalName,
       category,
@@ -60,6 +61,21 @@ export default function handler(req, res) {
     }
 
     return res.status(200).json(updated);
+  }
+
+  if (req.method === 'DELETE') {
+    const id = req.query.id || req.body?.id;
+
+    if (!id) {
+      return res.status(400).json({ error: 'ID do produto é obrigatório para exclusão' });
+    }
+
+    const result = await deleteProduct(id);
+    if (!result) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
+
+    return res.status(200).json({ success: true, id });
   }
 
   return res.status(405).json({ error: 'Method not allowed' });

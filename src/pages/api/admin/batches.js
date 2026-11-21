@@ -1,8 +1,9 @@
-import { getBatches, addBatch, generateBatchCodes } from '../../../lib/db';
+import { getBatches, addBatch, generateBatchCodes } from '../../../lib/db.js';
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method === 'GET') {
-    return res.status(200).json(getBatches());
+    const batches = await getBatches();
+    return res.status(200).json(batches);
   }
 
   if (req.method === 'POST') {
@@ -25,11 +26,11 @@ export default function handler(req, res) {
       createdAt: new Date().toISOString()
     };
 
-    addBatch(newBatch);
-    const codes = generateBatchCodes(batchId, qty);
+    const createdBatch = await addBatch(newBatch);
+    const codes = await generateBatchCodes(batchId, qty);
 
     return res.status(201).json({
-      batch: newBatch,
+      batch: createdBatch,
       generatedCodesCount: codes.length,
       sampleCodes: codes.slice(0, 5)
     });

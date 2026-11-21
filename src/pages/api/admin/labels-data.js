@@ -1,5 +1,5 @@
 import QRCode from 'qrcode';
-import { getDb, getProductById } from '../../../lib/db';
+import { getLabelsData } from '../../../lib/db.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -7,27 +7,13 @@ export default async function handler(req, res) {
   }
 
   const { batchId, baseUrl } = req.query;
-  const db = getDb();
+  const data = await getLabelsData(batchId);
 
-  let targetBatch = null;
-  if (batchId) {
-    targetBatch = db.batches.find(b => b.id === batchId);
-  }
-  if (!targetBatch && db.batches.length > 0) {
-    targetBatch = db.batches[0]; // fallback to first batch
-  }
-
-  if (!targetBatch) {
+  if (!data || !data.batch) {
     return res.status(404).json({ error: 'Nenhum lote cadastrado' });
   }
 
-  const product = getProductById(targetBatch.productId) || {
-    name: 'GHK CU 50 MG',
-    concentration: '50 MG'
-  };
-
-  // Find all codes for this batch
-  const batchCodes = Object.values(db.codes).filter(c => c.batchId === targetBatch.id);
+  const { batch: targetBatch, product, codes: batchCodes } = data;
 
   // If there are less than 65 codes, fill up to 65 for the standard A4351 sheet
   const countNeeded = Math.max(65, batchCodes.length);

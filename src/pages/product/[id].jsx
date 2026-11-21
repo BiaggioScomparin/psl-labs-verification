@@ -181,7 +181,7 @@ export default function ProductDetailPage({ product }) {
 }
 
 export async function getStaticPaths() {
-  const products = getProducts();
+  const products = await getProducts();
   const paths = products.map((p) => ({
     params: { id: p.id },
   }));
@@ -193,7 +193,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const product = getProductById(params.id);
+  const product = await getProductById(params.id);
 
   return {
     props: {

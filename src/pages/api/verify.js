@@ -1,4 +1,4 @@
-import { registerScan, getCode, getProductById } from '../../lib/db';
+import { registerScan, getCode, getProductById } from '../../lib/db.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET' && req.method !== 'POST') {
@@ -16,18 +16,18 @@ export default async function handler(req, res) {
   const userAgent = req.headers['user-agent'] || 'Desconhecido';
 
   if (peek) {
-    const raw = getCode(code);
+    const raw = await getCode(code);
     if (!raw) return res.status(404).json({ found: false });
-    const product = getProductById(raw.productId);
+    const product = await getProductById(raw.productId);
     return res.status(200).json({ found: true, ...raw, product });
   }
 
-  const result = registerScan(code, {
+  const result = await registerScan(code, {
     ip: Array.isArray(clientIp) ? clientIp[0] : clientIp.split(',')[0],
     userAgent: userAgent
   });
 
-  if (!result.found) {
+  if (!result || !result.found) {
     return res.status(404).json({
       found: false,
       message: 'Código inválido ou inexistente'
