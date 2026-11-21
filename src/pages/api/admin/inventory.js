@@ -1,4 +1,10 @@
-import { getInventory, updateStockQty } from '../../../lib/stockService';
+import { 
+  getInventory, 
+  updateStockQty, 
+  createInventoryItem, 
+  updateInventoryItem, 
+  deleteInventoryItem 
+} from '../../../lib/stockService.js';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
@@ -6,24 +12,61 @@ export default async function handler(req, res) {
       const inventory = await getInventory();
       return res.status(200).json(inventory);
     } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Erro ao buscar estoque' });
+      console.error("GET /api/admin/inventory error:", err);
+      return res.status(500).json({ error: err.message || 'Erro ao buscar estoque' });
+    }
+  }
+
+  if (req.method === 'POST') {
+    try {
+      const code = req.body?.code;
+      if (!code) {
+        return res.status(400).json({ error: 'Código (code) é obrigatório' });
+      }
+      const newItem = await createInventoryItem(req.body);
+      return res.status(201).json(newItem);
+    } catch (err) {
+      console.error("POST /api/admin/inventory error:", err);
+      return res.status(500).json({ error: err.message || 'Erro ao criar item no estoque' });
     }
   }
 
   if (req.method === 'PUT') {
     try {
-      const { code, qty, is_ready_sp } = req.body;
-      if (!code || qty === undefined) {
-        return res.status(400).json({ error: 'Código e quantidade são obrigatórios' });
+      const code = req.body?.code || req.query?.code;
+      if (!code) {
+        return res.status(400).json({ error: 'Código (code) é obrigatório' });
       }
-      const updated = await updateStockQty(code, qty, is_ready_sp);
+
+      // Support both legacy quick qty update { code, qty, is_ready_sp }
+      // AND full item update { code, name, dosage, category, unit_cost, price_b2c, price_b2b, stock_qty, min_stock, is_ready_sp }
+      const itemData = { ...req.body };
+      if (itemData.qty !== undefined && itemData.stock_qty === undefined) {
+        itemData.stock_qty = itemData.qty;
+      }
+
+      const updated = await updateInventoryItem(code, itemData);
       return res.status(200).json(updated);
     } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Erro ao atualizar estoque' });
+      console.error("PUT /api/admin/inventory error:", err);
+      return res.status(500).json({ error: err.message || 'Erro ao atualizar estoque' });
     }
   }
 
-  return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method === 'DELETE') {
+    try {
+      const code = req.query?.code || req.body?.code;
+      if (!code) {
+        return res.status(400).json({ error: 'Código (code) é obrigatório para exclusão' });
+      }
+      const result = await deleteInventoryItem(code);
+      return res.status(200).json(result);
+    } catch (err) {
+      console.error("DELETE /api/admin/inventory error:", err);
+      return res.status(500).json({ error: err.message || 'Erro ao excluir item do estoque' });
+    }
+  }
+
+  res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
+  return res.status(405).json({ error: `Method ${req.method} not allowed` });
 }
